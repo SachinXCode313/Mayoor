@@ -1,0 +1,225 @@
+/* lcScores.css */
+
+.AppContainer {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100vw;
+    height: 100vh;
+    margin: 0 auto;
+  }
+  
+  @media (min-width: 768px) {
+    .AppContainer {
+      max-width: 800px; /* Adjust max-width for larger screens */
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .AppContainer {
+      max-width: 900px;
+      border-radius: 20px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .Header {
+    background-color: #20c997;
+    color: white;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  @media (min-width: 768px) {
+    .Header {
+      padding: 15px 20px;
+      font-size: 1.4rem;
+    }
+  }
+  
+  .HeaderTitle {
+    font-weight: bold;
+  }
+  
+  .NavButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+  }
+  
+  @media (min-width: 768px) {
+    .NavButton {
+      font-size: 1.8rem;
+    }
+  }
+  
+  .ContentContainer {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  @media (min-width: 768px) {
+    .ContentContainer {
+      padding: 20px;
+    }
+  }
+  
+  .ProfileCard {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  @media (min-width: 768px) {
+    .ProfileCard {
+      padding: 20px;
+      border-radius: 12px;
+      gap: 20px;
+    }
+  }
+  
+  .ProfilePic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  @media (min-width: 768px) {
+    .ProfilePic {
+      width: 80px;
+      height: 80px;
+    }
+  }
+  
+  .ProfileInfo {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .ProfileRow {
+    display: flex;
+    gap: 10px;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+  }
+  
+  @media (min-width: 768px) {
+    .ProfileRow {
+      font-size: 1rem;
+    }
+  }
+  
+  .Label {
+    font-weight: bold;
+  }
+  
+  .Value {
+    flex-grow: 1;
+  }
+  
+  .LanguageDropdown {
+    margin-bottom: 10px;
+    text-align: right;
+  }
+  
+  .LanguageSelect {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  @media (min-width: 768px) {
+    .LanguageSelect {
+      padding: 10px;
+      font-size: 1rem;
+    }
+  }
+  
+  .TableContainer {
+    overflow-x: auto;
+  }
+  
+  .ScoresTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  @media (min-width: 768px) {
+    .ScoresTable {
+      border-radius: 12px;
+    }
+  }
+  
+  .TableHeaderCell {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 0.9rem;
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+  
+  @media (min-width: 768px) {
+    .TableHeaderCell {
+      padding: 10px;
+      font-size: 1rem;
+    }
+  }
+  
+  .TableDataCell {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+  
+  @media (min-width: 768px) {
+    .TableDataCell {
+      padding: 10px;
+      font-size: 1rem;
+    }
+  }
+  
+  .Wrapper {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
