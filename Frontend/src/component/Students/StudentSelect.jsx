@@ -41,7 +41,7 @@ const StudentSelect = ({ userData }) => {
     };
   
     try {
-      const response = await axios.get("http://10.33.0.41:8000/api/students", { headers });
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/students`, { headers });
   
       // Check if response.data.Students exists and is an array
       if (response.data && Array.isArray(response.data.Students)) {
