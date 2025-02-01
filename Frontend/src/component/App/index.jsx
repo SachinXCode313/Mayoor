@@ -8,11 +8,9 @@ const App = () => {
 
     const [user, setUser] = useState(null)
 
-    return <>
-        {
-            user ? <Home user={user} /> : <Login setUser = {setUser} />
-        }
-    </>
+    return (
+        <Login/>
+    )
 }
 
 

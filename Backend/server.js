@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:3000', // or use '*' to allow all origins
+    origin: 'http://localhost:3000', 
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));

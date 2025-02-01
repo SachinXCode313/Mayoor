@@ -103,9 +103,13 @@ const Login = () => {
         {user ? (
           <Home user={user} />
         ) : (
-          <div className="signIn">
+          <div className="container">
+            <div>
             <img src={Logo} alt="Logo" /><br />
-            <input type="button" value="Login" onClick={handleLogin} />
+            <h1>Mayoor</h1>
+            </div>
+            
+            <input type="button" value="Sign in with Google" onClick={handleLogin} />
             {error && <p style={{ color: "red" }}>{error}</p>}
           </div>
         )}

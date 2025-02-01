@@ -5,7 +5,8 @@
   
   body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #21C2BA;
+    background: linear-gradient(to bottom right, #06BA8F, #4EB1E6);
+    flex-direction: column;
   }
   
   h1{
