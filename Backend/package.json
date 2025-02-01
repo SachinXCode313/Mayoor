@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server.js --port 8000"
+    "start": "nodemon server.js --port 8080"
   },
   "author": "",
   "license": "ISC",

@@ -2,47 +2,37 @@ import db from "../config/db.js";
 
 // Get Assessment Criterias Scores
 const getAssessmentCriteriaScores =  async (req, res) => {
-    const { student_id } = req.headers; // Extract student ID from headers
-
-    console.log(`Fetching all AC scores for Student ID: ${student_id}`);
-
-    // Validate input
-    if (!student_id) {
-        return res.status(400).json({
-            message: 'Invalid input. Student ID (student_id) is required.',
-        });
+    const { student_id, year, section, subject, quarter, classname } = req.headers;
+    console.log(`Fetching scores and average for Student ID: ${student_id}`);
+    if (!student_id || !year || !section || !subject || !quarter || !classname) {
+        return res.status(400).json({ message: "Missing required headers: student_id, year, section, subject, quarter, classname" });
     }
-
     try {
-        // Query to fetch all AC scores for the student
+        // Query to fetch all ac_id and values for the student
         const query = `
-            SELECT student_id, ac_id, value
+            SELECT ac_id, value
             FROM ac_scores
-            WHERE student_id = ?
+            WHERE student_id = ? 
         `;
         const [results] = await db.execute(query, [student_id]);
-
         if (results.length === 0) {
-            // No record found
-            return res.status(404).json({
-                message: 'No scores found for the given Student ID.',
-            });
+            return res.status(404).json({ message: "No scores found for the provided Student ID" });
         }
+        // Calculate the average value
+        const totalScore = results.reduce((acc, row) => acc + parseFloat(row.value), 0); // Sum of all values
+        const averageScore = results.length > 0 ? (totalScore / results.length).toFixed(2) : "0.00";
 
-        // Return all AC scores
-        return res.status(200).json({
-            message: 'Scores fetched successfully.',
-            scores: results, // Return all matching records
-        });
+        // Constructing response with fetched data and average
+        const response = {
+            ac_scores: results, // Return fetched ac_id and value
+            average_score: averageScore // Return the calculated average
+        };
+        res.status(200).json(response);
     } catch (err) {
-        console.error('Error fetching scores:', err);
-
-        return res.status(500).json({
-            message: 'Server error while fetching scores.',
-            error: err.message,
-        });
+        console.error("Error fetching scores:", err);
+        res.status(500).json({ message: "Server error while fetching scores", error: err.message });
     }
-}
+};
 
 // Set Assessment Criteria Scores
 const setAssessmentCriteriaScore = async (req, res) => {

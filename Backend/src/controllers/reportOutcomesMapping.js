@@ -1,11 +1,35 @@
 import db from "../config/db.js";
-
 const priorityValues = {
     h: 0.5,
     m: 0.3,
     l: 0.2,
 };
-
+const getReportOutcomesMapping = async (req, res) => {
+    try {
+        const ro_id = req.headers["ro_id"]; // ro_id provided in the header
+        // Check if ro_id is provided in headers
+        if (!ro_id) {
+            return res.status(400).json({ error: "ro_id is required in the headers" });
+        }
+        // Query to fetch lo_id, ac_id, and priority mapped to the given ro_id
+        const [rows] = await db.query(
+            `SELECT lo_id, ac_id, priority
+            FROM ro_lo_mapping
+            WHERE ro_id = ?`,
+            [ro_id]
+        );
+        if (rows.length === 0) {
+            return res.status(404).json({ error: "No ACs found for the given ro_id." });
+        }
+        res.status(200).json({
+            message: "ACs and their priorities for the given ro_id fetched successfully",
+            data: rows
+        });
+    } catch (error) {
+        console.error("Error fetching ACs mapping for RO:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
 // Set Report Outcomes Mapping
 const setReportOutcomesMapping = async (req, res) => {
     try {
@@ -14,7 +38,6 @@ const setReportOutcomesMapping = async (req, res) => {
         const year = req.headers["year"];
         const className = req.headers["class"];
         const section = req.headers["section"];
-
         const { ro_id, data } = req.body;
         if (!data || !Array.isArray(data) || data.length === 0) {
             return res.status(400).json({ error: "Invalid data format. Expected an array of objects with lo_id and priority." });
@@ -26,12 +49,10 @@ const setReportOutcomesMapping = async (req, res) => {
                 return res.status(400).json({ error: `Invalid priority '${item.priority}'. Must be 'h', 'm', or 'l'.` });
             }
         }
-
         const [roRows] = await db.query("SELECT id FROM report_outcomes WHERE id = ?", [ro_id]);
         if (roRows.length === 0) {
             return res.status(404).json({ error: "Invalid ro_id provided." });
         }
-
         const [studentRows] = await db.query(
             `SELECT student_id FROM students_records WHERE year = ? AND class = ? AND section = ?`,
             [year, className, section]
@@ -56,17 +77,16 @@ const setReportOutcomesMapping = async (req, res) => {
         if (totalDenominator === 0) {
             return res.status(400).json({ error: "Invalid weight calculation, check input values." });
         }
-
         const roLoMappingPromises = data.map(async (item) => {
             const { lo_id, priority } = item;
             let weight = priorityValues[priority] / totalDenominator;
+            // Insert the mapping into ro_lo_mapping including the priority
             await db.query(
-                "INSERT INTO ro_lo_mapping (ro_id, lo_id, weight) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE weight = ?",
-                [ro_id, lo_id, weight, weight]
+                "INSERT INTO ro_lo_mapping (ro_id, lo_id, weight, priority) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE weight = ?, priority = ?",
+                [ro_id, lo_id, weight, priority, weight, priority]
             );
-            return { lo_id, weight };
+            return { lo_id, weight, priority }; // Returning the priority as well
         });
-
         const mappings = await Promise.all(roLoMappingPromises);
         for (const student_id of studentIds) {
             let roScore = 0;
@@ -87,7 +107,6 @@ const setReportOutcomesMapping = async (req, res) => {
                 [ro_id, student_id, roScore, roScore]
             );
         }
-
         res.status(201).json({
             message: "RO and LO mapping with weights saved successfully",
             students_processed: studentIds.length,
@@ -96,8 +115,5 @@ const setReportOutcomesMapping = async (req, res) => {
         console.error("Error mapping RO and LO:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
     }
-}
-
-
-
-export default setReportOutcomesMapping;
+};
+export {getReportOutcomesMapping,setReportOutcomesMapping};

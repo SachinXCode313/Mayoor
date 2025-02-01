@@ -9,8 +9,9 @@ const getReportOutcomesScore = async (req, res) => {
                 error: "student_id header is required.",
             });
         }
+        // Fetch the report outcome scores for the given student_id
         const [roScores] = await db.query(
-            `SELECT rs.student_id, rs.ro_id, rs.value
+            `SELECT rs.ro_id, rs.value
             FROM ro_scores rs
             WHERE rs.student_id = ?`,
             [student_id]
@@ -20,8 +21,13 @@ const getReportOutcomesScore = async (req, res) => {
                 error: "No ro_scores found for the provided student_id.",
             });
         }
+        // Calculate the total score and average score
+        const totalScore = roScores.reduce((acc, row) => acc + parseFloat(row.value), 0);
+        const averageScore = roScores.length > 0 ? totalScore / roScores.length : null;
+        // Send the response with both the fetched data and the average score
         res.status(200).json({
             ro_scores: roScores,
+            average_score: averageScore
         });
     } catch (error) {
         console.error("Error fetching ro_scores:", error.message);
@@ -29,6 +35,6 @@ const getReportOutcomesScore = async (req, res) => {
             error: "Internal Server Error",
         });
     }
-}
+}   
 
 export default getReportOutcomesScore

@@ -5,7 +5,32 @@ const priorityValues = {
     m: 0.3,
     l: 0.2,
 };
-
+const getLearningOutcomesMapping = async (req, res) => {
+    try {
+        const lo_id = req.headers["lo_id"]; // lo_id provided in the header
+        // Check if lo_id is provided in headers
+        if (!lo_id) {
+            return res.status(400).json({ error: "lo_id is required in the headers" });
+        }
+        // Query to fetch ac_id and priority mapped to the given lo_id
+        const [rows] = await db.query(
+            `SELECT ac_id, priority
+            FROM lo_ac_mapping
+            WHERE lo_id = ?`,
+            [lo_id]
+        );
+        if (rows.length === 0) {
+            return res.status(404).json({ error: "No ACs found for the given lo_id." });
+        }
+        res.status(200).json({
+            message: "ACs and their priorities fetched successfully",
+            data: rows
+        });
+    } catch (error) {
+        console.error("Error fetching ACs mapping:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
 // Set Learning Outcomes Mapping
 const setLearningOutcomesMapping = async (req, res) => {
     try {
@@ -15,7 +40,6 @@ const setLearningOutcomesMapping = async (req, res) => {
         const className = req.headers["class"];
         const section = req.headers["section"];
         const { lo_id, data } = req.body;
-
         if (!data || !Array.isArray(data) || data.length === 0) {
             return res.status(400).json({ error: "Invalid data format. Expected an array of objects with ac_id and priority." });
         }
@@ -25,7 +49,6 @@ const setLearningOutcomesMapping = async (req, res) => {
                 return res.status(400).json({ error: `Invalid priority '${item.priority}'. Must be 'h', 'm', or 'l'.` });
             }
         }
-
         const [loRows] = await db.query(`SELECT id FROM learning_outcomes WHERE id = ?`, [lo_id]);
         if (loRows.length === 0) {
             return res.status(404).json({ error: "Invalid lo_id provided." });
@@ -35,11 +58,9 @@ const setLearningOutcomesMapping = async (req, res) => {
             `SELECT student_id FROM students_records WHERE year = ? AND class = ? AND section = ?`,
             [year, className, section]
         );
-
         if (studentRows.length === 0) {
             return res.status(404).json({ error: "No students found in students_records for the given filters." });
         }
-
         const studentIds = studentRows.map(row => row.student_id);
         const inputAcIds = data.map(item => item.ac_id);
         const [validAcRows] = await db.query(
@@ -58,19 +79,18 @@ const setLearningOutcomesMapping = async (req, res) => {
         if (totalDenominator === 0) {
             return res.status(400).json({ error: "Invalid weight calculation, check input values." });
         }
-
         const loAcMappingPromises = data.map(async (item) => {
             const { ac_id, priority } = item;
             let weight = priorityValues[priority] / totalDenominator;
+            // Insert the mapping into lo_ac_mapping including the priority
             await db.query(
-                "INSERT INTO lo_ac_mapping (lo_id, ac_id, weight) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE weight = ?",
-                [lo_id, ac_id, weight, weight]
+                "INSERT INTO lo_ac_mapping (lo_id, ac_id, weight, priority) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE weight = ?, priority = ?",
+                [lo_id, ac_id, weight, priority, weight, priority]
             );
-            return { ac_id, weight };
+            return { ac_id, weight, priority }; // Returning the priority as well
         });
         
         const mappings = await Promise.all(loAcMappingPromises);
-
         for (const student_id of studentIds) {
             let loScore = 0;
             for (const mapping of mappings) {
@@ -100,7 +120,4 @@ const setLearningOutcomesMapping = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
-
-
-
-export default setLearningOutcomesMapping;
+export {getLearningOutcomesMapping,setLearningOutcomesMapping};
