@@ -29,7 +29,7 @@ const Student_report = ({ student, onBack, id }) => {
   };
 
   const percentages = [
-    { value: 72.89, label: "Assessment Criteria", component: "ac" },
+    { value: 72, label: "Assessment Criteria", component: "ac" },
     { value: 42.01, label: "Learning Outcome", component: "lo" },
     { value: 50, label: "Report Outcome", component: "ro" },
   ];

@@ -4,15 +4,32 @@ const Wrapper = styled.section`
     display: flex;
     flex-direction: column;
     background-color: #21C2BA;
-    font-family: monospace;
+    font-family: sans-sarif;
     // padding: 20px;
-    #user {
+    #profile {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 40px 20px 50px 30px;
+        padding: 30px 10px 50px 30px;
         font-size: 17px;
         color: black;
+    }
+    .user{
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+        display: flex;
+    }
+    .user img{
+        width : 110px;
+        border-radius : 50%;
+    }
+    .user div{
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        display: flex;
     }
 
     #user-content {
@@ -20,8 +37,8 @@ const Wrapper = styled.section`
         flex-direction: column;
     }
 
-    #hi{
-    font-size:19px;
+    #greet{
+    font-size:15px;
     font-weight:bold;
     }
     
@@ -31,19 +48,16 @@ const Wrapper = styled.section`
         align-items: center;
         margin-left: auto;
     }
-    #profile{
-        height: 30px;
-        width: 30px;
+    #profileIcon{
+        width: 20px;
         margin-top: -70px;
     }
     #notification{
-        height: 30px;
-        width: 30px;
+        width: 20px;
         margin-top: -70px;
     }
     #menu{
-    height: 47px;
-    width: 40px;
+    width: 30px;
     margin-top: -70px;
     }
 

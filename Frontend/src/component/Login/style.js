@@ -3,21 +3,21 @@ import styled from "styled-components";
 const Wrapper = styled.section`
   .homePage {
     width: 100%;
-    text-align: center;
     margin: 0;
     /* background:#21B2CA; */
-    #AppName {
+    #appName {
       margin: auto 100px;
       font-size: 50px;
       color: #36454F;
       opacity: 0; /* Initially hidden */
       animation: fadeIn 1s ease-out forwards;
-      animation-delay: 1s; /* Delay for text */
+      animation-delay: 2s; /* Delay for text */
     }
     .container {
       height: 100vh;
       display: flex;
       flex-direction: column;
+      text-align : center;
       justify-content: center;
       align-items: center;
       gap: 50px;
@@ -26,6 +26,7 @@ const Wrapper = styled.section`
       width: 40%;
       opacity: 0; /* Initially hidden */
       animation: fadeIn 1s ease-out forwards;
+      animation-delay: 2s; /* Delay for text */
     }
 
     /* Logo and Mayoor fade-in animation */

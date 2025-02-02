@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Wrapper from './style';
 import HomeList from './Homelist';
+import ClassView from "../ClassView/Classview";
 import ROlist from '../RO_List';
 import LOlist from '../LO_List';
 import AClist from '../AC_List';
@@ -10,8 +11,6 @@ import listIcon from '../assets/Audit.png';
 import StudentList from '../Students/StudentSelect';
 
 const Home = ({ user }) => {
-
-  
   const [index, setIndex] = useState(1);
   const [tabs, setTabs] = useState([
     { id: 1, title: 'Home', icon: homeIcon },
@@ -58,7 +57,8 @@ const Home = ({ user }) => {
         {index === 1 ? (
           <HomeList user={user} setIndex={setIndex} setUserData={handleUserData} userdata = {userData} />
         ) : index === 2 ? (
-          <StudentList userData = {userData} />
+          // <StudentList userData = {userData} />
+          <ClassView userData={userData}/>
         ) : index === 3 ? (
           <ROlist loItems={loItems} setLoItems={setLoItems} userData = {userData}/>
         ) : index === 4 ? (

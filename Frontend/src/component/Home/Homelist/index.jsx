@@ -10,7 +10,7 @@ const HomeList = ({ user, setIndex, setUserData }) => {
     }
 
     window.addEventListener("beforeunload", clearSessionStorageOnRefresh);
-    
+
     return () => {
       window.removeEventListener("beforeunload", clearSessionStorageOnRefresh);
     }
@@ -27,6 +27,8 @@ const HomeList = ({ user, setIndex, setUserData }) => {
     setter(value)
   }
 
+
+
   const handleClick = () => {
     const updatedUserdata = {
       year: parseInt(selectedYear, 10),
@@ -40,17 +42,33 @@ const HomeList = ({ user, setIndex, setUserData }) => {
     setUserData(updatedUserdata);
   }
 
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) {
+      return 'Good Morning!';
+    } else if (hour < 18) {
+      return 'Good Afternoon!';
+    } else {
+      return 'Good Evening!';
+    }
+  };
+
+
   return (
     <Wrapper>
-      <div id="user">
-        <div id="detail">
-          <p id="hi">Hi ,</p>
-          <h1 id="name">{user.name}</h1>
+      <div id="profile">
+        <div className='user'>
+          <img src={user.photoURL} alt="profile" />
+          <div >
+            <p id="greet">{getGreeting()}</p>
+            <h1 id="name">{user.displayName.split(" ")[0]}</h1>
+          </div>
           {/* <p>Please select your choices!</p> */}
         </div>
         <div id="image">
           <img id="notification" src={notification} alt="Notification" />
-          <img id="profile" src={student} alt="User" />
+          <img id="profileIcon" src={student} alt="User" />
           <img id="menu" src={menu} alt="Menu" />
         </div>
       </div>
