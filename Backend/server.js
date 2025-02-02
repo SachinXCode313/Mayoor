@@ -9,8 +9,9 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:3000', 
+    origin: ["http://localhost:3000", "https://mayoor-flax.vercel.app"],
     methods: ['GET', 'POST', 'OPTIONS'],
+    credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(bodyParser.json());
