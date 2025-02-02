@@ -4,7 +4,7 @@ const Wrapper = styled.section`
     display: flex;
     flex-direction: column;
     background-color: #21C2BA;
-    font-family: Poppins;
+    font-family: monospace;
     // padding: 20px;
     #user {
         display: flex;
