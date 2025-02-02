@@ -36,7 +36,7 @@ const setReportOutcomesMapping = async (req, res) => {
         const subject = req.headers["subject"];
         const quarter = req.headers["quarter"];
         const year = req.headers["year"];
-        const className = req.headers["class"];
+        const classname = req.headers["class"];
         const section = req.headers["section"];
         const { ro_id, data } = req.body;
         if (!data || !Array.isArray(data) || data.length === 0) {
@@ -55,7 +55,7 @@ const setReportOutcomesMapping = async (req, res) => {
         }
         const [studentRows] = await db.query(
             `SELECT student_id FROM students_records WHERE year = ? AND class = ? AND section = ?`,
-            [year, className, section]
+            [year, classname, section]
         );
         if (studentRows.length === 0) {
             return res.status(404).json({ error: "No students found in students_records for the given filters." });

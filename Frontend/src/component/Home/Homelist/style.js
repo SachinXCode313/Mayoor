@@ -7,12 +7,15 @@ const Wrapper = styled.section`
     font-family: sans-sarif;
     // padding: 20px;
     #profile {
+        flex-direction: row;
+        align-items: center;
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 30px 10px 50px 30px;
         font-size: 17px;
         color: black;
+        
     }
     .user{
         flex-direction: row;
@@ -41,6 +44,15 @@ const Wrapper = styled.section`
     font-size:15px;
     font-weight:bold;
     }
+
+    .navbar {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        display: flex;
+        margin-top: -100px;
+}
     
     #image {
         display: flex;
@@ -50,15 +62,12 @@ const Wrapper = styled.section`
     }
     #profileIcon{
         width: 20px;
-        margin-top: -70px;
     }
     #notification{
         width: 20px;
-        margin-top: -70px;
     }
     #menu{
     width: 30px;
-    margin-top: -70px;
     }
 
     #name {

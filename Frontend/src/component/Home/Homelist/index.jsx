@@ -65,8 +65,9 @@ const HomeList = ({ user, setIndex, setUserData }) => {
             <h1 id="name">{user.displayName.split(" ")[0]}</h1>
           </div>
           {/* <p>Please select your choices!</p> */}
+
         </div>
-        <div id="image">
+        <div className='navbar'>
           <img id="notification" src={notification} alt="Notification" />
           <img id="profileIcon" src={student} alt="User" />
           <img id="menu" src={menu} alt="Menu" />
