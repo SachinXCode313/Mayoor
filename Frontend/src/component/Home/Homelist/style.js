@@ -5,23 +5,26 @@ const Wrapper = styled.section`
     flex-direction: column;
     background-color: #21C2BA;
     font-family: Poppins;
-    #profile-image {
-        width : 70%;
-        border-radius : 70px;
-    }
+    // padding: 20px;
     #user {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px 40px 70px;
+        padding: 40px 20px 50px 30px;
         font-size: 17px;
         color: black;
-        /* font-family: Poppins; */
     }
+
     #user-content {
         display: flex;
         flex-direction: column;
     }
+
+    #hi{
+    font-size:19px;
+    font-weight:bold;
+    }
+    
     #image {
         display: flex;
         gap: 15px;
@@ -29,15 +32,23 @@ const Wrapper = styled.section`
         margin-left: auto;
     }
     #profile{
-        height: 40px;
-        width: 40px;
+        height: 30px;
+        width: 30px;
+        margin-top: -70px;
     }
     #notification{
-        height: 40px;
-        width: 40px;
+        height: 30px;
+        width: 30px;
+        margin-top: -70px;
     }
+    #menu{
+    height: 47px;
+    width: 40px;
+    margin-top: -70px;
+    }
+
     #name {
-        font-size: 35px;
+        font-size: 33px;
         font-weight: bold;
     }
     p {
@@ -49,22 +60,29 @@ const Wrapper = styled.section`
         border-radius: 30px 30px 0 0;
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 15px;
         align-items: center;
         padding: 50px 20px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         flex : 1;
     }
     select {
-        width: 80%;
-        padding: 15px;
+        appearance: none; /* Removes default browser styles */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 90%;
+        padding: 10px;
         font-weight: 600;
         border-radius: 50px;
-        background-color: rgba(179, 228, 244, 0.78);
+        background-color: #9CD8E7;
         border: none;
         outline: none;
         transition: 0.3s;
         cursor: pointer;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M6 9L12 15L18 9" stroke="%23000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 14px;
     }
     select:hover {
         background-color: rgba(179, 228, 244, 0.9);
@@ -75,7 +93,7 @@ const Wrapper = styled.section`
     }
     label {
         align-self: flex-start;
-        padding-left: 11%;
+        padding-left: 6%;
         font-weight: bold;
         font-size: 14px;
     }

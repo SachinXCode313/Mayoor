@@ -13,7 +13,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 // Registering chart components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const Student_report = ({ student, onBack }) => {
+const Student_report = ({ student, onBack, id }) => {
   const [activeComponent, setActiveComponent] = useState(null);
 
   const chartData = {
@@ -66,13 +66,13 @@ const Student_report = ({ student, onBack }) => {
                 <img src={profilePic} alt="Profile" />
               </div>
               <div className="student-details">
-                <p><strong>Name:</strong></p>
-                <p><strong>Roll No:</strong> </p>
-                <p><strong>Grade:</strong> V</p>
+                <p><strong>Name:{student.name}</strong></p>
+                <p><strong>Roll No:{student.id}</strong> </p>
+                <p><strong>Grade:</strong> {student.class}</p>
               </div>
               <div className="student-section">
-                <p><strong>Section:</strong> {student.section}</p>
-                <p><strong>Quarter:</strong> Q2</p>
+                <p><strong>Section:{student.section}</strong> </p>
+                {/* <p><strong>Quarter:</strong> Q2</p> */}
               </div>
             </div>
 

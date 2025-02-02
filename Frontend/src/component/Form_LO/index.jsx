@@ -5,7 +5,7 @@ import axios from "axios";
 const Form_LO = ({ closeForm, userData, loadLO }) => {
   const [loInput, setLoInput] = useState('');
 
-  const handleSave = async () => {
+  const handleSubmit = async () => {
     if (loInput.trim() === '') {
       alert('Please enter a valid LO!');
       return;
@@ -48,6 +48,11 @@ const Form_LO = ({ closeForm, userData, loadLO }) => {
 
     closeForm(); // Close the form after submission
   };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(); // Trigger form submission when Enter is pressed
+    }
+  };
 
   return (
     <Wrapper>
@@ -55,23 +60,24 @@ const Form_LO = ({ closeForm, userData, loadLO }) => {
         <p>Enter the LO you want to add :</p>
         <input
           type="text"
-          placeholder="LO Input"
+          placeholder="Enter Learning Outcome"
           className="input"
           value={loInput}
           onChange={(e) => setLoInput(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <div className="buttons">
-          <input
-            type="button"
-            value="Save"
-            className="savebtn"
-            onClick={handleSave}
-          />
           <input
             type="button"
             value="Close"
             className="closebtn"
             onClick={closeForm}
+          />
+            <input
+            type="button"
+            value="Submit"
+            className="submitbtn"
+            onClick={handleSubmit}
           />
         </div>
       </div>

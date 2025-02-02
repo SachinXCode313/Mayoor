@@ -1,96 +1,123 @@
-const styles = {
-  container: {
-    backgroundColor: "#ffffff", 
-    color: "#000",
-    minHeight: "100vh",
-    padding: "20px",
-  },
-  darkContainer: {
-    backgroundColor: "#121212", 
-    color: "#fff",
-    minHeight: "100vh",
-    padding: "20px",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "20px",
-  },
-  backButton: {
-    fontSize: "24px",
-    background: "none",
-    border: "none",
-    color: "inherit",
-    cursor: "pointer",
-  },
-  title: {
-    fontSize: "18px",
-    fontWeight: "bold",
-  },
-  notification: {
-    cursor: "pointer",
-  },
-  profileContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    marginBottom: "20px",
-  },
-  userName: {
-    fontSize: "20px",
-    fontWeight: "bold",
-    marginTop: "10px",
-  },
-  userId: {
-    fontSize: "14px",
-    color: "#888",
-  },
-  settingsContainer: {
-    borderRadius: "10px",
-    padding: "20px",
-    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-    backgroundColor: "#21c3bc",
-  },
-  darkSettingsContainer: {
-    backgroundColor: "#1f1f1f",
-    borderRadius: "10px",
-    padding: "20px",
-    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.5)",
-  },
-  settingsTitle: {
-    fontSize: "16px",
-    fontWeight: "bold",
-    marginBottom: "20px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  label: {
-    fontSize: "14px",
-    marginBottom: "5px",
-  },
-  input: {
-    padding: "10px",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    marginBottom: "15px",
-  },
-  switchRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "15px",
-  },
-  updateButton: {
-    backgroundColor: "#007BFF",
-    color: "#fff",
-    border: "none",
-    padding: "10px",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-};
+import styled from "styled-components";
 
-export default styles;
+const Wrapper = styled.div`
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #21C3BC;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn{
+      background-color: #21C3BC;;
+      border: 0;
+      font-size: 30px
+  }
+  
+  .header {
+    width: 90%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: black;
+    font-size: 40px;
+      height: 10%
+  }
+  
+  h1 {
+    font-size: 50px;
+    text-align: center;
+    flex: 1;
+    margin-top: 150px
+  }
+  
+  .profile-section {
+    background-color: white;
+    position: absolute;
+    top: 200px;
+    width: 100%;
+    height: 80%; 
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .avatar-container {
+    display: flex;
+    align-items: center;
+      margin:50px; 
+  }
+  
+  #teacher-img {
+    border-radius: 50%;
+  }
+  
+  .user-details {
+    font-size: 4vw;
+  }
+  
+  .form-container {
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        gap: 3vw;
+  }
+  
+  .form-criteria {
+    font-size: 20px;
+    margin-bottom: px;
+  }
+  
+  .form-input {
+      height: 30px;
+      border-radius: 15px;
+      background-color: #89D1DC4F;
+      font-size: 20px
+  }
+  
+  #save-button {
+      height: 50px;
+      width: 50%;
+      font-size: 25px;
+      margin-top: 60px;
+      background-color: #409FF3;
+      border-radius: 50px;
+      margin-left: 50%;
+      color: white;
+      border: 0;
+  }
+  
+  @media (max-width: 480px) {
+    .profile-section {
+      height: 80vh;
+    }
+  
+    #teacher-img {
+      width: 25vw;
+      height: 25vw;
+    }
+  
+    #save-button {
+      height: 40px;
+    }
+  }
+  `
+  export default Wrapper

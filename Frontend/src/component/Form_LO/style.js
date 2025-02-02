@@ -26,7 +26,7 @@ const Wrapper = styled.section`
     width: 100%;
   }
 
-  .savebtn, .closebtn {
+  .submitbtn, .closebtn {
     width: 48%;
     height: 35px;
     border-radius: 5px;
@@ -35,12 +35,12 @@ const Wrapper = styled.section`
     font-size: 14px;
   }
 
-  .savebtn {
+  .submitbtn {
     background-color: #4CAF50;
     color: white;
   }
 
-  .savebtn:hover {
+  .submitbtn:hover {
     background-color: #45a049;
   }
 

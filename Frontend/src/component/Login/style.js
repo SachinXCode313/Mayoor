@@ -6,7 +6,7 @@ const Wrapper = styled.section`
     text-align: center;
     margin: 0;
     /* background:#21B2CA; */
-    h1 {
+    #AppName {
       margin: auto 100px;
       font-size: 50px;
       color: #36454F;
@@ -22,7 +22,7 @@ const Wrapper = styled.section`
       align-items: center;
       gap: 50px;
     }
-    img {
+    #logo {
       width: 40%;
       opacity: 0; /* Initially hidden */
       animation: fadeIn 1s ease-out forwards;
@@ -40,7 +40,7 @@ const Wrapper = styled.section`
       }
     }
 
-    input {
+    #SignIn {
       transition: background-color 0.3s, box-shadow 0.3s;
       width: 300px;
       padding: 12px 16px 12px 42px;
@@ -57,18 +57,18 @@ const Wrapper = styled.section`
       background-position: 12px 11px;
       opacity: 0; /* Initially hidden */
       animation: fadeIn 1s ease-out forwards;
-      animation-delay: 3s; /* Delay for button */
+      animation-delay: 2s; /* Delay for button */
     }
 
-    input:hover {
+    #SignIn:hover {
       box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.25);
     }
 
-    input:active {
+    #SignIn:active {
       background-color: #eeeeee;
     }
 
-    input:focus {
+    #SignIn:focus {
       outline: none;
       box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.25), 0 0 0 3px #c8dafc;
     }

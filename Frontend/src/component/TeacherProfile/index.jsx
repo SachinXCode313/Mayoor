@@ -1,91 +1,62 @@
 import React, { useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
-import { MdOutlineDarkMode } from "react-icons/md";
-import styles from "./style";
+import Wrapper from "./style";
 
-const TeacherProfile = ({ goBack }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false); 
-  const [username, setUsername] = useState("John Smith");
-  const [editMode, setEditMode] = useState(false); 
-  const [tempName, setTempName] = useState(username); 
+const TeacherProfile = () => {
+  const [username, setUsername] = useState("Lady Gaga");
+  const [email] = useState("ladygaga@gmail.com"); // Fixed email
 
-  const handleToggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  const handleUpdateClick = () => {
-    if (editMode) {
-      setUsername(tempName); 
-    }
-    setEditMode(!editMode); 
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
   };
 
   return (
-    <div style={isDarkMode ? styles.darkContainer : styles.container}>
-      {/* Header */}
-      <header style={styles.header}>
-        <button
-          style={styles.backButton}
-          onClick={goBack} // Call goBack to return to the previous page
-          title="Back to Student List"
-        >
-          &lt;
+    <Wrapper>
+    <div className="container">
+      <div className="header">
+        <button className="btn" id="backBtn">&lt;</button>
+        <h1>Edit Profile</h1>
+        <button className="btn" id="notificationBtn">
+          <i>&#xf0f3;</i>
         </button>
-        <h1 style={styles.title}>Edit My Profile</h1>
-        <div
-          style={styles.notification}
-          onClick={handleToggleDarkMode}
-          title="Toggle Dark Mode"
-        >
-          <MdOutlineDarkMode size={24} />
-        </div>
-      </header>
-
-      {/* Profile Section */}
-      <div style={styles.profileContainer}>
-        <FaUserCircle size={80} color={isDarkMode ? "#aaa" : "#555"} />
-        <p style={styles.userName}>{username}</p>
-        <p style={styles.userId}>ID: 25030024</p>
       </div>
 
-      {/* Account Settings */}
-      <div
-        style={
-          isDarkMode ? styles.darkSettingsContainer : styles.settingsContainer
-        }
-      >
-        <h2 style={styles.settingsTitle}>Account Settings</h2>
-        <form style={styles.form}>
-          <label style={styles.label}>Username</label>
-          {editMode ? (
-            <input
-              type="text"
-              value={tempName}
-              onChange={(e) => setTempName(e.target.value)}
-              style={styles.input}
-            />
-          ) : (
-            <input type="text" value={username} style={styles.input} readOnly />
-          )}
+      <div className="profile-section">
+        <div className="avatar-container">
+          <img src="teacher.png" id="teacher-img" alt="Teacher" />
+          <div className="user-details">
+            <h2 className="username">{username}</h2>
+            <p className="userId">12345</p>
+          </div>
+        </div>
 
-          <label style={styles.label}>Email Address</label>
-          <input
-            type="email"
-            value="example@example.com"
-            style={styles.input}
-            readOnly
+        <div className="form-container">
+          <label className="form-criteria" htmlFor="form-username">Username</label>
+          <input 
+            type="text" 
+            className="form-input" 
+            id="form-username" 
+            value={username} 
+            onChange={handleUsernameChange} 
           />
-
-          <button
-            type="button"
-            onClick={handleUpdateClick}
-            style={styles.updateButton}
-          >
-            {editMode ? "Save Changes" : "Edit Profile"}
-          </button>
-        </form>
+          <label className="form-criteria" htmlFor="form-mail">Email Id</label>
+          <input 
+            type="text" 
+            className="form-input" 
+            id="form-mail" 
+            value={email} 
+            readOnly 
+          />
+          <label className="form-criteria" htmlFor="form-class">Class</label>
+          <select className="form-input dropdown" id="form-class">
+            <option>Class 3</option>
+            <option>Class 4</option>
+            <option>Class 5</option>
+          </select>
+          <button id="save-button">Save Changes</button>
+        </div>
       </div>
     </div>
+    </Wrapper>
   );
 };
 

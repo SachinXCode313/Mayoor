@@ -7,7 +7,7 @@ const Wrapper = styled.section`
   }
 
   .input {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     margin: 10px 0
     ;

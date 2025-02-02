@@ -12,7 +12,7 @@ app.use(cors({
     origin: ["http://localhost:3000", "https://mayoor-flax.vercel.app"],
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization',"subject","year","classname","quarter","section","ac_id","lo_id","ro_id","student_id"],
 }));
 app.use(bodyParser.json());
 

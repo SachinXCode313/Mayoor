@@ -3,10 +3,15 @@ import Wrapper from './style';
 import LOMapping from '../RO_LO_Mapping';
 import List from '../images/list.png';
 import axios from 'axios';
+import bellIcon from "../assets/bell.png";
+import userIcon from "../assets/user.png";
+import menuIcon from "../assets/menu.png";
 
 const ROlist = ({ loItems, setLoItems, userData }) => {
   const [activeIndex, setActiveIndex] = useState(null);
-  const [roList, setRoList] = useState([]);
+  const [roList, setRoList] = useState([]);     // Full RO list from API
+  const [searchQuery, setSearchQuery] = useState(""); // Stores search input
+  const [filteredRoList, setFilteredRoList] = useState([]); // Filtered RO list
 
   const toggleDropdown = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -15,66 +20,95 @@ const ROlist = ({ loItems, setLoItems, userData }) => {
   useEffect(() => {
     const loadRO = async (userdata) => {
       const headers = {
-        Authorization: 'Bearer YOUR_ACCESS_TOKEN', // Replace with the actual token
+        Authorization: 'Bearer YOUR_ACCESS_TOKEN', // Replace with actual token
         'Content-Type': 'application/json',
         year: userdata.year,
         classname: userdata.class,
         section: userdata.section,
         subject: userdata.subject,
       };
-  
+
       try {
-        const response = await axios.get('http://10.33.0.41:8000/api/report-outcome', { headers });
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/report-outcome`, { headers });
         const data = response.data;
-  
+
         console.log('Response Data:', data);
-  
-        // Check if data has the expected structure
+
         if (data && Array.isArray(data.ro)) {
-          setRoList(data.ro); // Use the `ro` array from the response
+          setRoList(data.ro);
+          setFilteredRoList(data.ro); // Initialize filtered list with full data
         } else {
           console.warn('Expected an array but received:', data);
-          setRoList([]); // If not valid, set an empty array
+          setRoList([]);
+          setFilteredRoList([]);
         }
       } catch (error) {
         console.error('Error fetching report outcomes:', error.response || error.message);
-        setRoList([]); // In case of an error, set an empty array
+        setRoList([]);
+        setFilteredRoList([]);
       }
     };
-  
+
     if (Object.keys(userData).length > 0) {
       loadRO(userData);
     }
-  }, [userData]); // Dependency on userData to trigger the effect
-  
+  }, [userData]);
 
-  // console.log('User data in RO:', userData);
+  // Search filter logic
+  useEffect(() => {
+    if (!searchQuery) {
+      setFilteredRoList(roList);
+    } else {
+      const filteredData = roList.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredRoList(filteredData);
+    }
+  }, [searchQuery, roList]);
 
   return (
     <Wrapper>
-      <h2 className="ro-list-title">RO List</h2>
-      <ul className="ro-list">
-        {roList.map((item, index) => (
-          <li key={item.id} className="ro-list-item">
-            <div className="ro-header" onClick={() => toggleDropdown(index)}>
-              <div className="list-icon-container">
-                <img src={List} alt="" className="list-icon" />
+      
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search RO..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="search-bar"
+        />
+        <div className="icon">
+            <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} />
+            <img src={userIcon} alt="User Icon" style={{ width: "22px", height: "22px" }} />
+            <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: "22px", height: "31px" }} />
+        </div>
+      </div>
+
+      {filteredRoList.length > 0 ? (
+        <ul className="ro-list">
+          {filteredRoList.map((item, index) => (
+            <li key={item.id} className="ro-list-item">
+              <div className="ro-header" onClick={() => toggleDropdown(index)}>
+                <div className="list-icon-containers">
+                  <img src={List} alt="" className="list-icons" />
+                </div>
+                <div className="ro-info">
+                  <p className="item-title">{item.name}</p>
+                </div>
               </div>
-              <div className="ro-info">
-                <p className="item-title">{item.name}</p>
-              </div>
-              <div className="ro-dropdown-icon">
-                {activeIndex === index }
-              </div>
-            </div>
-            {activeIndex === index && (
-              <div className="ro-dropdown-content">
-                <LOMapping loItems={loItems} setLoItems={setLoItems} userData={userData}/>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+              {activeIndex === index && (
+                <div className="ro-dropdown-content">
+                  <LOMapping loItems={loItems} setLoItems={setLoItems} userData={userData} roId={item.id} />
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="no-results">
+          <p className="no_results">No Results Found</p>
+        </div> 
+      )}
     </Wrapper>
   );
 };

@@ -105,11 +105,11 @@ const Login = () => {
         ) : (
           <div className="container">
             <div>
-            <img src={Logo} alt="Logo" /><br />
-            <h1>Mayoor</h1>
+            <img id="logo" src={Logo} alt="Logo" /><br />
+            <h1 id="AppName">Mayoor</h1>
             </div>
             
-            <input type="button" value="Sign in with Google" onClick={handleLogin} />
+            <input id="SignIn" type="button" value="Sign in with Google" onClick={handleLogin} />
             {error && <p style={{ color: "red" }}>{error}</p>}
           </div>
         )}

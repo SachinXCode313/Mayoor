@@ -90,12 +90,14 @@ const ACMapping = ({ userData, loId }) => {
       year: userData.year,
       subject: userData.subject,
       quarter: userData.quarter,
+      section: userData.section,
+      classname: userData.class,
     };
 
     // Make the POST request to send the filtered priorityMapping data via Axios
     try {
       const response = await axios.post(
-        'http://10.33.0.41:8000/api/learning-outcome-mapping', // Replace with your actual API URL
+        `${process.env.REACT_APP_API_URL}/api/learning-outcome-mapping`, // Replace with your actual API URL
         body,
         { headers }
       );
@@ -114,8 +116,8 @@ const ACMapping = ({ userData, loId }) => {
           {acList.map((ac, index) => (
             <div key={ac.id} className="ac-item">
               <div>
-                <h2>AC {index + 1}</h2>
-                <span>{ac.name}</span>
+                {/* <h2>AC {index + 1}</h2> */}
+                <span className="name">{ac.name}</span>
               </div>
               <div className="priority-buttons">
                 <button

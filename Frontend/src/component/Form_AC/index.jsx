@@ -54,15 +54,22 @@ const Form_AC = ({ closeForm, userData, loadAC }) => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(); // Trigger form submission when Enter is pressed
+    }
+  };
+
   return (
     <Wrapper>
       <h3>Add New Assessment Criteria</h3>
       <input
         type="text"
-        placeholder="Enter AC Name"
+        placeholder="Enter Assessment Criteria"
         value={acName}
         onChange={(e) => setAcName(e.target.value)}
         className="input"
+        onKeyDown={handleKeyDown} // Listen for Enter key press
       />
       <input
         type="number"
@@ -70,10 +77,11 @@ const Form_AC = ({ closeForm, userData, loadAC }) => {
         value={maxMarks}
         onChange={(e) => setMaxMarks(e.target.value)}
         className="input"
+        onKeyDown={handleKeyDown} // Listen for Enter key press
       />
       <div className="buttons">
-        <button onClick={handleSubmit} className="savebtn">Submit</button>
         <button onClick={closeForm} className="closebtn">Cancel</button>
+        <button onClick={handleSubmit} className="savebtn">Submit</button>
       </div>
     </Wrapper>
   );

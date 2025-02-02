@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 const Wrapper = styled.section`
 /* Container for the RO list */
 *{
@@ -23,9 +22,8 @@ const Wrapper = styled.section`
     overflow-y: auto; /* Add vertical scroll bar when content exceeds height */
     overflow-x: hidden; /* Prevent horizontal scrolling */
     scrollbar-width: thin; /* For Firefox - thin scrollbar */
-    scrollbar-color: #ccc transparent; 
+    scrollbar-color: #ccc transparent;
   }
-  
   /* Header section of the RO list */
   .ac-header {
     display: flex;
@@ -35,27 +33,29 @@ const Wrapper = styled.section`
     padding: 16px;
     cursor: pointer;
   }
-  
+  .name{
+  font-weight: 35px;
+  font-size: 16px;
+  }
   /* LO list container */
   .ac-list {
     background-color: white;
     padding: 16px;
   }
-  
   /* Individual LO item */
   .ac-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
+    color:rgb(26, 49, 46);
+    box-shadow: 0 4px 8px rgba(138, 135, 135, 0.3);
   }
-  
   /* Priority buttons container */
   .priority-buttons {
     display: flex;
     gap: 4px;
   }
-  
   /* Priority button styles */
   .priority-button {
     padding: 6px 10px;
@@ -64,35 +64,30 @@ const Wrapper = styled.section`
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  
   .priority-button.h {
     background-color: green;
     color: white;
   }
-  
   .priority-button.m {
     background-color: yellow;
     color: black;
   }
-  
   .priority-button.l {
     background-color: red;
     color: white;
   }
-  
   /* Unselected state for priority buttons */
   .priority-button:not(.h):not(.m):not(.l) {
     background-color: white;
     color: black;
   }
   .ac-list-container {
-    margin-bottom: 50px; 
+    margin-bottom: 50px;
   }
   .btns{
     margin : auto;
   }
   .btn{
-    
     width: 100px;
     padding: 10px;
     background-color: rgb(235, 56, 56);
@@ -125,7 +120,6 @@ const Wrapper = styled.section`
   align-items: center;
   z-index: 1000;
 }
-
 .popup-content {
   background: white;
   padding: 20px;
@@ -134,7 +128,6 @@ const Wrapper = styled.section`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   animation: popup 0.3s ease-in-out;
 }
-
 @keyframes popup {
   from {
     transform: scale(0.8);
@@ -145,7 +138,6 @@ const Wrapper = styled.section`
     opacity: 1;
   }
 }
-
 .form-container button {
   margin-top: 10px;
   padding: 5px 10px;
@@ -153,6 +145,5 @@ const Wrapper = styled.section`
   border-radius: 5px;
   cursor: pointer;
 }
-  
 `
-export default Wrapper
+export default Wrapper  
