@@ -57,6 +57,7 @@ const setReportOutcomesMapping = async (req, res) => {
             `SELECT student_id FROM students_records WHERE year = ? AND class = ? AND section = ?`,
             [year, classname, section]
         );
+        console.log(studentRows)
         if (studentRows.length === 0) {
             return res.status(404).json({ error: "No students found in students_records for the given filters." });
         }

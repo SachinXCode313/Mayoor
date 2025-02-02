@@ -26,7 +26,7 @@ const Wrapper = styled.section`
       width: 40%;
       opacity: 0; /* Initially hidden */
       animation: fadeIn 1s ease-out forwards;
-      animation-delay: 2s; /* Delay for text */
+      animation-delay: 1s; /* Delay for text */
     }
 
     /* Logo and Mayoor fade-in animation */
@@ -34,6 +34,7 @@ const Wrapper = styled.section`
       0% {
         opacity: 0;
         transform: translateY(-20px);
+        transform: scale;
       }
       100% {
         opacity: 1;
