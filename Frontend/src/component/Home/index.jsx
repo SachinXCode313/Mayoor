@@ -8,7 +8,8 @@ import stuIcon from '../assets/Graduate.png';
 import homeIcon from '../assets/Smart Home.png';
 import listIcon from '../assets/Audit.png';
 import StudentList from '../Students/StudentSelect';
-import ClassView from "../Classview";
+import Classview from '../ClassView/Classview.jsx'
+// import ClassView from "../Classview";
 
 const Home = ({ user }) => {
   const [index, setIndex] = useState(1);
@@ -48,7 +49,7 @@ const Home = ({ user }) => {
         {index === 1 ? (
           <HomeList user={user} setIndex={setIndex}  />
         ) : index === 2 ? (
-          <ClassView setIndex={setIndex}/>
+          <Classview setIndex={setIndex}/>
         ) : index === 3 ? (
           <StudentList onStudentsData={handleStudentsData} setIndex={setIndex}/>
         ) : index === 4 ? (
