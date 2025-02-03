@@ -6,17 +6,7 @@ const Wrapper = styled.section`
     background-color: #21C2BA;
     font-family: sans-sarif;
     // padding: 20px;
-    #profile {
-        flex-direction: row;
-        align-items: center;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 30px 10px 50px 30px;
-        font-size: 17px;
-        color: black;
-        
-    }
+   
     .user{
         flex-direction: row;
         align-items: center;
@@ -58,7 +48,9 @@ const Wrapper = styled.section`
         display: flex;
         gap: 15px;
         align-items: center;
-        margin-left: auto;
+        position : fixed;
+        right : 0;
+
     }
     #profileIcon{
         width: 20px;
@@ -68,6 +60,10 @@ const Wrapper = styled.section`
     }
     #menu{
     width: 30px;
+    }
+
+    #profile{
+    width : 20px;
     }
 
     #name {
@@ -86,6 +82,7 @@ const Wrapper = styled.section`
         gap: 15px;
         align-items: center;
         padding: 50px 20px;
+        margin : 50px 0 0;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         flex : 1;
     }

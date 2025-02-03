@@ -10,60 +10,67 @@ import bellIcon from "../assets/bell.png";
 import userIcon from "../assets/user.png";
 import menuIcon from "../assets/menu.png";
 
-const AC_List = ({ userData }) => {
+const AC_List = ({acItems, setAcItems, handleAcItems, studentsData , setIndex}) => {
   const [acList, setAcList] = useState([]);  
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredAcList, setFilteredAcList] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
 
-  const loadAC = async () => {
-    if (!userData.year || !userData.class || !userData.section || !userData.subject || !userData.quarter) {
-      console.warn("Missing user data, skipping API call.");
-      return;
-    }
+  const handleClick = () => {
+    setIndex(1)
+  }
+  const [userData, setUserData] = useState(null);
+    useEffect(() => {
+      const userData = sessionStorage.getItem("userData");
+      if (userData) {
+        setUserData(JSON.parse(userData));
+      }
+    }, []);
 
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      "Content-Type": "application/json",
-      year: userData.year,
-      classname: userData.class,
-      section: userData.section,
-      subject: userData.subject,
-      quarter: userData.quarter,
-    };
-
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/assessment-criteria`, { headers });
-      const data = response.data;
-
-      if (Array.isArray(data.assessments)) {
-        setAcList(data.assessments);
-        setFilteredAcList(data.assessments); // Initialize filtered list
-        localStorage.setItem("acList", JSON.stringify(data.assessments));
-      } else {
+    const loadAC = async () => {
+      if (!userData || !userData.year || !userData.class || !userData.section || !userData.subject || !userData.quarter) {
+        console.warn("Missing user data, skipping API call.");
+        return;
+      }
+    
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        "Content-Type": "application/json",
+        year: userData.year,
+        classname: userData.class,
+        section: userData.section,
+        subject: userData.subject,
+        quarter: userData.quarter,
+      };
+    
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/assessment-criteria`, { headers });
+        const data = response.data;
+    
+        if (Array.isArray(data.assessments)) {
+          setAcList(data.assessments);
+          setFilteredAcList(data.assessments);
+          setAcItems(data.assessments);
+        } else {
+          setAcList([]);
+          setFilteredAcList([]);
+          setAcItems([]);
+          console.warn("Unexpected API response format:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching assessment criteria:", error.response?.data || error.message);
         setAcList([]);
         setFilteredAcList([]);
-        console.warn("Unexpected API response format:", data);
+        setAcItems([]);
       }
-    } catch (error) {
-      console.error("Error fetching assessment criteria:", error.response?.data || error.message);
-      setAcList([]);
-      setFilteredAcList([]);
-    }
-  };
+    };
+    
 
   useEffect(() => {
-    const storedACList = localStorage.getItem("acList");
-    if (storedACList) {
-      setAcList(JSON.parse(storedACList));
-      setFilteredAcList(JSON.parse(storedACList)); // Retrieve and set data
-    } else {
-      loadAC();
-    }
+    loadAC();
   }, [userData]);
 
-  // Search filter logic
   useEffect(() => {
     if (!searchQuery) {
       setFilteredAcList(acList);
@@ -76,7 +83,6 @@ const AC_List = ({ userData }) => {
   }, [searchQuery, acList]);
 
   const handleStartAssessment = (item) => {
-    console.log("Item clicked:", item);
     setSelectedAssessment(item);
   };
 
@@ -85,13 +91,12 @@ const AC_List = ({ userData }) => {
   };
 
   if (selectedAssessment) {
-    return <Assessment selectedAssessment={selectedAssessment} onBack={handleBackToList} userData={userData} />;
+    return <Assessment selectedAssessment={selectedAssessment} onBack={handleBackToList} studentsData={studentsData}/>;
   }
 
   return (
     <Wrapper>
-     
-     <div className="search-container">
+      <div className="search-container">
         <input
           type="text"
           placeholder="Search AC..."
@@ -102,13 +107,13 @@ const AC_List = ({ userData }) => {
         <div className="icon">
             <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} />
             <img src={userIcon} alt="User Icon" style={{ width: "22px", height: "22px" }} />
-            <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: "22px", height: "31px" }} />
+            <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: "22px", height: "31px" }} onClick={handleClick} />
         </div>
       </div>
 
       {filteredAcList.length > 0 ? (
         <ul className="ac-list">
-          {filteredAcList.map((item, index) => (
+          {filteredAcList.map((item) => (
             <li key={item.id} className="ac-list-item" onClick={() => handleStartAssessment(item)}>
               <div className="ac-header">
                 <div className="list-icon-containers">
