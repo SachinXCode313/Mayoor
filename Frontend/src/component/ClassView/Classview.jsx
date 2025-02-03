@@ -85,7 +85,7 @@ const ClassView = ({setIndex, user}) => {
           <div className="right-icons">
             <img src={imgUser} alt="User" className="header-image" />
             <img src={imgBell} alt="Bell" className="header-image" />
-            <img src={imgMenu} alt="Menu" className="header-image-" onClick={handleClick} />
+            <img src={imgMenu} alt="Menu" className="header-image" onClick={handleClick} />
           </div>
         </div>
         <div className="class-overview">
