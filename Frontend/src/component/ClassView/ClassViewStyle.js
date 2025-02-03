@@ -74,7 +74,7 @@ const styles = `
     border-radius: 5px;
     margin-top: 10px;
     cursor: pointer;
-    border-color : #000;
+    border-color :  #75D2EA;
   }
 
   .chart-wrapper {
