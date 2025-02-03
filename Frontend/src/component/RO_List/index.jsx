@@ -7,15 +7,26 @@ import bellIcon from "../assets/bell.png";
 import userIcon from "../assets/user.png";
 import menuIcon from "../assets/menu.png";
 
-const ROlist = ({ loItems, setLoItems, userData }) => {
+const ROlist = ({ loItems, setLoItems, setIndex}) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [roList, setRoList] = useState([]);     // Full RO list from API
   const [searchQuery, setSearchQuery] = useState(""); // Stores search input
   const [filteredRoList, setFilteredRoList] = useState([]); // Filtered RO list
 
+  const handleClick = () => {
+    setIndex(1)
+  }
   const toggleDropdown = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
+
+  const [userData, setUserData] = useState(null);
+    useEffect(() => {
+      const userData = sessionStorage.getItem("userData");
+      if (userData) {
+        setUserData(JSON.parse(userData));
+      }
+    }, []);
 
   useEffect(() => {
     const loadRO = async (userdata) => {
@@ -49,7 +60,7 @@ const ROlist = ({ loItems, setLoItems, userData }) => {
       }
     };
 
-    if (Object.keys(userData).length > 0) {
+    if (userData && Object.keys(userData).length > 0) {
       loadRO(userData);
     }
   }, [userData]);
@@ -80,7 +91,7 @@ const ROlist = ({ loItems, setLoItems, userData }) => {
         <div className="icon">
             <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} />
             <img src={userIcon} alt="User Icon" style={{ width: "22px", height: "22px" }} />
-            <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: "22px", height: "31px" }} />
+            <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: "22px", height: "31px" }} onClick={handleClick}/>
         </div>
       </div>
 

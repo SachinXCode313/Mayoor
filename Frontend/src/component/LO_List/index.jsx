@@ -1,30 +1,40 @@
-import React, { useState, useEffect } from "react";
-import Wrapper from "./style";
+import React, { useState, useEffect } from 'react';
+import Wrapper from './style';
 import Delete from '../images/delete2.png';
 import Edit from '../images/edit2.png';
-import ACMapping from "../LO_AC_Mapping";
+import ACMapping from '../LO_AC_Mapping';
 import List from '../images/list.png';
-import axios from "axios";
-import Form_LO from "../Form_LO";
-import bellIcon from "../assets/bell.png";
-import userIcon from "../assets/user.png";
-import menuIcon from "../assets/menu.png";
+import axios from 'axios';
+import Form_LO from '../Form_LO';
+import bellIcon from '../assets/bell.png';
+import userIcon from '../assets/user.png';
+import menuIcon from '../assets/menu.png';
 
-const LOlist = ({ acItems, setAcItems, userData }) => {
+const LOlist = ({ acItems, setAcItems, loItems, setLoItems, handleLoItems, setIndex }) => {
   const [activeIndex, setActiveIndex] = useState(null);
-  const [loList, setLoList] = useState([]);      
-  const [searchQuery, setSearchQuery] = useState(""); 
-  const [filteredLoList, setFilteredLoList] = useState([]); 
+  const [filteredLoList, setFilteredLoList] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleClick = () => {
+    setIndex(1)
+  }
 
   const toggleDropdown = (index) => {
-    setActiveIndex(activeIndex === index ? null : index);
+    setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
   const handleform = () => {
     setShowForm(true);
   };
 
+  const [userData, setUserData] = useState(null);
+    useEffect(() => {
+      const userData = sessionStorage.getItem("userData");
+      if (userData) {
+        setUserData(JSON.parse(userData));
+      }
+    }, []);
   const loadLO = async (userData) => {
     const headers = {
       Authorization: 'Bearer YOUR_ACCESS_TOKEN',
@@ -36,12 +46,9 @@ const LOlist = ({ acItems, setAcItems, userData }) => {
       quarter: userData.quarter,
     };
 
-    console.log("Headers:", headers);
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/learning-outcome`, { headers });
       const data = response.data;
-
-      console.log("API Response Data:", data);
 
       let finalData = [];
       if (Array.isArray(data)) {
@@ -50,49 +57,31 @@ const LOlist = ({ acItems, setAcItems, userData }) => {
         finalData = data.ro;
       } else if (Array.isArray(data.lo)) {
         finalData = data.lo;
-      } else {
-        console.warn("Unexpected API response format:", data);
       }
 
-      localStorage.setItem('loList', JSON.stringify(finalData));
-      setLoList(finalData);
+      handleLoItems(finalData);
       setFilteredLoList(finalData);
-
     } catch (error) {
-      console.error("Error fetching report outcomes:", error.response || error.message);
-      setLoList([]);
-      setFilteredLoList([]);
+      console.error('Error fetching report outcomes:', error);
     }
   };
 
   useEffect(() => {
     if (userData && Object.keys(userData).length > 0) {
       loadLO(userData);
-    } else {
-      console.warn("userData is empty or undefined:", userData);
     }
   }, [userData]);
 
-  // Load data from localStorage on initial load
-  useEffect(() => {
-    const savedLoList = localStorage.getItem('loList');
-    if (savedLoList) {
-      setLoList(JSON.parse(savedLoList));
-      setFilteredLoList(JSON.parse(savedLoList));
-    }
-  }, []);
-
-  // Search filter logic
   useEffect(() => {
     if (!searchQuery) {
-      setFilteredLoList(loList);
+      setFilteredLoList(loItems);
     } else {
-      const filteredData = loList.filter(item =>
+      const filteredData = loItems.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredLoList(filteredData);
     }
-  }, [searchQuery, loList]);
+  }, [searchQuery, loItems]);
 
   return (
     <Wrapper>
@@ -105,16 +94,16 @@ const LOlist = ({ acItems, setAcItems, userData }) => {
           className="search-bar"
         />
         <div className="icon">
-            <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} />
-            <img src={userIcon} alt="User Icon" style={{ width: "22px", height: "22px" }} />
-            <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: "22px", height: "31px" }} />
+          <img src={bellIcon} alt="Bell Icon" style={{ width: '22px', height: '22px' }} />
+          <img src={userIcon} alt="User Icon" style={{ width: '22px', height: '22px' }} />
+          <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: '22px', height: '31px' }} onClick={handleClick}/>
         </div>
       </div>
 
       {filteredLoList.length > 0 ? (
         <ul className="lo-list">
           {filteredLoList.map((item, index) => (
-            <li key={item.id} className="lo-list-item">
+            <li key={item.id} className={`lo-list-item ${activeIndex === index ? 'active' : ''}`}>
               <div className="lo-header" onClick={() => toggleDropdown(index)}>
                 <div className="list-icon-containers">
                   <img src={List} alt="" className="list-icons" />
@@ -123,9 +112,10 @@ const LOlist = ({ acItems, setAcItems, userData }) => {
                   <p className="item-title">{item.name}</p>
                 </div>
               </div>
-
-              <div className={activeIndex === index ? "show lo-dropdown-content" : "lo-dropdown-content"}>
-                <ACMapping acItems={acItems} setAcItems={setAcItems} userData={userData} loList={loList} loId={item.id} />
+              <div className={`lo-dropdown-content ${activeIndex === index ? 'show' : 'hide'}`}>
+                {activeIndex === index && (
+                  <ACMapping acItems={acItems} setAcItems={setAcItems} loId={item.id} />
+                )}
               </div>
             </li>
           ))}
@@ -140,7 +130,7 @@ const LOlist = ({ acItems, setAcItems, userData }) => {
       {showForm && (
         <div className="popup-overlay">
           <div className="popup-content">
-            <Form_LO closeForm={() => setShowForm(false)} userData={userData} loadLO={loadLO} />
+            <Form_LO closeForm={() => setShowForm(false)} loadLO={loadLO} />
           </div>
         </div>
       )}

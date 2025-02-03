@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import Wrapper from './style';
 import axios from "axios";
 
-const Form_LO = ({ closeForm, userData, loadLO }) => {
+const Form_LO = ({ closeForm, loadLO }) => {
   const [loInput, setLoInput] = useState('');
 
+  const [userData, setUserData] = useState(null);
+      useEffect(() => {
+        const userData = sessionStorage.getItem("userData");
+        if (userData) {
+          setUserData(JSON.parse(userData));
+        }
+      }, []);
   const handleSubmit = async () => {
     if (loInput.trim() === '') {
       alert('Please enter a valid LO!');
@@ -29,7 +36,7 @@ const Form_LO = ({ closeForm, userData, loadLO }) => {
       console.log('Body:', body);
 
       const response = await axios.post(
-        'http://10.33.0.41:8000/api/learning-outcome',
+        `${process.env.REACT_APP_API_URL}/api/learning-outcome`,
         body,
         { headers }
       );

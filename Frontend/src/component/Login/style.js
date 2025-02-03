@@ -33,12 +33,12 @@ const Wrapper = styled.section`
     @keyframes fadeIn {
       0% {
         opacity: 0;
-        transform: translateY(-20px);
-        transform: scale;
+        // transform: translateY(-20px);
+        transform: scale(0);
       }
       100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1);
       }
     }
 
@@ -59,7 +59,7 @@ const Wrapper = styled.section`
       background-position: 12px 11px;
       opacity: 0; /* Initially hidden */
       animation: fadeIn 1s ease-out forwards;
-      animation-delay: 2s; /* Delay for button */
+      animation-delay: 2.5s; /* Delay for button */
     }
 
     #SignIn:hover {

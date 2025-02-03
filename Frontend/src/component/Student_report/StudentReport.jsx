@@ -29,7 +29,7 @@ const Student_report = ({ student, onBack, id }) => {
   };
 
   const percentages = [
-    { value: 72, label: "Assessment Criteria", component: "ac" },
+    { value: 72.89, label: "Assessment Criteria", component: "ac" },
     { value: 42.01, label: "Learning Outcome", component: "lo" },
     { value: 50, label: "Report Outcome", component: "ro" },
   ];
@@ -41,11 +41,11 @@ const Student_report = ({ student, onBack, id }) => {
   const renderScoreComponent = () => {
     switch(activeComponent) {
       case 'ac':
-        return <div className="score-component"><AcScores /></div>;
+        return <div className="score-component"><AcScores student={student} /></div>;
       case 'lo':
-        return <div className="score-component"><LoScores /></div>;
+        return <div className="score-component"><LoScores student={student}/></div>;
       case 'ro':
-        return <div className="score-component"><RoScores /></div>;
+        return <div className="score-component"><RoScores student={student}/></div>;
       default:
         return null;
     }

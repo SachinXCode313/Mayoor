@@ -3,18 +3,19 @@ import Wrapper from './style';
 import notification from "./bell.png";
 import student from './user.png';
 import menu from "./menu.png";
-const HomeList = ({ user, setIndex, setUserData }) => {
+
+const HomeList = ({ user, setIndex, msg }) => {
+  console.log(user)
+  const [userData, setUserData] = useState({});
   useEffect(() => {
     const clearSessionStorageOnRefresh = () => {
-      sessionStorage.clear()
-    }
-
+      sessionStorage.clear();
+    };
     window.addEventListener("beforeunload", clearSessionStorageOnRefresh);
-
     return () => {
       window.removeEventListener("beforeunload", clearSessionStorageOnRefresh);
-    }
-  }, [])
+    };
+  }, []);
 
   const [selectedYear, setSelectedYear] = useState(sessionStorage.getItem("year") || '');
   const [selectedClass, setSelectedClass] = useState(sessionStorage.getItem("class") || '');
@@ -23,57 +24,39 @@ const HomeList = ({ user, setIndex, setUserData }) => {
   const [selectedSubject, setSelectedSubject] = useState(sessionStorage.getItem("subject") || '');
 
   const updateSessionStorage = (key, value, setter) => {
-    sessionStorage.setItem(key, value)
-    setter(value)
-  }
-
-
+    sessionStorage.setItem(key, value);
+    setter(value);
+  };
 
   const handleClick = () => {
+    console.log(2)
+    setIndex(2)
+    console.log(2)
     const updatedUserdata = {
       year: parseInt(selectedYear, 10),
       class: parseInt(selectedClass, 10),
       section: selectedSection,
       quarter: parseInt(selectedQuarter, 10),
       subject: parseInt(selectedSubject, 10),
-    }
-
+    };
     sessionStorage.setItem("userData", JSON.stringify(updatedUserdata));
     setUserData(updatedUserdata);
-  }
 
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) {
-      return 'Good Morning!';
-    } else if (hour < 18) {
-      return 'Good Afternoon!';
-    } else {
-      return 'Good Evening!';
-    }
   };
-
 
   return (
     <Wrapper>
-      <div id="profile">
-        <div className='user'>
-          <img src={user.photoURL} alt="profile" />
-          <div >
-            <p id="greet">{getGreeting()}</p>
-            <h1 id="name">{user.displayName.split(" ")[0]}</h1>
-          </div>
-          {/* <p>Please select your choices!</p> */}
-
+      <div id="user">
+        <div id="detail">
+          <p id="hi">Hi ,</p>
+          <h1 id="name">{user.name}</h1>
         </div>
-        <div className='navbar'>
+        <div id="image">
           <img id="notification" src={notification} alt="Notification" />
-          <img id="profileIcon" src={student} alt="User" />
+          <img id="profile" src={student} alt="User" />
           <img id="menu" src={menu} alt="Menu" />
         </div>
       </div>
-
       <form className="choice">
         <label htmlFor="year">Year</label>
         <select
@@ -86,7 +69,6 @@ const HomeList = ({ user, setIndex, setUserData }) => {
           <option value="2024">2024</option>
           <option value="2025">2025</option>
         </select>
-
         <label htmlFor="class">Class</label>
         <select
           id="class"
@@ -106,7 +88,6 @@ const HomeList = ({ user, setIndex, setUserData }) => {
           <option value="9">IX</option>
           <option value="10">X</option>
         </select>
-
         <label htmlFor="section">Section</label>
         <select
           id="section"
@@ -119,7 +100,6 @@ const HomeList = ({ user, setIndex, setUserData }) => {
           <option value="Tulip">Tulip</option>
           <option value="Daffodil">Daffodil</option>
         </select>
-
         <label htmlFor="quarter">Quarter</label>
         <select
           id="quarter"
@@ -133,7 +113,6 @@ const HomeList = ({ user, setIndex, setUserData }) => {
           <option value="3">III</option>
           <option value="4">IV</option>
         </select>
-
         <label htmlFor="subject">Subject</label>
         <select
           id="subject"
@@ -157,13 +136,11 @@ const HomeList = ({ user, setIndex, setUserData }) => {
           <option value="13">Discipline</option>
           <option value="14">Attendance</option>
         </select>
-
         <button
           id="submit"
           onClick={(e) => {
             e.preventDefault();
             handleClick();
-            setIndex(2);
           }}
           disabled={!selectedSubject}
         >

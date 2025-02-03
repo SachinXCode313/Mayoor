@@ -5,9 +5,9 @@ import userIcon from "../assets/user.png";
 import { IoSearchOutline } from "react-icons/io5";
 import axios from "axios";
 import StudentReport from "../Student_report/StudentReport.jsx";
-import TeacherProfile from "../TeacherProfile/index.jsx";
+import TeacherProfile from "../TeacherProfile/index.jsx"
 
-const StudentList = ({ userData }) => {
+const StudentList = ({ onStudentsData }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [students, setStudents] = useState([]); // Stores API student list
   const [filteredStudents, setFilteredStudents] = useState([]); // Stores search-filtered students
@@ -30,8 +30,13 @@ const StudentList = ({ userData }) => {
   const handleBackToList2 = () => {
     setShowTeacherProfile(false); // Back to student list from teacher profile
   }
-
-   
+  const [userData, setUserData] = useState(null);
+  useEffect(() => {
+    const userData = sessionStorage.getItem("userData");
+    if (userData) {
+      setUserData(JSON.parse(userData));
+    }
+  }, []);
   useEffect(() => {
     const handler = setTimeout(() => {
       setFilteredStudents(
@@ -48,14 +53,16 @@ const StudentList = ({ userData }) => {
 
   useEffect(() => {
     const loadStudents = async () => {
+      if (!userData || students.length > 0) return; // Prevent unnecessary API calls
+  
       try {
         const headers = {
           Authorization: "Bearer YOUR_ACCESS_TOKEN",
           "Content-Type": "application/json",
-          year: userData.year,
-          classname: userData.class,
-          section: userData.section,
-          subject: userData.subject,
+          year: userData?.year,  
+          classname: userData?.class,
+          section: userData?.section,
+          subject: userData?.subject,
         };
   
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/students`, { headers });
@@ -63,11 +70,10 @@ const StudentList = ({ userData }) => {
   
         if (response.data && Array.isArray(response.data.students)) {
           setStudents(response.data.students);
-          localStorage.setItem("students", JSON.stringify(response.data.students)); // Store in localStorage
+          onStudentsData(response.data.students);
         } else {
           console.warn("Expected an array but received:", response.data);
           setStudents([]);
-          localStorage.removeItem("students"); // Clear storage if data is invalid
         }
       } catch (error) {
         console.error("Error fetching students:", error.response || error.message);
@@ -75,14 +81,12 @@ const StudentList = ({ userData }) => {
       }
     };
   
-    // Retrieve from localStorage first
-    const storedStudents = localStorage.getItem("students");
-    if (storedStudents) {
-      setStudents(JSON.parse(storedStudents));
-    } else if (Object.keys(userData).length > 0) {
+    if (userData && Object.keys(userData).length > 0 && students.length === 0) {
       loadStudents();
     }
-  }, [userData])
+  }, [userData]);  // Removed `onStudentsData` from dependencies
+  
+  
 
   if (showReport) {
     return <StudentReport student={showReport} onBack={handleBackToList1} />;

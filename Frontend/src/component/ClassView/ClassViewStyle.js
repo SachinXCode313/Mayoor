@@ -1,7 +1,7 @@
 const styles = `
   .class-container {
     width: 100%;
-    height: 100vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,6 +74,7 @@ const styles = `
     border-radius: 5px;
     margin-top: 10px;
     cursor: pointer;
+    border-color : #000;
   }
 
   .chart-wrapper {

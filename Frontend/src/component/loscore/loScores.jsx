@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import Wrapper from './lostyle';
 import bellIcon from '../assets/bell.png';  
 import userIcon from '../assets/user.png';
+import axios from 'axios';
 
-const StudentList = () => {
+const StudentList = (student) => {
   const [profile] = useState({
     name: 'John Doe',
     studentId: '1234567',
@@ -26,6 +27,58 @@ const StudentList = () => {
     { lo: 'LO12', score: 95 },
   ]);
 
+  const [loScoreList, setLoScoreList] = useState([]); 
+  const [filteredLoScoreList, setFilteredLoScoreList] = useState([]); 
+
+  const [userData, setUserData] = useState(null);
+    useEffect(() => {
+      const userData = sessionStorage.getItem("userData");
+      if (userData) {
+        setUserData(JSON.parse(userData));
+      }
+    }, []);
+    console.log("Student Data:", student);
+    console.log("User Data:", userData);
+
+
+    useEffect(() => {
+      const loadLoScore = async (userdata) => {
+        const headers = {
+          Authorization: 'Bearer YOUR_ACCESS_TOKEN', // Replace with actual token
+          'Content-Type': 'application/json',
+          student_id: student.id,
+          year: userdata.year,
+          classname: userdata.class,
+          section: userdata.section,
+          subject: userdata.subject,
+        };
+        console.log(headers);
+        
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/learning-outcome-score`, { headers });
+          const data = response.data;
+  
+          console.log('Response Data:', data);
+  
+          if (data && Array.isArray(data.ro)) {
+            setLoScoreList(data.ro);
+            setFilteredLoScoreList(data.ro); // Initialize filtered list with full data
+          } else {
+            console.warn('Expected an array but received:', data);
+            setLoScoreList([]);
+            setFilteredLoScoreList([]);
+          }
+        } catch (error) {
+          console.error('Error fetching report outcomes:', error.response || error.message);
+          setLoScoreList([]);
+          setFilteredLoScoreList([]);
+        }
+      };
+  
+      if (userData && Object.keys(userData).length > 0) {
+        loadLoScore(userData);
+      }
+    }, [userData]);
   return (
     <Wrapper>
       <div className="AppContainer">
@@ -40,11 +93,11 @@ const StudentList = () => {
             <div className="ProfileInfo">
               <div className="ProfileRow">
                 <span className="Label">Name:</span>
-                <span className="Value">{profile.name}</span>
+                <span className="Value">{student.name}</span>
               </div>
               <div className="ProfileRow">
-                <span className="Label">Student ID:</span>
-                <span className="Value">{profile.studentId}</span>
+                <span className="Label">Roll No.:</span>
+                <span className="Value">{student.id}</span>
               </div>
               <div className="ProfileRow">
                 <span className="Label">Subject:</span>
