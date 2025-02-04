@@ -150,7 +150,7 @@ const Login = () => {
             </div>
 
             <input id="SignIn" type="button" value="Sign in with Google" onClick={handleLogin} />
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
           </div>
         )}
       </div>

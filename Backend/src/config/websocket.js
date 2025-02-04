@@ -4,64 +4,84 @@ import db from "./db.js";
 const WSPORT = process.env.WSPORT || 3500;
 const wss = new WebSocketServer({ port: WSPORT });
 
-let activeTeachers = {};
+let activeTeachers = {}; 
 
 wss.on("connection", (ws) => {
     console.log("🔵 New client connected");
 
     ws.on("message", (message) => {
-        const teacherData = JSON.parse(message);
-        const { name, email } = teacherData;
-        console.log("Received teacher data:", teacherData);
-        if (name && email) {
-            const currentTime = new Date();
-            db.query(
-                "INSERT INTO teachers (name,email, status, last_seen) VALUES (?,?, 'active', ?) ON DUPLICATE KEY UPDATE status='active', last_seen=?",
-                [name, email, currentTime, currentTime],
-                (err) => {
-                    if (err) {
-                        console.error("❌ Error inserting/updating teacher:", err);
-                        return;
+        try {
+            const teacherData = JSON.parse(message);
+            const { name, email } = teacherData;
+
+            if (name && email) {
+                console.log(`📩 Received data from: ${name} (${email})`);
+
+                const currentTime = new Date();
+
+                // Insert or update the teacher status
+                db.query(
+                    "INSERT INTO teachers (name, email, status, last_seen) VALUES (?, ?, 'active', ?) ON DUPLICATE KEY UPDATE status='active', last_seen=?",
+                    [name, email, currentTime, currentTime],
+                    (err) => {
+                        if (err) {
+                            console.error("❌ Database error:", err);
+                            return;
+                        }
+                        console.log(`✅ Teacher ${name} marked as active`);
+                        sendUpdatedList();
                     }
-                    activeTeachers[name] = ws;
-                    sendUpdatedList();
-                }
-            );
+                );
+
+                // Store active connection
+                activeTeachers[name] = ws;
+                console.log("🟢 Active teachers:", Object.keys(activeTeachers));
+            }
+        } catch (err) {
+            console.error("❌ Error parsing message:", err);
         }
     });
 
     ws.on("close", () => {
-        // Object.keys(activeTeachers).forEach((name) => {
-        //     if (activeTeachers[name] === ws) {
-        //         const lastSeenTime = new Date();
-        //         db.query(
-        //             "UPDATE teachers SET status='inactive', last_seen=? WHERE name=?",
-        //             [lastSeenTime, name],
-        //             (err) => {
-        //                 if (err) console.error("❌ Error updating teacher status:", err);
-        //                 delete activeTeachers[name];
-        //                 sendUpdatedList();
-        //             }
-        //         );
-        //         console.log("🔴 A client disconnected");
-        //     }
-        // });
+        console.log("🔴 A client disconnected");
 
-        for (let teacher in activeTeachers) {
+        let disconnectedTeacher = null;
+
+        // Find which teacher's WebSocket has disconnected
+        for (const teacher in activeTeachers) {
             if (activeTeachers[teacher] === ws) {
-                // Set last seen time to current timestamp when teacher disconnects
-                const lastSeenTime = new Date();
-
-                db.query("UPDATE teachers SET status='inactive', last_seen=? WHERE name=?", [lastSeenTime, teacher], (err) => {
-                    if (err) {
-                        console.error("Error updating teacher status in DB:", err);
-                    }
-                    delete activeTeachers[teacher];
-                    sendUpdatedList();
-                });
+                disconnectedTeacher = teacher;
+                break;
             }
         }
-        console.log("🔴 A client disconnected");
+
+        if (disconnectedTeacher) {
+            console.log(`🔄 Updating status for: ${disconnectedTeacher}`);
+
+            const lastSeenTime = new Date();
+
+            // Update the database to mark the teacher as inactive
+            db.query(
+                "UPDATE teachers SET status='inactive', last_seen=? WHERE name=?",
+                [lastSeenTime, disconnectedTeacher],
+                (err) => {
+                    if (err) {
+                        console.error("❌ Error updating teacher status:", err);
+                    } else {
+                        console.log(`✅ Teacher ${disconnectedTeacher} marked as inactive`);
+                    }
+
+                    // Remove teacher from activeTeachers
+                    delete activeTeachers[disconnectedTeacher];
+                    console.log("🟢 Active teachers after removal:", Object.keys(activeTeachers));
+
+                    // Notify all clients
+                    sendUpdatedList();
+                }
+            );
+        } else {
+            console.log("⚠️ Disconnected client not found in activeTeachers");
+        }
     });
 });
 
@@ -90,5 +110,6 @@ function sendUpdatedList() {
     });
 }
 
-console.log(`✅ WebSocket server is running on ${WSPORT}`);
+console.log(`✅ WebSocket server is running on port ${WSPORT}`);
 export default wss;
+
