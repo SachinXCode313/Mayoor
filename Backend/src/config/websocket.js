@@ -11,13 +11,13 @@ wss.on("connection", (ws) => {
 
     ws.on("message", (message) => {
         const teacherData = JSON.parse(message);
-        const { name,email } = teacherData; 
+        const { name, email } = teacherData;
         console.log("Received teacher data:", teacherData);
         if (name && email) {
             const currentTime = new Date();
             db.query(
                 "INSERT INTO teachers (name,email, status, last_seen) VALUES (?,?, 'active', ?) ON DUPLICATE KEY UPDATE status='active', last_seen=?",
-                [name,email, currentTime, currentTime],
+                [name, email, currentTime, currentTime],
                 (err) => {
                     if (err) {
                         console.error("❌ Error inserting/updating teacher:", err);
@@ -31,21 +31,37 @@ wss.on("connection", (ws) => {
     });
 
     ws.on("close", () => {
-        Object.keys(activeTeachers).forEach((name) => {
-            if (activeTeachers[name] === ws) {
+        // Object.keys(activeTeachers).forEach((name) => {
+        //     if (activeTeachers[name] === ws) {
+        //         const lastSeenTime = new Date();
+        //         db.query(
+        //             "UPDATE teachers SET status='inactive', last_seen=? WHERE name=?",
+        //             [lastSeenTime, name],
+        //             (err) => {
+        //                 if (err) console.error("❌ Error updating teacher status:", err);
+        //                 delete activeTeachers[name];
+        //                 sendUpdatedList();
+        //             }
+        //         );
+        //         console.log("🔴 A client disconnected");
+        //     }
+        // });
+
+        for (let teacher in activeTeachers) {
+            if (activeTeachers[teacher] === ws) {
+                // Set last seen time to current timestamp when teacher disconnects
                 const lastSeenTime = new Date();
-                db.query(
-                    "UPDATE teachers SET status='inactive', last_seen=? WHERE name=?",
-                    [lastSeenTime, name],
-                    (err) => {
-                        if (err) console.error("❌ Error updating teacher status:", err);
-                        delete activeTeachers[name];
-                        sendUpdatedList();
+
+                db.query("UPDATE teachers SET status='inactive', last_seen=? WHERE name=?", [lastSeenTime, teacher], (err) => {
+                    if (err) {
+                        console.error("Error updating teacher status in DB:", err);
                     }
-                );
-                console.log("🔴 A client disconnected");
+                    delete activeTeachers[teacher];
+                    sendUpdatedList();
+                });
             }
-        });
+        }
+        console.log("🔴 A client disconnected");
     });
 });
 
