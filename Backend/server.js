@@ -3,13 +3,13 @@ import cors from 'cors';
 import bodyParser from "body-parser";
 import routers from './src/routes/routes.js';
 import dotenv from "dotenv"
-import "./src/config/websocket.js";
+// import "./src/config/websocket.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(cors({
-    origin: ["http://localhost:3000", "http://localhost:3001", "https://mayoor-flax.vercel.app"],
+    origin: ["http://localhost:3000", "http://localhost:3001", "https://mayoor-flax.vercel.app" , "https://push-notification-murex-three.vercel.app"],
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', "subject", "year", "classname", "quarter", "section", "ac_id", "lo_id", "ro_id", "student_id"],

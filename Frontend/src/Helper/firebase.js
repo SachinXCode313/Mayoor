@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { getMessaging,getToken,} from "firebase/messaging"
+import axios from "axios"
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -20,9 +21,27 @@ export const requestNotificationPermission = async () => {
       const permission = await Notification.requestPermission();
       if (permission === "granted") {
         console.log("Notification permission granted.");
+
+        // const storedToken = localStorage.getItem("fcm_token");
+        // if (storedToken) {
+        //   console.log("Token already exists:", storedToken);
+        //   return;
+        // }
+
         const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+
         if (token) {
           console.log("Token retrieved:", token);
+          try {
+            // localStorage.setItem("fcm_token", token);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/save-token`, {
+              token,
+            });
+            const data = response.data;
+            console.log("Response Data:", data);
+          } catch (error) {
+            console.error("Error saving token:", error);
+          }
         } else {
           console.log("No token available.");
         }
