@@ -37,7 +37,7 @@ const setLearningOutcomesMapping = async (req, res) => {
         const subject = req.headers["subject"];
         const quarter = req.headers["quarter"];
         const year = req.headers["year"];
-        const classname = req.headers["class"];
+        const classname = req.headers["classname"];
         const section = req.headers["section"];
         const { lo_id, data } = req.body;
         if (!data || !Array.isArray(data) || data.length === 0) {

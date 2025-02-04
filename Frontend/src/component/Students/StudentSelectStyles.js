@@ -2,7 +2,7 @@ const styles = {
   container: {
     display: "flex",
     flexDirection: "column",
-    height: "90vh",
+    height: "94vh",
     backgroundColor: "#ffffff",
     width: "100vw",
     alignItems: "center",

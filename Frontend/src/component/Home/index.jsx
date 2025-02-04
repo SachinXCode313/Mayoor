@@ -11,7 +11,7 @@ import StudentList from '../Students/StudentSelect';
 import Classview from '../ClassView/Classview.jsx'
 // import ClassView from "../Classview";
 
-const Home = ({ user }) => {
+const Home = ({ teacher,teachers }) => {
   const [index, setIndex] = useState(1);
 
   const [tabs, setTabs] = useState([
@@ -37,17 +37,19 @@ const Home = ({ user }) => {
     setStudentsData(data); // Update students data in the parent state
   };
 
+  console.log(teachers)
+
   // const handleSetIndex = (newIndex) => {
   //   console.log("Setting index to:", newIndex);
   //   setIndex(newIndex);
   // };
-// console.log(user)
+// console.log(teacher)
 
   return (
     <Wrapper>
       <div className="screen">
         {index === 1 ? (
-          <HomeList user={user} setIndex={setIndex}  />
+          <HomeList teacher={teacher} setIndex={setIndex}  />
         ) : index === 2 ? (
           <Classview setIndex={setIndex}/>
         ) : index === 3 ? (

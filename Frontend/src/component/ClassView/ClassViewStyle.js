@@ -1,7 +1,7 @@
 const styles = `
   .class-container {
     width: 100%;
-    height: 90vh;
+    height: 94vh;
     display: flex;
     flex-direction: column;
     align-items: center;

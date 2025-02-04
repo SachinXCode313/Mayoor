@@ -1,5 +1,5 @@
 import Wrapper from "./style";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { requestNotificationPermission } from "../../Helper/firebase";
@@ -24,34 +24,66 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 const allowedDomains = ["gitjaipur.com"];
+const WS_URL = "ws://localhost:3500";
 
 const Login = () => {
-  const [user, setUser] = useState(null);
+  const [teacher, setTeacher] = useState(null); // Start with null to avoid flicker
+  const [teachers, setTeachers] = useState([]);
   const [error, setError] = useState("");
+  const [ws, setWs] = useState(null);
   const [notification, setNotification] = useState({ title: "", body: "" });
+  
+  const loginInProgress = useRef(false); // Track if login is in progress
 
   useEffect(() => {
     requestNotificationPermission();
-    
+
     onMessage(messaging, (payload) => {
       console.log("Received foreground message:", payload);
       const { title, body } = payload.notification || {};
-  
+
       setNotification({ title, body });
-  
+
       if (Notification.permission === "granted") {
         new Notification(title || "Notification", {
           body: body || "You have a new notification!",
         });
       } else {
         console.log("Notification permission not granted");
-      } 
+      }
     });
-  
   }, []);
 
+  useEffect(() => {
+    const socket = new WebSocket(WS_URL);
+    setWs(socket);
+
+    socket.onopen = () => console.log("✅ Connected to WebSocket server");
+
+    socket.onmessage = (event) => {
+      console.log("📥 Received data:", event.data);
+      setTeachers(JSON.parse(event.data));
+    };
+
+    socket.onclose = () => console.log("🔴 Disconnected from WebSocket server");
+
+    return () => socket.close();
+  }, []);
+
+  // const handleJoin = () => {
+  //   if (teacher && ws) {
+  //     const userData = JSON.stringify({ teacherName: teacher.displayName, email: teacher.email });
+  //     console.log("Sending data to WebSocket server:", userData);  // Log the data before sending
+  //     ws.send(userData);
+  //     setTeacher(null); // Clear after sending
+  //   }
+  // };
+  
 
   const handleLogin = async () => {
+    if (loginInProgress.current) return; // Prevent multiple login attempts
+    loginInProgress.current = true;
+
     try {
       // Force fresh sign-in flow
       await signOut(auth);
@@ -75,10 +107,14 @@ const Login = () => {
           });
 
           if (response.status === 200) {
-            setUser(result.user);
-            console.log(user.displayName)
+            setTeacher(result.user); // Set teacher only after successful login
             setError("");
-            console.log("User authenticated successfully:", response.data);
+            console.log("teacher authenticated successfully:", response.data);
+
+            // Send minimal user data through WebSocket
+            if (ws) {
+              ws.send(JSON.stringify({ email: result.user.email, name: result.user.displayName }));
+            }
           } else {
             setError("Authentication failed: " + response.data.message);
           }
@@ -94,23 +130,27 @@ const Login = () => {
       console.error("Error during login:", err.code, err.message);
       setError(`An error occurred during login: ${err.message || err}`);
       await signOut(auth); // Ensure we clean up invalid credentials
+    } finally {
+      loginInProgress.current = false;
     }
   };
+
+  console.log(teacher);
 
   return (
     <Wrapper>
       <div className="homePage">
-        {user ? (
-          <Home user={user} />
+        {teacher ? (
+          <Home teacher={teacher} teachers={teachers} />
         ) : (
           <div className="container">
             <div>
-            <img id="logo" src={Logo} alt="Logo" /><br />
-            <h1 id="appName">Mayoor</h1>
+              <img id="logo" src={Logo} alt="Logo" /><br />
+              <h1 id="appName">Mayoor</h1>
             </div>
-            
+
             <input id="SignIn" type="button" value="Sign in with Google" onClick={handleLogin} />
-            {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
+            {error && <p style={{ color: "red" }}>{error}</p>}
           </div>
         )}
       </div>
