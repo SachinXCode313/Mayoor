@@ -1,4 +1,4 @@
-import { adminAuth } from "../config/firebase-admin.js";
+import {adminAuth} from "../config/firebase-admin.js";
 
 const allowedDomains = ["gitjaipur.com"];
 

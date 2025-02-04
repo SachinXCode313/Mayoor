@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from "body-parser";
 import routers from './src/routes/routes.js';
 import dotenv from "dotenv"
-import "./src/config/websocket.js";
+// import "./src/config/websocket.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
