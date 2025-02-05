@@ -32,21 +32,13 @@ const Wrapper = styled.section`
   }
 
   .savebtn {
-    background-color: #4CAF50;
+    background-color: #21c2ba;
     color: white;
-  }
-
-  .savebtn:hover {
-    background-color: #45a049;
   }
 
   .closebtn {
-    background-color: #f44336;
-    color: white;
-  }
-
-  .closebtn:hover {
-    background-color: #da190b;
+    background-color: #ddd;
+    color: black;
   }
 `;
 

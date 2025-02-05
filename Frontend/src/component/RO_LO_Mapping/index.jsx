@@ -2,36 +2,29 @@ import React, { useState, useEffect } from "react";
 import Wrapper from "./style";
 import Form_LO from "../Form_LO/index";
 import axios from "axios";
-
 const LOMapping = ({ roId, loItems }) => {
-  const [priorityMapping, setPriorityMapping] = useState({}); 
-  const [isLocked, setIsLocked] = useState(false); 
+  const [priorityMapping, setPriorityMapping] = useState({});
+  const [isLocked, setIsLocked] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [userData, setUserData] = useState(null);
-      
   useEffect(() => {
     const userData = sessionStorage.getItem("userData");
     if (userData) {
       setUserData(JSON.parse(userData));
     }
   }, []);
-
   const handleform = () => {
     setShowForm(true);
   };
-
   const handleClick = (loid, priority) => {
     if (isLocked) return;
-
     setPriorityMapping((prev) => ({
       ...prev,
       [loid]: priority.toLowerCase(),
     }));
   };
-
-  const handleDone = async () => {    
-    if (isLocked) return; 
-    
+  const handleDone = async () => {
+    if (isLocked) return;
     const body = {
       ro_id: roId,
       data: Object.entries(priorityMapping).map(([lo_id, priority]) => ({
@@ -39,11 +32,9 @@ const LOMapping = ({ roId, loItems }) => {
         priority,
       })),
     };
-
     console.log("Data to be sent:", body);
-
     const headers = {
-      Authorization: 'Bearer YOUR_ACCESS_TOKEN', 
+      Authorization: 'Bearer YOUR_ACCESS_TOKEN',
       'Content-Type': 'application/json',
       year: userData?.year,
       subject: userData?.subject,
@@ -51,7 +42,6 @@ const LOMapping = ({ roId, loItems }) => {
       section: userData?.section,
       classname: userData?.class,
     };
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/report-outcome-mapping`,
@@ -63,11 +53,9 @@ const LOMapping = ({ roId, loItems }) => {
       console.error("Error sending data:", error);
     }
   };
-
   useEffect(() => {
     const loadLoAcMapping = async () => {
       if (!userData) return;
-
       const headers = {
         Authorization: "Bearer YOUR_ACCESS_TOKEN",
         "Content-Type": "application/json",
@@ -78,16 +66,13 @@ const LOMapping = ({ roId, loItems }) => {
         subject: userData.subject,
         quarter: userData.quarter,
       };
-
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/report-outcome-mapping`,
           { headers }
         );
         const { data } = response.data;
-
         console.log("Response Come Data:", data);
-
         if (data.length > 0) {
           setIsLocked(true);
           const newPriorityMapping = {};
@@ -104,17 +89,14 @@ const LOMapping = ({ roId, loItems }) => {
         setIsLocked(false);
       }
     };
-
     loadLoAcMapping();
   }, [userData, roId]);
-
   return (
     <Wrapper>
       <div className="lo-list-container">
         <div className="lo-list">
           {loItems.map((lo) => {
             const selectedPriority = priorityMapping[lo.id] || "";
-
             return(
             <div key={lo.id} className="lo-item">
               <div>
@@ -144,7 +126,6 @@ const LOMapping = ({ roId, loItems }) => {
                 </button>
               </div>
             </div>
-
             )
           })}
         </div>
@@ -163,5 +144,4 @@ const LOMapping = ({ roId, loItems }) => {
     </Wrapper>
   );
 };
-
 export default LOMapping;

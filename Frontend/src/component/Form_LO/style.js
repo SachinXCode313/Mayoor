@@ -36,22 +36,16 @@ const Wrapper = styled.section`
   }
 
   .submitbtn {
-    background-color: #4CAF50;
+    background-color: #21c2ba;
     color: white;
-  }
-
-  .submitbtn:hover {
-    background-color: #45a049;
   }
 
   .closebtn {
-    background-color: #f44336;
-    color: white;
+    background-color: #ddd;
+    color: black;
+    
   }
 
-  .closebtn:hover {
-    background-color: #da190b;
-  }
 `;
 
 export default Wrapper;

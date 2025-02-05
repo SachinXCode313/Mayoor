@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Wrapper from './style';
-// import notification from "./bell.png";
+import notification from "./bell.png";
 import student from './user.png';
 import menu from "./menu.png";
 import Ripples from 'react-ripples'
-
-
 const HomeList = ({ user, setIndex, msg }) => {
   console.log(user)
   const [userData, setUserData] = useState({});
@@ -18,18 +16,15 @@ const HomeList = ({ user, setIndex, msg }) => {
       window.removeEventListener("beforeunload", clearSessionStorageOnRefresh);
     };
   }, []);
-
   const [selectedYear, setSelectedYear] = useState(sessionStorage.getItem("year") || 2024);
   const [selectedClass, setSelectedClass] = useState(sessionStorage.getItem("class") || 1);
   const [selectedSection, setSelectedSection] = useState(sessionStorage.getItem("section") || 'Orchid');
   const [selectedQuarter, setSelectedQuarter] = useState(sessionStorage.getItem("quarter") || '1');
   const [selectedSubject, setSelectedSubject] = useState(sessionStorage.getItem("subject") || '1');
-
   const updateSessionStorage = (key, value, setter) => {
     sessionStorage.setItem(key, value);
     setter(value);
   };
-
   const handleClick = () => {
     setIndex(2)
     const updatedUserdata = {
@@ -41,13 +36,10 @@ const HomeList = ({ user, setIndex, msg }) => {
     };
     sessionStorage.setItem("userData", JSON.stringify(updatedUserdata));
     setUserData(updatedUserdata);
-
   }
-
   const toggle = e => {
     e.target.nextSibling.style.display = e.target.nextSibling.style.display === 'flex' ? 'none' : 'flex'
   }
-
   return (
     <Wrapper>
       <div id="user">
@@ -63,14 +55,12 @@ const HomeList = ({ user, setIndex, msg }) => {
       </div>
       <form className="choice">
         <label htmlFor="year" onClick={toggle}>Year ({selectedYear})</label>
-
         <div className="options">
           <Ripples>
           <div tabIndex={0} className={selectedYear === 2025 ? "option active" : "option"} onClick={e => setSelectedYear(2025)}>2025</div>
             </Ripples>
           <Ripples><div tabIndex={0} className={selectedYear === 2024 ? "option active" : "option"} onClick={e => setSelectedYear(2024)}>2024</div></Ripples>
         </div>
-
         <label htmlFor="class" onClick={toggle}>Class ({selectedClass})</label>
         <div className="options">
           <Ripples><div tabIndex={0} className={`option ${selectedClass === 1 ? 'active' : ''}`} onClick={e => setSelectedClass(1)}>1</div></Ripples>
@@ -82,14 +72,12 @@ const HomeList = ({ user, setIndex, msg }) => {
           <Ripples><div tabIndex={0} className={`option ${selectedClass === 7 ? 'active' : ''}`} onClick={e => setSelectedClass(7)}>7</div></Ripples>
           <Ripples><div tabIndex={0} className={`option ${selectedClass === 8 ? 'active' : ''}`} onClick={e => setSelectedClass(8)}>8</div></Ripples>
         </div>
-        
         <label htmlFor="section" onClick={toggle}>Section ({selectedSection})</label>
         <div className="options">
           <Ripples><div tabIndex={0} className={selectedSection === "Orchid" ? "option active" : "option"} onClick={e => setSelectedSection("Orchid")}>Orchid</div></Ripples>
           <Ripples><div tabIndex={0} className={selectedSection === "Tulip" ? "option active" : "option"} onClick={e => setSelectedSection("Tulip")}>Tulip</div></Ripples>
           <Ripples><div tabIndex={0} className={selectedSection === "Daffodil" ? "option active" : "option"} onClick={e => setSelectedSection("Daffodil")}>Daffodil</div></Ripples>
         </div>
-        
         <label htmlFor="quarter" onClick={toggle}>Quarter ({selectedQuarter})</label>
         <div className="options">
           <Ripples><div tabIndex={0} className={selectedQuarter === "1" ? "option active" : "option"} onClick={e => setSelectedQuarter("1")}>I</div></Ripples>
@@ -128,5 +116,4 @@ const HomeList = ({ user, setIndex, msg }) => {
     </Wrapper>
   );
 };
-
 export default HomeList;

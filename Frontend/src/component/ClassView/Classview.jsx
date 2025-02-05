@@ -2,6 +2,7 @@ import React, { useState , useEffect} from "react";
 import { Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend } from "chart.js";
 import "./ClassViewStyle"
+import Menu from "../MenuBar/index";
 
 import imgUser from "../assets/user.png";
 // import imgBack from "../assets/Vector.png";
@@ -74,6 +75,7 @@ const ClassView = ({setIndex, user}) => {
     setIndex(1)
   }
 
+  
   const [userData, setUserData] = useState('');
       useEffect(() => {
         const userData = sessionStorage.getItem("userData");
@@ -81,21 +83,28 @@ const ClassView = ({setIndex, user}) => {
           setUserData(JSON.parse(userData));
         }
       }, []);
+      const handleProfileClick = () => alert("Go to Profile");
+      const handleSettingsClick = () => alert("Open Settings");
+      const handleLogoutClick = () => alert("Logging Out...");
   return (
     <div className="class-container">
       <div className="class-header">
+      <div className="class-overview">
+          <div className="class-title">Class Overview</div>
+        </div>
         <div className="header-icons">
           <div className="back-icon">
             {/* <img src={imgBack} alt="Back" className="header-image" /> */}
           </div>
           <div className="right-icons">
-            <img src={imgUser} alt="User" className="header-image" />
-            <img src={imgBell} alt="Bell" className="header-image" />
-            <img src={imgMenu} alt="Menu" className="header-image-menu" onClick={handleClick} />
+            {/* <img src={imgBell} alt="Bell" className="header-image" /> */}
+          <Menu
+             onProfileClick={handleProfileClick}
+             onSettingsClick={handleSettingsClick}
+             onLogoutClick={handleLogoutClick}
+             onReturnClick={handleClick}
+          />
           </div>
-        </div>
-        <div className="class-overview">
-          <div className="class-title">Class Overview</div>
         </div>
       </div>
 

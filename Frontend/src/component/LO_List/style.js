@@ -142,12 +142,16 @@ const Wrapper = styled.section`
       display : block;
     }
   }
+    .plus{
+    font-size: 40px;
+    color: rgb(26, 24, 24)
+    }
   .add{
     background-color: #21c3bc;
     opacity: 0.7;
     font-weight: bold;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     -moz-border-radius: 50px;
     -webkit-border-radius: 50px;
     border-radius: 50px;

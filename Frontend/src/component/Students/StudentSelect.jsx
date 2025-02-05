@@ -6,9 +6,9 @@ import { IoSearchOutline } from "react-icons/io5";
 import axios from "axios";
 import StudentReport from "../Student_report/StudentReport.jsx";
 import TeacherProfile from "../TeacherProfile/index.jsx"
-// import loading from "./loading.gif";
+import Menu from "../MenuBar";
 
-const StudentList = ({ onStudentsData }) => {
+const StudentList = ({ onStudentsData, setIndex }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [students, setStudents] = useState([]); // Stores API student list
   const [filteredStudents, setFilteredStudents] = useState([]); // Stores search-filtered students
@@ -16,12 +16,18 @@ const StudentList = ({ onStudentsData }) => {
   const [showReport, setShowReport] = useState(null);
   const [showTeacherProfile, setShowTeacherProfile] = useState(false);
 
+  const handleProfileClick = () => alert("Go to Profile");
+  const handleSettingsClick = () => alert("Open Settings");
+  const handleLogoutClick = () => alert("Logging Out...");
   const handleReport = (student) => {
     setShowReport(student); // Set the clicked student
   }
 
   const handleProfile = () => {
     setShowTeacherProfile(true);
+  }
+  const handleClick =()=>{
+    setIndex(1)
   }
 
   const handleBackToList1 = () => {
@@ -123,12 +129,18 @@ const StudentList = ({ onStudentsData }) => {
           </div>
 
           <div style={styles.iconWrapper}>
-            <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} />
-            <img src={userIcon} alt="User Icon" onClick={handleProfile} style={{ width: "22px", height: "22px" }} />
+            {/* <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} /> */}
+            {/* <img src={userIcon} alt="User Icon" onClick={handleProfile} style={{ width: "22px", height: "22px" }} /> */}
+            <Menu
+             onProfileClick={handleProfileClick}
+             onSettingsClick={handleSettingsClick}
+             onLogoutClick={handleLogoutClick}
+             onReturnClick={handleClick}
+          />
           </div>
         </div>
         
-        <h2 style={styles.title}>Student List</h2>
+        {/* <h2 style={styles.title}>Student List</h2> */}
       </div>
 
       {/* Student List */}
@@ -141,8 +153,7 @@ const StudentList = ({ onStudentsData }) => {
           ))
         ) : (
           <div style={styles.noResults}>
-            loading....
-            {/* <img src={loading} alt="" className="loading"/> */}
+            Loading....
           </div>
         )}
       </div>

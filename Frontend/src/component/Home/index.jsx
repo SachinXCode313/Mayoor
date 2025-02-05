@@ -8,9 +8,9 @@ import stuIcon from '../assets/Graduate.png';
 import homeIcon from '../assets/Smart Home.png';
 import listIcon from '../assets/Audit.png';
 import StudentList from '../Students/StudentSelect';
-import { useSwipeable } from 'react-swipeable';
 import ClassView from '../ClassView/Classview';
 
+import { useSwipeable } from 'react-swipeable';
 const Home = ({ user }) => {
   const [index, setIndex] = useState(1);
   const [tabs, setTabs] = useState([
@@ -39,7 +39,6 @@ const Home = ({ user }) => {
   //   setIndex(newIndex);
   // };
 // console.log(user)
-
 const handlers = useSwipeable({
   onSwipedLeft: () => {
     if (index !== 1) setIndex((prevIndex) => (prevIndex < 6 ? prevIndex + 1 : prevIndex));
@@ -49,8 +48,6 @@ const handlers = useSwipeable({
   },
   trackMouse: true,
 });
-
-
   return (
     <Wrapper {...handlers}>
       <div className="screen">
@@ -59,9 +56,9 @@ const handlers = useSwipeable({
         ) : index === 2 ? (
           <ClassView setIndex={setIndex} user={user}/>
         ) : index === 3 ? (
-          <StudentList onStudentsData={handleStudentsData} setIndex={setIndex}/>
+          <StudentList onStudentsData={handleStudentsData} setIndex={setIndex} />
         ) : index === 4 ? (
-          <AClist acItems={acItems} setAcItems={setAcItems} handleAcItems={handleAcItems} studentsData={studentsData} setIndex={setIndex}/>
+          <AClist acItems={acItems} setAcItems={setAcItems} handleAcItems={handleAcItems} studentsData={studentsData} setIndex={setIndex} user={user}/>
         ) : index === 5 ? (
           <LOlist loItems={loItems} handleLoItems={handleLoItems} acItems={acItems} setAcItems={setAcItems} setIndex={setIndex}/>
         ) : (

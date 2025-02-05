@@ -8,94 +8,82 @@ import AcScores from '../acscore/acScores';
 import LoScores from '../loscore/loScores';
 import RoScores from '../roscore/roScores';
 import Wrapper from './StudentReport';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
-
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js"
 // Registering chart components
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const Student_report = ({ student, onBack, id }) => {
-  const [activeComponent, setActiveComponent] = useState(null);
-
+  const [activeComponent, setActiveComponent] = useState(null)
   const chartData = {
     labels: ["Science", "Computer Science", "Social Studies", "II Language", "GP"],
     datasets: [
       {
         label: "Marks",
         data: [70, 95, 45, 60, 80],
-        backgroundColor: ["#3498db", "#2ecc71", "#f1c40f", "#9b59b6", "#e74c3c"],
+        backgroundColor: ["#3498DB", "#2ECC71", "#F1C40F", "#9B59B6", "#E74C3C"],
         borderRadius: 5,
       },
     ],
-  };
-
+  }
   const percentages = [
     { value: 72.89, label: "Assessment Criteria", component: "ac" },
     { value: 42.01, label: "Learning Outcome", component: "lo" },
     { value: 50, label: "Report Outcome", component: "ro" },
-  ];
-
+  ]
   const handleComponentClick = (component) => {
-    setActiveComponent(component);
-  };
-
+    setActiveComponent(component)
+  }
+  const handleOnBack =()=>{
+    setActiveComponent(null)
+    if (!activeComponent) {
+      onBack(); 
+    }
+  }
   const renderScoreComponent = () => {
     switch(activeComponent) {
       case 'ac':
-        return <div className="score-component"><AcScores student={student} /></div>;
+        return <div className="score-component"><AcScores student={student} handleOnBack={handleOnBack}/></div>
       case 'lo':
-        return <div className="score-component"><LoScores student={student}/></div>;
+        return <div className="score-component"><LoScores student={student} handleOnBack={handleOnBack}/></div>
       case 'ro':
-        return <div className="score-component"><RoScores student={student}/></div>;
+        return <div className="score-component"><RoScores student={student} handleOnBack={handleOnBack}/></div>
       default:
-        return null;
+        return null
     }
-  };
-
+  }
   return (
     <Wrapper>
-      <header className="header">
-        <FaArrowLeft className="back-icon" onClick={onBack} />
-        <h2>Student Report</h2>
-      </header>
-
       <div className="main-container">
         {activeComponent === null ? (
           <>
+            <header className="header">
+              <FaArrowLeft className="back-icon" onClick={onBack} />
+              <h2>Student Report</h2>
+            </header>
             <div className="student-info">
               <div className="profile-pic">
                 <img src={profilePic} alt="Profile" />
               </div>
               <div className="student-details">
-                <p><strong>Name:{student.name}</strong></p>
-                <p><strong>Roll No:{student.id}</strong> </p>
+                <p><strong>Name:</strong> {student.name}</p>
+                <p><strong>Section:</strong> {student.section}</p>
+                <p><strong>Roll No: </strong> {student.id}</p>
                 <p><strong>Grade:</strong> {student.class}</p>
               </div>
-              <div className="student-section">
-                <p><strong>Section:{student.section}</strong> </p>
-                {/* <p><strong>Quarter:</strong> Q2</p> */}
-              </div>
             </div>
-
             <h3 className="average-title">Average Percentage</h3>
             <div className="percentage-container">
               {percentages.map((item, index) => (
                 <div key={index} className="percentage" onClick={() => handleComponentClick(item.component)}>
                   <CircularProgressbar value={item.value} text={`${item.value}%`} styles={buildStyles({
-                    textSize: "14px", pathColor: "#16a085", textColor: "#333", trailColor: "#d6d6d6", strokeLinecap: "round"
+                    textSize: "14px", pathColor: "#16A085", textColor: "#333", trailColor: "#D6D6D6", strokeLinecap: "round"
                   })} />
                   <p>{item.label}</p>
                 </div>
               ))}
             </div>
-
+            <h3 className= "subject-title">Subject Performance</h3>
             <div className="chart-container">
-              <h3>Subject Performance</h3>
               <Bar data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
-            </div>
-
-            <div className="remark-section">
-              <textarea placeholder="Teacher's Remark"></textarea>
-              <FaEdit className="edit-icon" />
             </div>
           </>
         ) : (
@@ -105,7 +93,6 @@ const Student_report = ({ student, onBack, id }) => {
         )}
       </div>
     </Wrapper>
-  );
-};
-
-export default Student_report;
+  )
+}
+export default Student_report

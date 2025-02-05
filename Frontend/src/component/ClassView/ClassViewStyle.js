@@ -9,11 +9,13 @@ const styles = `
 
   .class-header {
     width: 100%;
+    height: 75px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
     padding-top: 25px;
-    background-color: #20b2aa;
+    background-color:#21c2ba;
     color: white;
   }
 
@@ -42,8 +44,10 @@ const styles = `
   }
 
   .class-title {
-    font-size: 24px;
+    font-size: 25px;
+    font-weight: bold;
     text-align: center;
+    margin-top: -30px;
   }
 
   .info-box {

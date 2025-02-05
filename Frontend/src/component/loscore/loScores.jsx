@@ -1,17 +1,16 @@
 import React, { useState, useEffect} from 'react';
 import Wrapper from './lostyle';
-import bellIcon from '../assets/bell.png';  
-import userIcon from '../assets/user.png';
+import { FaArrowLeft, FaEdit } from "react-icons/fa";
+// import bellIcon from '../assets/bell.png';
+// import userIcon from '../assets/user.png';
 import axios from 'axios';
-
-const StudentList = ({student}) => {
+const StudentList = ({student, handleOnBack}) => {
   const [profile] = useState({
     name: 'John Doe',
     studentId: '1234567',
     subject: 'Computer Science',
     profilePic: 'https://i.pravatar.cc/150',
   });
-
   const [scores] = useState([
     { lo: 'LO1', score: 90 },
     { lo: 'LO2', score: 85 },
@@ -26,10 +25,8 @@ const StudentList = ({student}) => {
     { lo: 'LO11', score: 85 },
     { lo: 'LO12', score: 95 },
   ]);
-
-  const [loScoreList, setLoScoreList] = useState([]); 
-  const [filteredLoScoreList, setFilteredLoScoreList] = useState([]); 
-
+  const [loScoreList, setLoScoreList] = useState([]);
+  const [filteredLoScoreList, setFilteredLoScoreList] = useState([]);
   const [userData, setUserData] = useState(null);
     useEffect(() => {
       const userData = sessionStorage.getItem("userData");
@@ -39,8 +36,6 @@ const StudentList = ({student}) => {
     }, []);
     console.log("Student Data:", student);
     console.log("User Data:", userData);
-
-
     useEffect(() => {
       const loadLoScore = async (userdata) => {
         const headers = {
@@ -54,16 +49,13 @@ const StudentList = ({student}) => {
           quarter: userdata.quarter // Use userdata instead of user
         };
         console.log(headers);
-    
         try {
           const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/learning-outcome-score`, { headers });
           const data = response.data;
-    
           console.log('Response Data:', data);
-    
-          if (data && Array.isArray(data.lo_scores)) {
-            setLoScoreList(data.lo_scores);
-            setFilteredLoScoreList(data.lo_scores);
+          if (data && Array.isArray(data.ac_scores)) {
+            setLoScoreList(data.ac_scores);
+            setFilteredLoScoreList(data.ac_scores);
           } else {
             console.warn('Expected an array but received:', data);
             setLoScoreList([]);
@@ -75,19 +67,17 @@ const StudentList = ({student}) => {
           setFilteredLoScoreList([]);
         }
       };
-    
       if (userData && Object.keys(userData).length > 0) {
         loadLoScore(userData); // Corrected: Pass userData instead of user
       }
     }, [userData]);
-    
   return (
     <Wrapper>
       <div className="AppContainer">
-      <div className="Header"> 
-          <span>LO Scores</span>  
-          
-        </div> 
+      <div className="Header">
+              <FaArrowLeft className="back-icon" onClick={handleOnBack}/>
+                <span className="name">LO Scores</span>
+              </div>
         <div className="container">
         <div className="ContentContainer">
           <div className="ProfileCard">
@@ -107,7 +97,6 @@ const StudentList = ({student}) => {
               </div>
             </div>
           </div>
-        
           <div className="TableContainer">
             <table className="ScoresTable">
               <thead>
@@ -130,7 +119,6 @@ const StudentList = ({student}) => {
       </div>
     </div>
     </Wrapper>
-  );
-};
-
-export default StudentList;
+  )
+}
+export default StudentList

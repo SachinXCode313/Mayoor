@@ -10,14 +10,14 @@ const styles = {
     overflowX: "hidden",
   },
   header: {
-    backgroundColor: "#20B2AA",
+    backgroundColor: "#21c2ba",
     padding: "20px",
     position: "sticky",
     top: 0,
     width: "100%",
     textAlign: "center",
     zIndex: 1000,
-    height: "150px",
+    height: "95px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -36,7 +36,7 @@ const styles = {
   searchBox: {
     display: "flex",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.6)",
+    backgroundColor: "#a6e0dd",
     borderRadius: "25px",
     padding: "0px 16px",
     width: "70%",
@@ -45,13 +45,13 @@ const styles = {
     transition: "all 0.3s ease",
     position: "relative",
   },
-  searchBoxActive: {
-    position: "absolute",
-    top: "10px",
-    left: "10px",
-    width: "300px",
-    zIndex: 2000, // Ensures it stays on top
-  },
+  // searchBoxActive: {
+  //   position: "absolute",
+  //   top: "10px",
+  //   left: "10px",
+  //   width: "300px",
+  //   zIndex: 2000, // Ensures it stays on top
+  // },
   searchInput: {
     flex: 1,
     border: "none",
@@ -93,10 +93,13 @@ const styles = {
     fontSize: "16px",
     marginTop: "10px",
   },
-  loading:{
-    height: "20px",
-    width: "20px",
+  loading: {
+    height: "30px",  
+    width: "30px",
+    display: "block", 
+    margin: "auto",   
   },
+  
 };
 
 export default styles;

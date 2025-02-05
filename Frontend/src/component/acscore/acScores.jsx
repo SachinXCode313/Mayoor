@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Wrapper from './acstyle';
-import bellIcon from '../assets/bell.png';  
-import userIcon from '../assets/user.png';
+import { FaArrowLeft, FaEdit } from "react-icons/fa";
 import axios from 'axios';
-
-const StudentList = ({student}) => {
+const StudentList = ({student, handleOnBack}) => {
   const [profile] = useState({
     name: 'John Doe',
     studentId: '1234567',
     subject: 'Computer Science',
     profilePic: 'https://i.pravatar.cc/150',
   });
-
   const [scores] = useState([
     { ac: 'AC1', score: 90 },
     { ac: 'AC2', score: 85 },
@@ -26,10 +23,8 @@ const StudentList = ({student}) => {
     { ac: 'AC11', score: 85 },
     { ac: 'AC12', score: 95 },
   ]);
-
-  const [acScoreList, setAcScoreList] = useState([]); 
-  const [filteredAcScoreList, setFilteredAcScoreList] = useState([]); 
-
+  const [acScoreList, setAcScoreList] = useState([]);
+  const [filteredAcScoreList, setFilteredAcScoreList] = useState([]);
   const [userData, setUserData] = useState(null);
     useEffect(() => {
       const userData = sessionStorage.getItem("userData");
@@ -39,8 +34,6 @@ const StudentList = ({student}) => {
     }, []);
     console.log("Student Data:", student);
     console.log("User Data:", userData);
-
-
     useEffect(() => {
       const loadAcScore = async (userdata) => {
         const headers = {
@@ -54,42 +47,36 @@ const StudentList = ({student}) => {
           quarter: userData.quarter,
         };
         console.log(headers);
-    
         try {
           const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/assessment-criteria-score`, { headers });
           const data = response.data;
-    
           console.log('Response Data:', data);
-    
           if (data && Array.isArray(data.ac_scores)) {
             // Now correctly using ac_scores from the response
             setAcScoreList(data.ac_scores);
             setFilteredAcScoreList(data.ac_scores); // Initialize filtered list with full data
           } else {
-            console.warn('Expected an array but received:', data);
-            setAcScoreList([]);
-            setFilteredAcScoreList([]);
+            console.warn('Expected an array but received:', data)
+            setAcScoreList([])
+            setFilteredAcScoreList([])
           }
         } catch (error) {
-          console.error('Error fetching ac score:', error.response || error.message);
-          setAcScoreList([]);
-          setFilteredAcScoreList([]);
+          console.error('Error fetching report outcomes:', error.response || error.message)
+          setAcScoreList([])
+          setFilteredAcScoreList([])
         }
-      };
-    
-      if (userData && Object.keys(userData).length > 0) {
-        loadAcScore(userData);
       }
-    }, [userData]);
-    
+      if (userData && Object.keys(userData).length > 0) {
+        loadAcScore(userData)
+      }
+    }, [userData])
   return (
     <Wrapper>
       <div className="AppContainer">
-      <div className="Header"> 
-          <span>AC Scores </span>
-          <img className="HeaderImage" src={userIcon} alt="Logouser" />
-          <img className="HeaderImage" src={bellIcon} alt="Logonotification" />     
-        </div>  
+      <div className="Header">
+              <FaArrowLeft className="back-icon" onClick={handleOnBack}/>
+                <span className="name">AC Scores</span>
+              </div>
         <div className="container">
         <div className="ContentContainer">
           <div className="ProfileCard">
@@ -109,7 +96,6 @@ const StudentList = ({student}) => {
               </div>
             </div>
           </div>
-        
           <div className="TableContainer">
             <table className="ScoresTable">
               <thead>
@@ -132,7 +118,6 @@ const StudentList = ({student}) => {
       </div>
     </div>
     </Wrapper>
-  );
-};
-
-export default StudentList;
+  )
+}
+export default StudentList
