@@ -1,7 +1,9 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { onMessage } from 'firebase/messaging';
-import { messaging, requestNotificationPermission } from '../../Helper/firebase';
+import { messaging} from '../../Helper/firebase';
+import requestNotificationPermission from '../../Helper/push';
+
 
 const LoadNotification = () => {
 

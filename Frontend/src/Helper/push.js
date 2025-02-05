@@ -18,7 +18,7 @@ import { VAPID_KEY, messaging } from "./firebase";
 import axios from "axios";
 
 
-export const requestNotificationPermission = async () => {
+const requestNotificationPermission = async () => {
     if ("Notification" in window) {
         const permission = await Notification.requestPermission();
         if (permission === "granted") {
@@ -45,5 +45,7 @@ export const requestNotificationPermission = async () => {
         console.error("Notifications are not supported in this browser.");
     }
 };
+
+export default requestNotificationPermission;
 
 
