@@ -14,7 +14,7 @@ const App = () => {
     return (
       <>
         {/* <Login/> */}
-        
+        <LoadNotification/>
         {
           user ? <Home user={user} /> : <Login setUser = {setUser} />
         }
