@@ -9,6 +9,7 @@ const getClassAverageACScore = async (req, res) => {
                 error: "Missing required headers: subject, classname, year, quarter, or section.",
             });
         }
+
         // Query to get average scores per AC
         const [acAverages] = await db.query(`
             SELECT ac.id, AVG(ascore.value) AS average_score
@@ -28,18 +29,18 @@ const getClassAverageACScore = async (req, res) => {
             return res.status(404).json({ error: "No AC scores found for the provided filters." });
         }
 
-        // Format the response
+        // Format the response and round average_score to 3 decimal places
         const result = acAverages.map(row => ({
             ac_id: row.id,
-            average_score: parseFloat(row.average_score)
+            average_score: parseFloat(row.average_score.toFixed(3)) // Round to 3 decimal places
         }));
 
-        // Calculate overall average
+        // Calculate overall average and round to 3 decimal places
         const overallAverage = result.reduce((sum, item) => sum + item.average_score, 0) / result.length;
-
+        
         res.status(200).json({ 
             class_ac_averages: result,
-            overall_average: parseFloat(overallAverage.toFixed(3)) 
+            overall_average: parseFloat(overallAverage.toFixed(3)) // Rounded to 3 decimal places
         });
     } catch (error) {
         console.error("Error fetching class AC averages:", error.message);
