@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Wrapper from './style';
-import notification from "./bell.png";
+// import notification from "./bell.png";
 import student from './user.png';
 import menu from "./menu.png";
 import Ripples from 'react-ripples'
@@ -53,7 +53,7 @@ const HomeList = ({ user, setIndex, msg }) => {
       <div id="user">
         <div id="detail">
           <p id="hi">Hi ,</p>
-          <h1 id="name">{user.name}</h1>
+          <h1 id="name">{user}</h1>
         </div>
         <div id="image">
           {/* <img id="notification" src={notification} alt="Notification" /> */}

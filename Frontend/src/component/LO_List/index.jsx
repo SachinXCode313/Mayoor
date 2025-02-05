@@ -9,13 +9,14 @@ import Form_LO from '../Form_LO';
 import bellIcon from '../assets/bell.png';
 import userIcon from '../assets/user.png';
 import menuIcon from '../assets/menu.png';
+import Menu from '../MenuBar';
 
 const LOlist = ({ acItems, setAcItems, loItems, setLoItems, handleLoItems, setIndex }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [filteredLoList, setFilteredLoList] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const [loading, setLoading] = useState(false)
   const handleClick = () => {
     setIndex(1)
   }
@@ -28,6 +29,9 @@ const LOlist = ({ acItems, setAcItems, loItems, setLoItems, handleLoItems, setIn
     setShowForm(true);
   };
 
+  const handleProfileClick = () => alert("Go to Profile");
+  const handleSettingsClick = () => alert("Open Settings");
+  const handleLogoutClick = () => alert("Logging Out...");
   const [userData, setUserData] = useState(null);
     useEffect(() => {
       const userData = sessionStorage.getItem("userData");
@@ -36,6 +40,7 @@ const LOlist = ({ acItems, setAcItems, loItems, setLoItems, handleLoItems, setIn
       }
     }, []);
   const loadLO = async (userData) => {
+    setLoading(true)
     const headers = {
       Authorization: 'Bearer YOUR_ACCESS_TOKEN',
       'Content-Type': 'application/json',
@@ -63,6 +68,8 @@ const LOlist = ({ acItems, setAcItems, loItems, setLoItems, handleLoItems, setIn
       setFilteredLoList(finalData);
     } catch (error) {
       console.error('Error fetching report outcomes:', error);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -94,15 +101,24 @@ const LOlist = ({ acItems, setAcItems, loItems, setLoItems, handleLoItems, setIn
           className="search-bar"
         />
         <div className="icon">
-          <img src={bellIcon} alt="Bell Icon" style={{ width: '22px', height: '22px' }} />
-          <img src={userIcon} alt="User Icon" style={{ width: '22px', height: '22px' }} />
-          <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: '22px', height: '31px' }} onClick={handleClick}/>
+          {/* <img src={bellIcon} alt="Bell Icon" style={{ width: '22px', height: '22px' }} /> */}
+          {/* <img src={userIcon} alt="User Icon" style={{ width: '22px', height: '22px' }} /> */}
+          {/* <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: '22px', height: '31px' }} onClick={handleClick}/> */}
+          <Menu
+             onProfileClick={handleProfileClick}
+             onSettingsClick={handleSettingsClick}
+             onLogoutClick={handleLogoutClick}
+             onReturnClick={handleClick}
+          />
         </div>
       </div>
-
-      {filteredLoList.length > 0 ? (
         <ul className="lo-list">
-          {filteredLoList.map((item, index) => (
+          {loading ? (
+            <li className="loading-message">
+            <p>Loading....</p>
+            </li>
+          ) : filteredLoList.length > 0 ? (
+          filteredLoList.map((item, index) => (
             <li key={item.id} className={`lo-list-item ${activeIndex === index ? 'active' : ''}`}>
               <div className="lo-header" onClick={() => toggleDropdown(index)}>
                 <div className="list-icon-containers">
@@ -118,15 +134,15 @@ const LOlist = ({ acItems, setAcItems, loItems, setLoItems, handleLoItems, setIn
                 )}
               </div>
             </li>
-          ))}
-        </ul>
-      ) : (
-        <div className="no-results">
+          ))
+        ) : (
+          <li className="no-results">
           <p className="no_results">No Results Found</p>
-        </div>
+        </li>
       )}
+      </ul>
 
-      <div className="add" onClick={handleform}>+</div>
+      <div className="add" onClick={handleform}><span className='plus'>+</span></div>
       {showForm && (
         <div className="popup-overlay">
           <div className="popup-content">

@@ -39,6 +39,7 @@ const Home = ({ user }) => {
   //   setIndex(newIndex);
   // };
 // console.log(user)
+
 const handlers = useSwipeable({
   onSwipedLeft: () => {
     if (index !== 1) setIndex((prevIndex) => (prevIndex < 6 ? prevIndex + 1 : prevIndex));
@@ -48,6 +49,8 @@ const handlers = useSwipeable({
   },
   trackMouse: true,
 });
+
+
   return (
     <Wrapper {...handlers}>
       <div className="screen">
