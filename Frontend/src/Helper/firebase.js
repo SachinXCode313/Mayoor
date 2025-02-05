@@ -56,11 +56,12 @@ const firebaseConfig = {
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 export const app = initializeApp(firebaseConfig);
-export let messaging = typeof window !== "undefined" ? getMessaging(app) : null;
-if (process.browser) {
-  // because I'm getting error "Navigator not defined"
-  messaging = getMessaging(app);
-}
+export const messaging = getMessaging(app);
+// export let messaging = typeof window !== "undefined" ? getMessaging(app) : null;
+// if (process.browser) {
+//   // because I'm getting error "Navigator not defined"
+//   messaging = getMessaging(app);
+// }
 export const VAPID_KEY = process.env.REACT_APP_FIREBASE_VAPID_KEY;
 
 
