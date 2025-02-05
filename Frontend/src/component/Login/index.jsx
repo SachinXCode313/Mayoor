@@ -1,7 +1,7 @@
 import Wrapper from "./style";
 import React, { useState, useEffect, useRef } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut,signInWithRedirect,browserLocalPersistence,setPersistence } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 // import { requestNotificationPermission } from "../../Helper/firebase";
 // import { onMessage } from "firebase/messaging";
 // import { messaging } from "../../Helper/firebase";
@@ -27,13 +27,13 @@ const provider = new GoogleAuthProvider();
 const allowedDomains = ["gitjaipur.com"];
 const WS_URL = "ws://localhost:3500";
 
-const Login = ({ setUser }) => {
+const Login = ({setUser}) => {
   const [teacher, setTeacher] = useState(null); // Start with null to avoid flicker
   const [teachers, setTeachers] = useState([]);
   const [error, setError] = useState("");
   const [ws, setWs] = useState(null);
   const [notification, setNotification] = useState({ title: "", body: "" });
-
+  
   const loginInProgress = useRef(false); // Track if login is in progress
 
   // useEffect(() => {
@@ -45,7 +45,7 @@ const Login = ({ setUser }) => {
 
   //     new Notification({ title, body });
 
-
+      
   //   });
   // }, []);
 
@@ -73,36 +73,31 @@ const Login = ({ setUser }) => {
   //     setTeacher(null); // Clear after sending
   //   }
   // };
-
+  
 
   const handleLogin = async () => {
     if (loginInProgress.current) return; // Prevent multiple login attempts
     loginInProgress.current = true;
-
+  
     try {
       // Force fresh sign-in flow
       await signOut(auth);
       provider.setCustomParameters({
         prompt: "select_account",
       });
-      setPersistence(auth, browserLocalPersistence)
-        .then(() => {
-          return signInWithRedirect(auth, provider);
-        })
-        .catch((error) => console.log(error));
-
+  
       const result = await signInWithPopup(auth, provider);
       console.log("Sign-in successful:", result);
-
+  
       const email = result.user.email;
       const idToken = await result.user.getIdToken();
       console.log("ID Token retrieved:", idToken);
-
+  
       try {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/verify-token`, {
           token: idToken,
         });
-
+  
         if (response.status === 200) {
           setTeacher(result.user); // Set teacher only after successful login
           setError("");
@@ -127,7 +122,7 @@ const Login = ({ setUser }) => {
       loginInProgress.current = false;
     }
   };
-
+  
 
   console.log(teacher);
 
