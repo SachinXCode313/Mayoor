@@ -8,16 +8,17 @@ const Wrapper = styled.section`
         flex : 1;
         display: flex;
         flex-direction: column;
+        overflow: auto;
     }
     .bottom{
-        height: 60px;
         display: flex;
         input{
             flex : 1;
             border : none;
             background : #135d5d;
             color : #fff;
-            padding : 15px;
+            padding : 20px 0;
+            text-align: center;
             font-weight: bold;
             cursor: pointer;
             &.active{

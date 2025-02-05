@@ -2,7 +2,6 @@ const styles = {
   container: {
     display: "flex",
     flexDirection: "column",
-    height: "94vh",
     backgroundColor: "#ffffff",
     width: "100vw",
     alignItems: "center",
@@ -87,37 +86,16 @@ const styles = {
     fontWeight: "bold",
     marginTop: "8px",
   },
-  listContainer: {
-    marginTop: "120px",
-    padding: "20px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-    overflowY: "auto",
-    height: "calc(100vh - 120px)",
-    width: "100%",
-    maxWidth: "600px",
-    margin: "0 auto",
-    boxSizing: "border-box",
-  },
-  listItem: {
-    color: "black",
-    padding: "12px",
-    backgroundColor: "#f0f0f0",
-    borderRadius: "8px",
-    fontSize: "16px",
-    textAlign: "center",
-    boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
-    width: "100%",
-    maxWidth: "100%",
-    overflowWrap: "break-word",
-    boxSizing: "border-box",
-  },
+ 
   noResults: {
     textAlign: "center",
     color: "gray",
     fontSize: "16px",
     marginTop: "10px",
+  },
+  loading:{
+    height: "20px",
+    width: "20px",
   },
 };
 

@@ -3,9 +3,11 @@ import Wrapper from './style';
 import notification from "./bell.png";
 import student from './user.png';
 import menu from "./menu.png";
+import Ripples from 'react-ripples'
 
-const HomeList = ({ teacher, setIndex, msg }) => {
-  console.log(teacher)
+
+const HomeList = ({ user, setIndex, msg }) => {
+  console.log(user)
   const [userData, setUserData] = useState({});
   useEffect(() => {
     const clearSessionStorageOnRefresh = () => {
@@ -17,11 +19,11 @@ const HomeList = ({ teacher, setIndex, msg }) => {
     };
   }, []);
 
-  const [selectedYear, setSelectedYear] = useState(sessionStorage.getItem("year") || '');
-  const [selectedClass, setSelectedClass] = useState(sessionStorage.getItem("class") || '');
-  const [selectedSection, setSelectedSection] = useState(sessionStorage.getItem("section") || '');
-  const [selectedQuarter, setSelectedQuarter] = useState(sessionStorage.getItem("quarter") || '');
-  const [selectedSubject, setSelectedSubject] = useState(sessionStorage.getItem("subject") || '');
+  const [selectedYear, setSelectedYear] = useState(sessionStorage.getItem("year") || 2024);
+  const [selectedClass, setSelectedClass] = useState(sessionStorage.getItem("class") || 1);
+  const [selectedSection, setSelectedSection] = useState(sessionStorage.getItem("section") || 'Orchid');
+  const [selectedQuarter, setSelectedQuarter] = useState(sessionStorage.getItem("quarter") || '1');
+  const [selectedSubject, setSelectedSubject] = useState(sessionStorage.getItem("subject") || '1');
 
   const updateSessionStorage = (key, value, setter) => {
     sessionStorage.setItem(key, value);
@@ -29,9 +31,7 @@ const HomeList = ({ teacher, setIndex, msg }) => {
   };
 
   const handleClick = () => {
-    console.log(2)
     setIndex(2)
-    console.log(2)
     const updatedUserdata = {
       year: parseInt(selectedYear, 10),
       class: parseInt(selectedClass, 10),
@@ -42,110 +42,88 @@ const HomeList = ({ teacher, setIndex, msg }) => {
     sessionStorage.setItem("userData", JSON.stringify(updatedUserdata));
     setUserData(updatedUserdata);
 
-  };
+  }
+
+  const toggle = e => {
+    e.target.nextSibling.style.display = e.target.nextSibling.style.display === 'flex' ? 'none' : 'flex'
+  }
 
   return (
     <Wrapper>
       <div id="user">
         <div id="detail">
           <p id="hi">Hi ,</p>
-          <h1 id="name">{teacher.name}</h1>
+          <h1 id="name">{user.name}</h1>
         </div>
         <div id="image">
-          <img id="notification" src={notification} alt="Notification" />
+          {/* <img id="notification" src={notification} alt="Notification" /> */}
           <img id="profile" src={student} alt="User" />
           <img id="menu" src={menu} alt="Menu" />
         </div>
       </div>
       <form className="choice">
-        <label htmlFor="year">Year</label>
-        <select
-          id="year"
-          value={selectedYear}
-          onChange={(e) => updateSessionStorage("year", e.target.value, setSelectedYear)}
-        >
-          <option value="" disabled>-- Select year --</option>
-          <option value="2023">2023</option>
-          <option value="2024">2024</option>
-          <option value="2025">2025</option>
-        </select>
-        <label htmlFor="class">Class</label>
-        <select
-          id="class"
-          value={selectedClass}
-          onChange={(e) => updateSessionStorage("class", e.target.value, setSelectedClass)}
-          disabled={!selectedYear}
-        >
-          <option value="" disabled>-- Select class --</option>
-          <option value="1">I</option>
-          <option value="2">II</option>
-          <option value="3">III</option>
-          <option value="4">IV</option>
-          <option value="5">V</option>
-          <option value="6">VI</option>
-          <option value="7">VII</option>
-          <option value="8">VIII</option>
-          <option value="9">IX</option>
-          <option value="10">X</option>
-        </select>
-        <label htmlFor="section">Section</label>
-        <select
-          id="section"
-          value={selectedSection}
-          onChange={(e) => updateSessionStorage("section", e.target.value, setSelectedSection)}
-          disabled={!selectedClass}
-        >
-          <option value="" disabled>-- Select section --</option>
-          <option value="Orchid">Orchid</option>
-          <option value="Tulip">Tulip</option>
-          <option value="Daffodil">Daffodil</option>
-        </select>
-        <label htmlFor="quarter">Quarter</label>
-        <select
-          id="quarter"
-          value={selectedQuarter}
-          onChange={(e) => updateSessionStorage("quarter", e.target.value, setSelectedQuarter)}
-          disabled={!selectedSection}
-        >
-          <option value="" disabled>-- Select quarter --</option>
-          <option value="1">I</option>
-          <option value="2">II</option>
-          <option value="3">III</option>
-          <option value="4">IV</option>
-        </select>
-        <label htmlFor="subject">Subject</label>
-        <select
-          id="subject"
-          value={selectedSubject}
-          onChange={(e) => updateSessionStorage("subject", e.target.value, setSelectedSubject)}
-          disabled={!selectedQuarter}
-        >
-          <option value="" disabled>-- Select subject --</option>
-          <option value="1">English</option>
-          <option value="2">Hindi</option>
-          <option value="3">Mathematics</option>
-          <option value="4">Science</option>
-          <option value="5">Computer Sc.</option>
-          <option value="6">Social Studies</option>
-          <option value="7">III Language</option>
-          <option value="8">GP Values</option>
-          <option value="9">Music</option>
-          <option value="10">Dance/Dramatics</option>
-          <option value="11">Art</option>
-          <option value="12">Sports</option>
-          <option value="13">Discipline</option>
-          <option value="14">Attendance</option>
-        </select>
-        <button
-          id="submit"
+        <label htmlFor="year" onClick={toggle}>Year ({selectedYear})</label>
+
+        <div className="options">
+          <Ripples>
+          <div tabIndex={0} className={selectedYear === 2025 ? "option active" : "option"} onClick={e => setSelectedYear(2025)}>2025</div>
+            </Ripples>
+          <Ripples><div tabIndex={0} className={selectedYear === 2024 ? "option active" : "option"} onClick={e => setSelectedYear(2024)}>2024</div></Ripples>
+        </div>
+
+        <label htmlFor="class" onClick={toggle}>Class ({selectedClass})</label>
+        <div className="options">
+          <Ripples><div tabIndex={0} className={`option ${selectedClass === 1 ? 'active' : ''}`} onClick={e => setSelectedClass(1)}>1</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedClass === 2 ? 'active' : ''}`} onClick={e => setSelectedClass(2)}>2</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedClass === 3 ? 'active' : ''}`} onClick={e => setSelectedClass(3)}>3</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedClass === 4 ? 'active' : ''}`} onClick={e => setSelectedClass(4)}>4</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedClass === 5 ? 'active' : ''}`} onClick={e => setSelectedClass(5)}>5</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedClass === 6 ? 'active' : ''}`} onClick={e => setSelectedClass(6)}>6</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedClass === 7 ? 'active' : ''}`} onClick={e => setSelectedClass(7)}>7</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedClass === 8 ? 'active' : ''}`} onClick={e => setSelectedClass(8)}>8</div></Ripples>
+        </div>
+        
+        <label htmlFor="section" onClick={toggle}>Section ({selectedSection})</label>
+        <div className="options">
+          <Ripples><div tabIndex={0} className={selectedSection === "Orchid" ? "option active" : "option"} onClick={e => setSelectedSection("Orchid")}>Orchid</div></Ripples>
+          <Ripples><div tabIndex={0} className={selectedSection === "Tulip" ? "option active" : "option"} onClick={e => setSelectedSection("Tulip")}>Tulip</div></Ripples>
+          <Ripples><div tabIndex={0} className={selectedSection === "Daffodil" ? "option active" : "option"} onClick={e => setSelectedSection("Daffodil")}>Daffodil</div></Ripples>
+        </div>
+        
+        <label htmlFor="quarter" onClick={toggle}>Quarter ({selectedQuarter})</label>
+        <div className="options">
+          <Ripples><div tabIndex={0} className={selectedQuarter === "1" ? "option active" : "option"} onClick={e => setSelectedQuarter("1")}>I</div></Ripples>
+          <Ripples><div tabIndex={0} className={selectedQuarter === "2" ? "option active" : "option"} onClick={e => setSelectedQuarter("2")}>II</div></Ripples>
+          <Ripples><div tabIndex={0} className={selectedQuarter === "3" ? "option active" : "option"} onClick={e => setSelectedQuarter("3")}>III</div></Ripples>
+          <Ripples><div tabIndex={0} className={selectedQuarter === "4" ? "option active" : "option"} onClick={e => setSelectedQuarter("4")}>IV</div></Ripples>
+        </div>
+        <label htmlFor="subject" onClick={toggle}>Subject ({selectedSubject})</label>
+        <div className="options subjects">
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === "1" ? 'active' : ''}`} onClick={e => setSelectedSubject('1')}>English</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === "2" ? 'active' : ''}`} onClick={e => setSelectedSubject('2')}>Hindi</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '3' ? 'active' : ''}`} onClick={e => setSelectedSubject('3')}>Mathematics</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '4' ? 'active' : ''}`} onClick={e => setSelectedSubject('4')}>Science</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '5' ? 'active' : ''}`} onClick={e => setSelectedSubject('5')}>Computer Sc.</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '6' ? 'active' : ''}`} onClick={e => setSelectedSubject('6')}>Social Studies</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '7' ? 'active' : ''}`} onClick={e => setSelectedSubject('7')}>III Language</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '8' ? 'active' : ''}`} onClick={e => setSelectedSubject('8')}>GP Values</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '9' ? 'active' : ''}`} onClick={e => setSelectedSubject('9')}>Music</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '10' ? 'active' : ''}`} onClick={e => setSelectedSubject('10')}>Dance/Dramatics</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '11' ? 'active' : ''}`} onClick={e => setSelectedSubject('11')}>Art</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '12' ? 'active' : ''}`} onClick={e => setSelectedSubject('12')}>Sports</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '13' ? 'active' : ''}`} onClick={e => setSelectedSubject('13')}>Discipline</div></Ripples>
+          <Ripples><div tabIndex={0} className={`option ${selectedSubject === '14' ? 'active' : ''}`} onClick={e => setSelectedSubject('14')}>Attendance</div></Ripples>
+        </div>
+        <Ripples><button
+          className="get-started"
           onClick={(e) => {
             e.preventDefault();
             handleClick();
           }}
           disabled={!selectedSubject}
         >
-          Next
-        </button>
+          Get Started
+        </button></Ripples>
       </form>
     </Wrapper>
   );

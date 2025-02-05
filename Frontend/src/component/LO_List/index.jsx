@@ -135,7 +135,7 @@ const LOlist = ({ acItems, setAcItems, loItems, setLoItems, handleLoItems, setIn
         </div>
       )}
     </Wrapper>
-  );
-};
+  )
+}
 
 export default LOlist;

@@ -1,66 +1,57 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Wrapper from "./style";
 import Form_AC from "../Form_AC/index";
-import axios from "axios"; // Import axios
+import axios from "axios";
 
-const ACMapping = ({  loId, acItems }) => {
-  const [priorityMapping, setPriorityMapping] = useState({}); // Stores priorities by loId and acId
+const ACMapping = ({ loId, acItems }) => {
+  const [priorityMapping, setPriorityMapping] = useState({});
+  const [isLocked, setIsLocked] = useState(false); // Lock all ACs if any priority exists
   const [showForm, setShowForm] = useState(false);
-
   const [userData, setUserData] = useState(null);
-      useEffect(() => {
-        const userData = sessionStorage.getItem("userData");
-        if (userData) {
-          setUserData(JSON.parse(userData));
-        }
-      }, []);
+
+  useEffect(() => {
+    const userData = sessionStorage.getItem("userData");
+    if (userData) {
+      setUserData(JSON.parse(userData));
+    }
+  }, []);
+
   const handleform = () => {
     setShowForm(true);
   };
 
   const handleClick = (acid, priority) => {
-    const lowerCasePriority = priority.toLowerCase();
-  
-    setPriorityMapping((prev) => {
-      const updatedPriorityMapping = { ...prev };
-  
-      // Ensure loId exists before accessing its Data property
-      if (!updatedPriorityMapping[loId]) {
-        updatedPriorityMapping[loId] = { Data: [] };
-      }
-  
-      const existingEntryIndex = updatedPriorityMapping[loId].Data.findIndex(
-        (entry) => entry.ac_id === acid
-      );
-  
-      if (existingEntryIndex !== -1) {
-        updatedPriorityMapping[loId].Data[existingEntryIndex].priority = lowerCasePriority;
-      } else {
-        updatedPriorityMapping[loId].Data.push({ ac_id: acid, priority: lowerCasePriority });
-      }
-  
-      return updatedPriorityMapping;
-    });
+    if (isLocked) return; // Prevent changing priorities if locked
+
+    setPriorityMapping((prev) => ({
+      ...prev,
+      [acid]: priority.toLowerCase(),
+    }));
   };
-  
+
   const handleDone = async () => {
+    if (isLocked) return; // Prevent sending data if locked
+
     const body = {
-      lo_id: loId, // Correct key name
-      data: priorityMapping[loId]?.Data || [],
+      lo_id: loId,
+      data: Object.entries(priorityMapping).map(([ac_id, priority]) => ({
+        ac_id: Number(ac_id),
+        priority,
+      })),
     };
-  
-    console.log("Data to be sent:", body);
-  
+
+    console.log("Data to be sent:", JSON.stringify(body, null, 2));
+
     const headers = {
-      Authorization: 'Bearer YOUR_ACCESS_TOKEN',
-      'Content-Type': 'application/json',
+      Authorization: "Bearer YOUR_ACCESS_TOKEN",
+      "Content-Type": "application/json",
       year: userData?.year,
       subject: userData?.subject,
       quarter: userData?.quarter,
       section: userData?.section,
       classname: userData?.class,
     };
-  
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/learning-outcome-mapping`,
@@ -72,64 +63,93 @@ const ACMapping = ({  loId, acItems }) => {
       console.error("Error sending data:", error);
     }
   };
-  
+
+  useEffect(() => {
+    const loadLoAcMapping = async () => {
+      if (!userData) return;
+
+      const headers = {
+        Authorization: "Bearer YOUR_ACCESS_TOKEN",
+        "Content-Type": "application/json",
+        lo_id: loId,
+        year: userData.year,
+        classname: userData.class,
+        section: userData.section,
+        subject: userData.subject,
+        quarter: userData.quarter,
+      };
+
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/learning-outcome-mapping`,
+          { headers }
+        );
+        const { data } = response.data;
+
+        console.log("Response Come Data:", data);
+
+        if (data.length > 0) {
+          setIsLocked(true); // If any priority exists, lock all ACs
+          const newPriorityMapping = {};
+          data.forEach(({ ac_id, priority }) => {
+            newPriorityMapping[ac_id] = priority.toLowerCase();
+          });
+          setPriorityMapping(newPriorityMapping);
+        } else {
+          setIsLocked(false); // If no priority exists, allow user selection
+        }
+      } catch (error) {
+        console.error("Error fetching ac score:", error.response || error.message);
+        setPriorityMapping({});
+        setIsLocked(false);
+      }
+    };
+
+    loadLoAcMapping();
+  }, [userData, loId]);
 
   return (
     <Wrapper>
       <div className="ac-list-container">
         <div className="ac-list">
-          {acItems.map((ac, index) => (
-            <div key={ac.id} className="ac-item">
-              <div>
-                <span className="name">{ac.name}</span>
+          {acItems.map((ac) => {
+            const selectedPriority = priorityMapping[ac.id] || "";
+
+            return (
+              <div key={ac.id} className="ac-item">
+                <div>
+                  <span className="name">{ac.name}</span>
+                </div>
+                <div className="priority-buttons">
+                  <button
+                    className={`priority-button ${selectedPriority === "h" ? "h" : ""}`}
+                    onClick={() => handleClick(ac.id, "H")}
+                    disabled={isLocked}
+                  >
+                    H
+                  </button>
+                  <button
+                    className={`priority-button ${selectedPriority === "m" ? "m" : ""}`}
+                    onClick={() => handleClick(ac.id, "M")}
+                    disabled={isLocked}
+                  >
+                    M
+                  </button>
+                  <button
+                    className={`priority-button ${selectedPriority === "l" ? "l" : ""}`}
+                    onClick={() => handleClick(ac.id, "L")}
+                    disabled={isLocked}
+                  >
+                    L
+                  </button>
+                </div>
               </div>
-              <div className="priority-buttons">
-              <button
-                  className={`priority-button ${
-                    priorityMapping[loId]?.Data.find(
-                      (entry) => entry.ac_id === ac.id
-                    )?.priority === "h"
-                      ? "h"
-                      : ""
-                  }`}
-                  onClick={() => handleClick(ac.id, "H")}
-                  disabled={priorityMapping[loId]?.isLocked} // Disable button if locked
-                >
-                  H
-                </button>
-                <button
-                  className={`priority-button ${
-                    priorityMapping[loId]?.Data.find(
-                      (entry) => entry.ac_id === ac.id
-                    )?.priority === "m"
-                      ? "m"
-                      : ""
-                  }`}
-                  onClick={() => handleClick(ac.id, "M")}
-                  disabled={priorityMapping[loId]?.isLocked} // Disable button if locked
-                >
-                  M
-                </button>
-                <button
-                  className={`priority-button ${
-                    priorityMapping[loId]?.Data.find(
-                      (entry) => entry.ac_id === ac.id
-                    )?.priority === "l"
-                      ? "l"
-                      : ""
-                  }`}
-                  onClick={() => handleClick(ac.id, "L")}
-                  disabled={priorityMapping[loId]?.isLocked} // Disable button if locked
-                >
-                   L
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="btns">
-          <input type="button" value="Add New AC" className="addBtn" onClick={handleform} />
-          <input type="button" value="Done" className="btn" onClick={handleDone} />
+          <input type="button" value="Add New AC" className="addBtn" onClick={handleform} disabled={isLocked} />
+          <input type="button" value="Done" className="btn" onClick={handleDone} disabled={isLocked} />
         </div>
       </div>
       {showForm && (

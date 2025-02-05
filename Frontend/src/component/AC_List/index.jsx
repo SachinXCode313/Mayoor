@@ -46,6 +46,7 @@ const AC_List = ({acItems, setAcItems, handleAcItems, studentsData , setIndex}) 
     
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/assessment-criteria`, { headers });
+        console.log("Response Data:", response.data);
         const data = response.data;
     
         if (Array.isArray(data.assessments)) {

@@ -6,6 +6,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import axios from "axios";
 import StudentReport from "../Student_report/StudentReport.jsx";
 import TeacherProfile from "../TeacherProfile/index.jsx"
+import loading from "./loading.gif";
 
 const StudentList = ({ onStudentsData }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -67,6 +68,10 @@ const StudentList = ({ onStudentsData }) => {
   
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/students`, { headers });
         console.log("Response Data:", response.data);
+
+        let re = /(\b[a-z](?!\s))/g
+
+        response.data.students.map(student => {student.name = student.name.toLowerCase().replace(re, function(x){return x.toUpperCase();})})
   
         if (response.data && Array.isArray(response.data.students)) {
           setStudents(response.data.students);
@@ -85,8 +90,6 @@ const StudentList = ({ onStudentsData }) => {
       loadStudents();
     }
   }, [userData]);  // Removed `onStudentsData` from dependencies
-  
-  
 
   if (showReport) {
     return <StudentReport student={showReport} onBack={handleBackToList1} />;
@@ -129,15 +132,17 @@ const StudentList = ({ onStudentsData }) => {
       </div>
 
       {/* Student List */}
-      <div style={styles.listContainer}>
+      <div style={{width : "100%"}}>
         {filteredStudents.length > 0 ? (
           filteredStudents.map((student, index) => (
-            <div key={index} style={styles.listItem} onClick={() => handleReport(student)}>
-              {student.name}
+            <div className="student-item" key={index} style={styles.listItem} onClick={() => handleReport(student)}>
+              <span className="initials">{student.name.split(' ')[0][0] + student.name.split(' ')[1][0].toUpperCase()}</span><span>{student.name}</span>
             </div>
           ))
         ) : (
-          <div style={styles.noResults}>No students found</div>
+          <div style={styles.noResults}>
+            <img src={loading} alt="" className="loading"/>
+          </div>
         )}
       </div>
     </div>

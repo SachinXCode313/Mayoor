@@ -1,28 +1,53 @@
 import styled from "styled-components";
+import peacock from "./peacock.png"
 const Wrapper = styled.section`
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: #21C2BA;
-    font-family: sans-sarif;
+    background: #21C2BA;
+    font-family: Poppins;
+
+    .options{
+        display : flex;
+        gap : 10px;
+        width : 100%;
+        flex-wrap: wrap;
+        .option{
+            flex : 1;
+            background : #21C2BA;
+            color : #FFFFFF;
+            padding : 20px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            text-align: center;
+            opacity : 0.5;
+            &.active{
+                opacity: 1;
+                box-shadow: 2px 2px 2px #ccc;
+            }
+        }
+    }
+
+    .subjects{
+        .option{
+            width : 80px;
+            flex : auto;
+            white-space: nowrap;
+        }
+    }
+
     // padding: 20px;
-   
-    .user{
-        flex-direction: row;
+    #user {
+        display: flex;
         align-items: center;
-        gap: 10px;
-        justify-content: center;
-        display: flex;
-    }
-    .user img{
-        width : 110px;
-        border-radius : 50%;
-    }
-    .user div{
-        flex-direction: column;
-        justify-content: center;
-        gap: 4px;
-        display: flex;
+        justify-content: space-between;
+        padding: 40px 20px 50px 30px;
+        font-size: 17px;
+        color: black;
+        background: no-repeat 150% center;
+        background-image: linear-gradient( rgba(33,194, 186, 0.7),rgba(33,194, 186, 0.7) ), url(${peacock});
+        
+        background-size: auto 130%;
     }
 
     #user-content {
@@ -30,40 +55,31 @@ const Wrapper = styled.section`
         flex-direction: column;
     }
 
-    #greet{
-    font-size:15px;
+    #hi{
+    font-size:19px;
     font-weight:bold;
     }
-
-    .navbar {
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        display: flex;
-        margin-top: -100px;
-}
     
     #image {
         display: flex;
         gap: 15px;
         align-items: center;
-        position : fixed;
-        right : 0;
-
+        margin-left: auto;
     }
-    #profileIcon{
-        width: 20px;
+    #profile{
+        height: 30px;
+        width: 30px;
+        margin-top: -70px;
     }
     #notification{
-        width: 20px;
+        height: 30px;
+        width: 30px;
+        margin-top: -70px;
     }
     #menu{
-    width: 30px;
-    }
-
-    #profile{
-    width : 20px;
+    height: 47px;
+    width: 40px;
+    margin-top: -70px;
     }
 
     #name {
@@ -77,14 +93,17 @@ const Wrapper = styled.section`
     form {
         background-color: #FFFFF0;
         border-radius: 30px 30px 0 0;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        align-items: center;
         padding: 50px 20px;
-        margin : 50px 0 0;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         flex : 1;
+        max-width: 500px;
+        margin: auto;
+        width: 100%;
+        box-sizing: border-box;
+        label{
+            display: block;
+            padding : 20px 0 10px 0;
+        }
     }
     select {
         appearance: none; /* Removes default browser styles */
@@ -112,28 +131,19 @@ const Wrapper = styled.section`
         opacity: 0.6;
     }
     label {
-        align-self: flex-start;
-        padding-left: 6%;
         font-weight: bold;
-        font-size: 14px;
     }
-    #submit {
-        width: 25%;
-        padding: 15px;
-        border-radius: 50px;
-        background-color: #409FF3;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-        border: none;
-        transition: 0.3s;
-    }
-    #submit:hover {
-        background-color: #3078C0;
-    }
-    #submit:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
+    
+    .get-started{
+        background : #21C2BA;
+        color : #000;
+        padding : 15px 30px;
+        border-radius: 5px;
+        border : none;
+        margin-top : 30px;
+        width: 100%;
+        font-weight : bold;
+        border-bottom : solid 3px #00a098;
     }
 `;
 export default Wrapper;

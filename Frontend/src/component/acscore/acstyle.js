@@ -1,14 +1,13 @@
 
 import styled from "styled-components";  
 
-const Wrapper = styled.div`  
-  font-family: sans-serif;  
+const Wrapper = styled.div`   
   margin:0;  
   padding: 0;  
   background-color:#fff;  
   display: flex;  
   justify-content: space-between;  
-   min-height: 100vh;  
+   min-height: 70vh;  
   .AppContainer {  
     background-color:  #21C3BC;  
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);   
@@ -16,7 +15,7 @@ const Wrapper = styled.div`
     flex-direction: column;  
     align-items: stretch;  
     width: 100vw;   
-    height: 100vh;  
+    height: 70vh;  
     margin: 0 auto;  
   }  
    

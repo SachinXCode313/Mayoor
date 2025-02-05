@@ -1,7 +1,6 @@
 const styles = `
   .class-container {
     width: 100%;
-    height: 94vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,7 +73,6 @@ const styles = `
     border-radius: 5px;
     margin-top: 10px;
     cursor: pointer;
-    border-color :  #75D2EA;
   }
 
   .chart-wrapper {
@@ -91,6 +89,10 @@ const styles = `
   .header-image {
     width: 24px;
     height: 24px;
+  }
+  .header-image-menu {
+    width: 34px;
+    height: 34px;
   }
 `;
 

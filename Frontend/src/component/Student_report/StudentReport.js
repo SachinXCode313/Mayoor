@@ -3,7 +3,6 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   /* Global Styles */
   margin: 0;
-  font-family: Arial, sans-serif;
   background-color: #f8f8f8;
 
   /* Header */
@@ -37,7 +36,7 @@ const Wrapper = styled.div`
     background-color: white;
     border-radius: 15px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    min-height: calc(90vh - 80px);
+    min-height: calc(100vh -56px - 80px);
     position: relative;
   }
 

@@ -2,11 +2,14 @@ import React, { useState , useEffect} from "react";
 import { Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend } from "chart.js";
 import "./ClassViewStyle"
+
 import imgUser from "../assets/user.png";
-import imgBack from "../assets/Vector.png";
+// import imgBack from "../assets/Vector.png";
 import imgMenu from "../assets/menu.png";
 import imgBell from "../assets/bell.png";
+
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+
 const chartData = {
   ac: {
     labels: ["AC 1", "AC 2", "AC 3", "AC 4", "AC 5", "AC 6", "AC 7", "AC 8", "AC 9", "AC 10"],
@@ -14,9 +17,9 @@ const chartData = {
       {
         label: "AC Scores",
         data: [0.1, 0.2, 0.5, 0.3, 0.7, 0.8, 0.9],
-        borderColor: "#3B82F6",
+        borderColor: "#3b82f6",
         fill: false,
-        pointBackgroundColor: "#3B82F6",
+        pointBackgroundColor: "#3b82f6",
       },
     ],
   },
@@ -26,9 +29,9 @@ const chartData = {
       {
         label: "LO Scores",
         data: [0.1, 0.2, 0.5, 0.6, 0.7, 0.8, 0.9],
-        borderColor: "#FF7F50",
+        borderColor: "#ff7f50",
         fill: false,
-        pointBackgroundColor: "#FF7F50",
+        pointBackgroundColor: "#ff7f50",
       },
     ],
   },
@@ -38,13 +41,14 @@ const chartData = {
       {
         label: "RO Scores",
         data: [0.1, 0.2, 0.5, 0.6, 0.7, 0.8, 0.9],
-        borderColor: "#32CD32",
+        borderColor: "#32cd32",
         fill: false,
-        pointBackgroundColor: "#32CD32",
+        pointBackgroundColor: "#32cd32",
       },
     ],
   },
 };
+
 const options = {
   responsive: true,
   plugins: { legend: { display: false } },
@@ -63,11 +67,13 @@ const options = {
     },
   },
 };
+
 const ClassView = ({setIndex, user}) => {
   const [selectedChart, setSelectedChart] = useState("ac");
   const handleClick = () => {
     setIndex(1)
   }
+
   const [userData, setUserData] = useState('');
       useEffect(() => {
         const userData = sessionStorage.getItem("userData");
@@ -85,13 +91,14 @@ const ClassView = ({setIndex, user}) => {
           <div className="right-icons">
             <img src={imgUser} alt="User" className="header-image" />
             <img src={imgBell} alt="Bell" className="header-image" />
-            <img src={imgMenu} alt="Menu" className="header-image" onClick={handleClick} />
+            <img src={imgMenu} alt="Menu" className="header-image-menu" onClick={handleClick} />
           </div>
         </div>
         <div className="class-overview">
           <div className="class-title">Class Overview</div>
         </div>
       </div>
+
       <div className="info-box">
         <div className="info-text">
           <p>
@@ -113,11 +120,13 @@ const ClassView = ({setIndex, user}) => {
           </p>
         </div>
       </div>
+
       <select className="chart-dropdown" onChange={(e) => setSelectedChart(e.target.value)}>
         <option value="ac">AC Scores</option>
         <option value="lo">LO Scores</option>
         <option value="ro">RO Scores</option>
       </select>
+
       <div className="chart-wrapper">
         <div className="chart-container">
           <Line data={chartData[selectedChart]} options={options} />
@@ -126,4 +135,5 @@ const ClassView = ({setIndex, user}) => {
     </div>
   );
 };
+
 export default ClassView;

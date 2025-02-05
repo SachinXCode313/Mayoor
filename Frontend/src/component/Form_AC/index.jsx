@@ -1,18 +1,17 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Wrapper from "./style";
 import axios from "axios";
 
 const Form_AC = ({ closeForm, loadAC }) => {
   const [acName, setAcName] = useState("");
   const [maxMarks, setMaxMarks] = useState("");
-
   const [userData, setUserData] = useState(null);
-      useEffect(() => {
-        const userData = sessionStorage.getItem("userData");
-        if (userData) {
-          setUserData(JSON.parse(userData));
-        }
-      }, []);
+    useEffect(() => {
+      const userData = sessionStorage.getItem("userData");
+      if (userData) {
+        setUserData(JSON.parse(userData));
+      }
+    }, []);
   const handleSubmit = async () => {
     if (!acName.trim() || !maxMarks) {
       alert("Please fill in all fields.");
@@ -23,7 +22,6 @@ const Form_AC = ({ closeForm, loadAC }) => {
       alert("Missing user details. Ensure all fields are filled in.");
       return;
     }
-
 
     const headers = {
       Authorization: "Bearer YOUR_ACCESS_TOKEN", // Replace with actual token

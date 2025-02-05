@@ -6,11 +6,52 @@ display: flex;
 flex-direction: column;
 overflow: hidden;
 
+.search-container {
+      display: flex;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      width: 100%;
+      margin: 15px 0;
+      padding-left: 12px;
+      padding-right:12px;
+    }
+    .menu{
+    padding-right:17px;
+    }
+    .icon{
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding-right: 15px;
+    }
+       .search-bar {
+      width: 100%;
+      padding: 10px 40px 10px 15px; /* Padding for space for the search icon */
+      font-size: 16px;
+      border-radius: 25px;
+      border: 1px solid #ddd; /* Same border color as other elements */
+      background-color: #A6E0DD; /* White background for consistency */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for subtle depth */
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+      margin: 10px;
+    }
+    .search-bar:focus {
+      border-color: #00796B; /* Matching the color scheme */
+      box-shadow: 0 2px 4px rgba(0, 121, 107, 0.2);
+      background-color: white;/* Focus shadow effect */
+    }
+    .search-bar::placeholder {
+      color: #aaa
+       }
+
 search-container {
       display: flex;
       gap: 60px;
       align-items: center;
       position: relative;
+      background-color: #21C3BC;
       width: 100%;
       margin: 15px 0;
       padding-left: 12px;
@@ -29,7 +70,7 @@ search-container {
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       outline: none;
       transition: border-color 0.3s, box-shadow 0.3s;
-      margin: 10px;
+      margin-left: -60px;
     }
        .search-bar:focus {
       border-color: #00796B;
@@ -87,7 +128,7 @@ height: 25px;
 .name {
 font-family: Sans-sarif;
   font-size: 25px;
-  margin-top: 40px;
+  margin-top: 35px;
   color: black;
 }
 .title{
@@ -95,6 +136,7 @@ font-family: Sans-sarif;
   color: white
 }
 .roll-number {
+  margin-top: 12px;
   font-size: 11px;
 }
 .done-button {
@@ -110,13 +152,16 @@ font-family: Sans-sarif;
   margin: auto;
   width:150px;
 }
+.studentName{
+ height: 47px;
+}
 .ac-container {
   display: flex;
   overflow-x: auto;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   width: 100%;
-  height: 145px;
+  height: 220px;
   max-width: 100%;
   padding: 20px 10px;
   gap: 20px;
@@ -141,13 +186,14 @@ font-family: Sans-sarif;
 }
 .marks-input {
   width: 100%;
-  padding: 5px;
+  padding: 7px;
   font-size: 13px;
   text-align: center;
   border-radius: 10px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  margin-top: 9px;
+  margin-top: 50px;
+  bottom: 0;
 }
 .ac-container::-webkit-scrollbar {
   display: none;
