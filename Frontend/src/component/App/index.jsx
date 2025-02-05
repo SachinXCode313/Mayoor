@@ -13,28 +13,13 @@ const App = () => {
 
     const [user, setUser] = useState(null)
 
-    useEffect(() => {
-        const unsubscribe = onMessage(messaging, (payload) => {
-          console.log("Received foreground message:", payload);
-    
-          if (payload.notification) {
-            const { title, body } = payload.notification;
-    
-            // Option 1: Using toast for a UI notification
-            toast.info(`${title}: ${body}`);
-    
-            // Option 2: Using the browser's Notification API
-            if (Notification.permission === "granted") {
-              new Notification(title, { body });
-            }
-          }
-        });
-    
-        return () => unsubscribe();
-      }, []);
-
     return (
-        <Login/>
+      <>
+        {/* <Login/> */}
+        {
+          user ? <Home user={user} /> : <Login setUser = {setUser} />
+        }
+        </>
     )
 }
 
