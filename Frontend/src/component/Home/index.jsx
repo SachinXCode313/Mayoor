@@ -64,7 +64,9 @@ useEffect(() => {
     console.log("Received foreground message:", payload);
     const { title, body } = payload.notification || {};
 
-    new Notification({ title, body });
+    new Notification(title,{
+      body: body || "Foreground body",
+    })
     
   });
 }, []);

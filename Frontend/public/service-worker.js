@@ -1,5 +1,5 @@
 const urlsToCache = ["/", "/assets/style.css", "/manifest.json", "/image/icon.png", "/assets/index.html"]
-const CACHE_NAME = "cache2"
+const CACHE_NAME = "cache3"
 
 self.addEventListener('install', (event) => {
     console.log('Inside the install handler:', event)
