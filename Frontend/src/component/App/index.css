@@ -1,14 +1,14 @@
-/* *{
+*{
     margin: 0 ;
     padding: 0;
   }
   
   body{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
     background: linear-gradient(to bottom right, #06BA8F, #4EB1E6);
-    flex-direction: column;
+    /* flex-direction: column; */
   }
-  
+/*   
   h1{
     font-size: 1.2rem;
   }
