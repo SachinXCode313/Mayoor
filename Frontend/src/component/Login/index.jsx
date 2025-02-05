@@ -43,15 +43,9 @@ const Login = () => {
       console.log("Received foreground message:", payload);
       const { title, body } = payload.notification || {};
 
-      setNotification({ title, body });
+      new Notification({ title, body });
 
-      if (Notification.permission === "granted") {
-        new Notification(title || "Notification", {
-          body: body || "You have a new notification!",
-        });
-      } else {
-        console.log("Notification permission not granted");
-      }
+      
     });
   }, []);
 

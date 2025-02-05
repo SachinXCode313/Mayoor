@@ -3,83 +3,99 @@ import db from '../config/db.js';
 
 // Save token to MySQL
 export const saveToken = async (req, res) => {
-  const { token } = req.body;
-  if (!token) {
-    return res.status(400).json({ message: 'Token is required' });
-  }
+    try {
+        console.log("📥 Received request to save token:", req.body);
 
-  try {
-    const [rows] = await db.query('SELECT token FROM device_tokens WHERE token = ?', [token]);
-    if (rows.length === 0) {
-      await db.query('INSERT INTO device_tokens (token) VALUES (?)', [token]);
-      console.log('Token saved:', token);
-    } else {
-      console.log('Token already exists:', token);
+        const { token } = req.body;
+
+        if (!token || typeof token !== 'string' || token.length < 20) {
+            console.error("❌ Invalid or missing token");
+            return res.status(400).json({ message: 'Valid token is required' });
+        }
+
+        // Save token (INSERT IGNORE prevents duplicate errors)
+        const [result] = await db.query('INSERT IGNORE INTO device_tokens (token) VALUES (?)', [token]);
+
+        if (result.affectedRows > 0) {
+            console.log('✅ Token saved:', token);
+            res.json({ message: 'Token saved successfully' });
+        } else {
+            console.log('ℹ️ Token already exists:', token);
+            res.json({ message: 'Token already exists' });
+        }
+
+    } catch (error) {
+        console.error('❌ Database Error:', error);
+        res.status(500).json({ message: 'Database error', error: error.message });
     }
-    res.json({ message: 'Token saved successfully' });
-  } catch (error) {
-    console.error('Database Error:', error);
-    res.status(500).json({ message: 'Database error', error: error.message });
-  }
 };
-
-
 
 // Send notifications to stored tokens
 export const sendNotification = async (req, res) => {
-  const { title, body } = req.body;
-  if (!title || !body) {
-    return res.status(400).json({ message: 'Title and body are required' });
-  }
+    try {
+        console.log("📥 Received request to send notification:", req.body);
 
-  try {
-    const [rows] = await db.query('SELECT token FROM device_tokens');
-    if (rows.length === 0) {
-      return res.status(400).json({ message: 'No users to notify' });
+        const { title, body } = req.body;
+
+        if (!title || !body) {
+            console.error("❌ Missing title or body");
+            return res.status(400).json({ message: 'Title and body are required' });
+        }
+
+        // Retrieve tokens from database
+        const [rows] = await db.query('SELECT token FROM device_tokens');
+        if (rows.length === 0) {
+            console.error("❌ No tokens found");
+            return res.status(400).json({ message: 'No users to notify' });
+        }
+
+        const tokensArray = rows.map(row => row.token);
+        console.log(tokensArray)
+        // console.log(`📢 Sending notifications to ${tokensArray.length} tokens`);
+
+
+        const message = tokensArray.map((token) => ({
+          notification: {
+            title,
+            body,
+          },
+          token:token,
+        }))
+
+        console.log(message)
+
+        // Firebase message payload
+       
+        // Send notifications
+        const response = await admin.messaging().sendEach(message);
+        console.log("✅ Firebase responses:", response);
+
+        // Remove invalid tokens
+        const invalidTokens = [];
+        response.responses.forEach((resp, index) => {
+            if (!resp.success && resp.error.code === "messaging/registration-token-not-registered") {
+                invalidTokens.push(tokensArray[index]);
+            }
+        });
+
+        if (invalidTokens.length > 0) {
+            await db.query('DELETE FROM device_tokens WHERE token IN (?)', [invalidTokens]);
+            console.log('🚮 Removed invalid tokens:', invalidTokens);
+        }
+
+        res.json({
+            message: "✅ Notification sent successfully!",
+            successCount: response.successCount,
+            failureCount: response.failureCount,
+            invalidTokens,
+        });
+
+    } catch (error) {
+        console.error("❌ Firebase Error:", error);
+        res.status(500).json({ message: "Failed to send notification", error: error.message });
     }
-
-    const tokensArray = rows.map(row => row.token);
-    console.log("Sending notifications to tokens:", tokensArray);
-
-    const message = {
-      notification: { title, body },
-      tokens: tokensArray,
-    };
-    // console.log("token Array : ", tokensArray)
-
-    const response = await admin.messaging().sendEachForMulticast(message);
-    console.log("Firebase responses:", response);
-
-    response.responses.forEach((res, index) => {
-      if (!res.success) {
-        console.error(`Error for message ${index}:`, res.error);
-      }
-    });
-
-
-    // Remove invalid tokens
-    const invalidTokens = [];
-    response.responses.forEach((resp, index) => {
-      if (!resp.success && resp.error.code === "messaging/registration-token-not-registered") {
-        invalidTokens.push(tokensArray[index]);
-      }
-    });
-
-    if (invalidTokens.length > 0) {
-      await db.query('DELETE FROM device_tokens WHERE token IN (?)', [invalidTokens]);
-      console.log('Removed invalid tokens:', invalidTokens);
-    }
-
-    res.json({
-      message: "Notification sent successfully!",
-      // tokensSent: tokensArray,
-      response,
-    });
-  } catch (error) {
-    console.error("Firebase Error:", error);
-    res.status(500).json({ message: "Failed to send notification", error: error.message });
-  }
 };
+
 
 
 // import admin from '../config/firebase-admin.js';

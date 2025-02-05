@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
+import { getMessaging, getToken,onMessage } from "firebase/messaging";
 import axios from "axios";
 
 const firebaseConfig = {
@@ -16,18 +16,6 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const messaging = getMessaging(app);
 const VAPID_KEY = process.env.REACT_APP_FIREBASE_VAPID_KEY;
-
-// Register Service Worker
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker
-        .register("/firebase-messaging-sw.js")
-        .then(registration => {
-            console.log("Service Worker registered:", registration);
-        })
-        .catch(error => {
-            console.error("Service Worker registration failed:", error);
-        });
-}
 
 // Request Notification Permission and Get Token
 export const requestNotificationPermission = async () => {
@@ -49,7 +37,6 @@ export const requestNotificationPermission = async () => {
                 console.log("No token available.");
             }
         } else if (permission === "denied") {
-            alert("Notification permission denied.");
         }
     } catch (error) {
         console.error("Error requesting notification permission:", error);
