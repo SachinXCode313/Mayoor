@@ -1,25 +1,10 @@
-import { useState,useEffect } from "react"
-import { requestNotificationPermission } from "../../Helper/firebase"
-import { messaging } from "../../Helper/firebase"
+import { useState} from "react"
 import Login from "../Login"
 import Home from "../Home"
 import './index.css'
-
-import { onMessage } from "firebase/messaging";
-// import { toast } from "react-toastify";
+import LoadNotification from "./LoadNotification"
 
 
-  useEffect(() => {
-    requestNotificationPermission();
-
-    onMessage(messaging, (payload) => {
-      console.log("Received foreground message:", payload);
-      const { title, body } = payload.notification || {};
-
-      new Notification({ title, body });
-      
-    });
-  }, []);
 
 
 const App = () => {
@@ -29,6 +14,7 @@ const App = () => {
     return (
       <>
         {/* <Login/> */}
+        <LoadNotification/>
         {
           user ? <Home user={user} /> : <Login setUser = {setUser} />
         }
