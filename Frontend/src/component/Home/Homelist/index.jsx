@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Wrapper from './style';
-import notification from "./bell.png";
-import student from './user.png';
-import menu from "./menu.png";
+// import notification from "./bell.png";
+// import student from './user.png';
+// import menu from "./menu.png";
 import Ripples from 'react-ripples'
 const HomeList = ({ user, setIndex, msg }) => {
   console.log(user)
@@ -45,12 +45,12 @@ const HomeList = ({ user, setIndex, msg }) => {
       <div id="user">
         <div id="detail">
           <p id="hi">Hi ,</p>
-          <h1 id="name">{user}</h1>
+          <h1 id="name">{user.name}</h1>
         </div>
         <div id="image">
           {/* <img id="notification" src={notification} alt="Notification" /> */}
-          <img id="profile" src={student} alt="User" />
-          <img id="menu" src={menu} alt="Menu" />
+          {/* <img id="profile" src={student} alt="User" /> */}
+          {/* <img id="menu" src={menu} alt="Menu" /> */}
         </div>
       </div>
       <form className="choice">
@@ -102,7 +102,7 @@ const HomeList = ({ user, setIndex, msg }) => {
           <Ripples><div tabIndex={0} className={`option ${selectedSubject === '13' ? 'active' : ''}`} onClick={e => setSelectedSubject('13')}>Discipline</div></Ripples>
           <Ripples><div tabIndex={0} className={`option ${selectedSubject === '14' ? 'active' : ''}`} onClick={e => setSelectedSubject('14')}>Attendance</div></Ripples>
         </div>
-        <Ripples><button
+        <Ripples className="started"><button
           className="get-started"
           onClick={(e) => {
             e.preventDefault();

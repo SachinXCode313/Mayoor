@@ -12,7 +12,7 @@ const Wrapper = styled.section`
       gap: 60px;
       align-items: center;
       position: relative;
-      width: 100%;
+      // width: 100%;
       margin: 15px 0;
       padding-left: 12px;
       padding-right:12px;
@@ -96,6 +96,13 @@ const Wrapper = styled.section`
     background-color: #fff;
     padding: 10px;
   }
+    .loading-message{
+    height: 30px;  
+    width: 30px;
+    display: block; 
+    margin: auto; 
+    color: grey;
+    }
 
   .ro-list::-webkit-scrollbar {
     width: 8px; /* Width of the scrollbar for WebKit browsers */
@@ -133,7 +140,7 @@ const Wrapper = styled.section`
 
   .ro-dropdown-content {
     padding: 10px;
-    background: #e0f2f1;
+    background: #eee;
     color: #004d40;
   }
   

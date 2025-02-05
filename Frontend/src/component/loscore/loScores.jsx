@@ -4,29 +4,28 @@ import { FaArrowLeft, FaEdit } from "react-icons/fa";
 // import bellIcon from '../assets/bell.png';
 // import userIcon from '../assets/user.png';
 import axios from 'axios';
-const StudentList = ({student, handleOnBack}) => {
-  const [profile] = useState({
-    name: 'John Doe',
-    studentId: '1234567',
-    subject: 'Computer Science',
-    profilePic: 'https://i.pravatar.cc/150',
-  });
-  const [scores] = useState([
-    { lo: 'LO1', score: 90 },
-    { lo: 'LO2', score: 85 },
-    { lo: 'LO3', score: 95 },
-    { lo: 'LO4', score: 90 },
-    { lo: 'LO5', score: 85 },
-    { lo: 'LO6', score: 95 },
-    { lo: 'LO7', score: 90 },
-    { lo: 'LO8', score: 85 },
-    { lo: 'LO9', score: 95 },
-    { lo: 'LO10', score: 90 },
-    { lo: 'LO11', score: 85 },
-    { lo: 'LO12', score: 95 },
-  ]);
-  const [loScoreList, setLoScoreList] = useState([]);
-  const [filteredLoScoreList, setFilteredLoScoreList] = useState([]);
+import studentIcon from '../assets/Student.avif'
+const StudentList = ({student, handleOnBack, loScoreList}) => {
+  // const [profile] = useState({
+  //   name: 'John Doe',
+  //   studentId: '1234567',
+  //   subject: 'Computer Science',
+  //   //profilePic: 'https://i.pravatar.cc/150',
+  // });
+  // const [scores] = useState([
+  //   { lo: 'LO1', score: 90 },
+  //   { lo: 'LO2', score: 85 },
+  //   { lo: 'LO3', score: 95 },
+  //   { lo: 'LO4', score: 90 },
+  //   { lo: 'LO5', score: 85 },
+  //   { lo: 'LO6', score: 95 },
+  //   { lo: 'LO7', score: 90 },
+  //   { lo: 'LO8', score: 85 },
+  //   { lo: 'LO9', score: 95 },
+  //   { lo: 'LO10', score: 90 },
+  //   { lo: 'LO11', score: 85 },
+  //   { lo: 'LO12', score: 95 },
+  // ]);
   const [userData, setUserData] = useState(null);
     useEffect(() => {
       const userData = sessionStorage.getItem("userData");
@@ -34,43 +33,8 @@ const StudentList = ({student, handleOnBack}) => {
         setUserData(JSON.parse(userData));
       }
     }, []);
-    console.log("Student Data:", student);
-    console.log("User Data:", userData);
-    useEffect(() => {
-      const loadLoScore = async (userdata) => {
-        const headers = {
-          Authorization: 'Bearer YOUR_ACCESS_TOKEN', // Replace with actual token
-          'Content-Type': 'application/json',
-          student_id: student.id,
-          year: userdata.year,
-          classname: userdata.class,
-          section: userdata.section,
-          subject: userdata.subject,
-          quarter: userdata.quarter // Use userdata instead of user
-        };
-        console.log(headers);
-        try {
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/learning-outcome-score`, { headers });
-          const data = response.data;
-          console.log('Response Data:', data);
-          if (data && Array.isArray(data.ac_scores)) {
-            setLoScoreList(data.ac_scores);
-            setFilteredLoScoreList(data.ac_scores);
-          } else {
-            console.warn('Expected an array but received:', data);
-            setLoScoreList([]);
-            setFilteredLoScoreList([]);
-          }
-        } catch (error) {
-          console.error('Error fetching lo scores:', error.response || error.message);
-          setLoScoreList([]);
-          setFilteredLoScoreList([]);
-        }
-      };
-      if (userData && Object.keys(userData).length > 0) {
-        loadLoScore(userData); // Corrected: Pass userData instead of user
-      }
-    }, [userData]);
+    // console.log("Student Data:", student);
+    // console.log("User Data:", userData);
   return (
     <Wrapper>
       <div className="AppContainer">
@@ -81,7 +45,7 @@ const StudentList = ({student, handleOnBack}) => {
         <div className="container">
         <div className="ContentContainer">
           <div className="ProfileCard">
-            <img className="ProfilePic" src={profile.profilePic} alt="Profile" />
+            <img className="ProfilePic" src={studentIcon} alt="Profile" />
             <div className="ProfileInfo">
               <div className="ProfileRow">
                 <span className="Label">Name:</span>
@@ -93,7 +57,7 @@ const StudentList = ({student, handleOnBack}) => {
               </div>
               <div className="ProfileRow">
                 <span className="Label">Subject:</span>
-                <span className="Value">{profile.subject}</span>
+                <span className="Value">{student.subject}</span>
               </div>
             </div>
           </div>

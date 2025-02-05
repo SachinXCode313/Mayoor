@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./StudentSelectStyles"; // Importing styles
 import bellIcon from "../assets/bell.png";
 import userIcon from "../assets/user.png";
-import { IoSearchOutline } from "react-icons/io5";
+// import { IoSearchOutline } from "react-icons/io5";
 import axios from "axios";
 import StudentReport from "../Student_report/StudentReport.jsx";
 import TeacherProfile from "../TeacherProfile/index.jsx"
@@ -125,13 +125,13 @@ const StudentList = ({ onStudentsData, setIndex }) => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
             />
-            <IoSearchOutline style={styles.searchIcon} />
+            {/* <IoSearchOutline style={styles.searchIcon} /> */}
           </div>
 
           <div style={styles.iconWrapper}>
             {/* <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} /> */}
             {/* <img src={userIcon} alt="User Icon" onClick={handleProfile} style={{ width: "22px", height: "22px" }} /> */}
-            <Menu
+            <Menu style={styles.menu}
              onProfileClick={handleProfileClick}
              onSettingsClick={handleSettingsClick}
              onLogoutClick={handleLogoutClick}
@@ -153,7 +153,7 @@ const StudentList = ({ onStudentsData, setIndex }) => {
           ))
         ) : (
           <div style={styles.noResults}>
-            Loading....
+            Loading...
           </div>
         )}
       </div>

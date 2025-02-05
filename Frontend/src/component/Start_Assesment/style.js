@@ -126,9 +126,9 @@ height: 25px;
   border: 5px solid #FFFFFF;
 }
 .name {
-font-family: Sans-sarif;
+  font-family: sans-sarif;
   font-size: 25px;
-  margin-top: 35px;
+  margin-top: 25px;
   color: black;
 }
 .title{
@@ -182,7 +182,7 @@ font-family: Sans-sarif;
 .ac-box h2 {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 15px;
+  margin-bottom: 19px;
 }
 .marks-input {
   width: 100%;
@@ -198,5 +198,8 @@ font-family: Sans-sarif;
 .ac-container::-webkit-scrollbar {
   display: none;
 }
+  .max-marks{
+  margin-top: 5px;
+  }
 `
 export default Wrapper;

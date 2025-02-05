@@ -63,7 +63,26 @@ const styles = `
     line-height: 1.5;
     text-align: right;
   }
+  /* Percentage Circles */
+ .percentage-container {
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+  flex-wrap: wrap; /* Allow wrapping for responsiveness */
+}
 
+.percentage {
+  text-align: center;
+  width: 90px; /* Adjust width as needed */
+  flex: 1 1 100px; /* Allow flexibility in size */
+  max-width: 120px; /* Set a maximum width */
+}
+
+.percentage p {
+  font-size: 11px;
+  margin-top: 5px;
+}
   .info-text {
     width: 100%;
     text-align: left;
@@ -105,4 +124,4 @@ styleSheet.type = "text/css";
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
-export default styles;
+export default styles

@@ -92,15 +92,15 @@ const Assessment = ({ selectedAssessment, onBack, studentsData }) => {
             className="search-bar"
           />
           <div className="icon">
-            <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} />
-            <img src={userIcon} alt="User Icon" style={{ width: "22px", height: "22px" }} />
-            <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: "22px", height: "31px" }} />
+            {/* <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} /> */}
+            {/* <img src={userIcon} alt="User Icon" style={{ width: "22px", height: "22px" }} /> */}
+            {/* <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: "22px", height: "31px" }} /> */}
           </div>
         </div>
 
         <div className="info-container">
           <h1 className="name">{selectedAssessment ? selectedAssessment.name : "AC-1"}</h1>
-          <p>Max Marks : {selectedAssessment.max_marks}</p>
+          <p className="max-marks">Max Marks : {selectedAssessment.max_marks}</p>
         </div>
       </div>
 

@@ -18,7 +18,7 @@ const Wrapper = styled.section`
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: 80vh;
+    height: auto;
     overflow-y: auto; /* Add vertical scroll bar when content exceeds height */
     overflow-x: hidden; /* Prevent horizontal scrolling */
     scrollbar-width: thin; /* For Firefox - thin scrollbar */
@@ -90,10 +90,10 @@ const Wrapper = styled.section`
   .btn{
     width: 100px;
     padding: 10px;
-    background-color: rgb(235, 56, 56);
+    background-color: #21c2ba;
     color: white;
     border-color: white;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
     font-weight: bold;
   }
@@ -101,10 +101,10 @@ const Wrapper = styled.section`
     margin-right: 20px;
     width: 100px;
     padding: 10px;
-    background-color: rgb(100, 156, 75);
+    background-color: grey;
     color: white;
     border-color: white;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
     font-weight: bold;
   }

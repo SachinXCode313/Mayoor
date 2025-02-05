@@ -91,7 +91,7 @@ const Wrapper = styled.section`
 .btn{
   width: 100px;
   padding: 10px;
-  background-color: rgb(235, 56, 56);
+  background-color: #21c2ba;
   color: white;
   border-color: white;
   border-radius: 20px;
@@ -102,7 +102,7 @@ const Wrapper = styled.section`
   margin-right: 20px;
   width: 100px;
   padding: 10px;
-  background-color: rgb(100, 156, 75);
+  background-color: grey;
   color: white;
   border-color: white;
   border-radius: 20px;

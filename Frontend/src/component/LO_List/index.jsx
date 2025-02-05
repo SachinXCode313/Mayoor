@@ -114,8 +114,8 @@ const LOlist = ({ acItems, setAcItems, loItems, setLoItems, handleLoItems, setIn
       </div>
         <ul className="lo-list">
           {loading ? (
-            <li className="loading-message">
-            <p>Loading....</p>
+            <li>
+            <p className="loading-message">Loading....</p>
             </li>
           ) : filteredLoList.length > 0 ? (
           filteredLoList.map((item, index) => (

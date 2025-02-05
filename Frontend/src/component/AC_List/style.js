@@ -12,16 +12,17 @@ const Wrapper = styled.section`
       gap: 60px;
       align-items: center;
       position: relative;
-      width: 100%;
+      // width: 100%;
       margin: 15px 0;
       padding-left: 12px;
       padding-right:12px;
     }
-    .menu{
-    padding-right:17px;
-    }
+      
+    // .menu{
+    // margin-right: 20px;
+    // }
     .search-bar {
-      width: 100%;
+      // width: 100%;
       padding: 10px 40px 10px 15px;
       font-size: 16px;
       border-radius: 25px;
@@ -40,12 +41,12 @@ const Wrapper = styled.section`
     .search-bar::placeholder {
       color: #aaa;
     }
-    .icon{
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding-right: 15px;
-    }
+    // .icon{
+    //   display: flex;
+    //   gap: 12px;
+    //   align-items: center;
+    //   padding-right: 15px;
+    // }
 
     .list-icon-container {
       position: absolute;
@@ -174,6 +175,13 @@ const Wrapper = styled.section`
   height: 20px;
   //background-color: #21c3bc;
 }
+  .loading-message{
+    height: 30px;  
+    width: 30px;
+    display: block; 
+    margin: auto; 
+    color: grey;
+    }
 .list-icon-containers{
   //background-color: #21c3bc;
   margin-right: 10px;

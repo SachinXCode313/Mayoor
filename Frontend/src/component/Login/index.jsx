@@ -20,16 +20,18 @@ const firebaseConfig = {
 };
 
 
+
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 const allowedDomains = ["gitjaipur.com"];
-const WS_URL = "ws://localhost:3500";
+const WS_URL = "ws://mayoorschoolapp.onrender.com/";
 
 const Login = ({setUser}) => {
   const [teacher, setTeacher] = useState(null); // Start with null to avoid flicker
-  const [teachers, setTeachers] = useState([]);
+  // const [teachers, setTeachers] = useState([]);
   const [error, setError] = useState("");
   const [ws, setWs] = useState(null);
   const [notification, setNotification] = useState({ title: "", body: "" });
@@ -57,7 +59,7 @@ const Login = ({setUser}) => {
 
     socket.onmessage = (event) => {
       console.log("📥 Received data:", event.data);
-      setTeachers(JSON.parse(event.data));
+      // setTeachers(JSON.parse(event.data));
     };
 
     socket.onclose = () => console.log("🔴 Disconnected from WebSocket server");
@@ -130,7 +132,7 @@ const Login = ({setUser}) => {
     <Wrapper>
       <div className="homePage">
         {teacher ? (
-          <Home teacher={teacher} teachers={teachers} />
+          <Home teacher={teacher} />
         ) : (
           <div className="container">
             <div>

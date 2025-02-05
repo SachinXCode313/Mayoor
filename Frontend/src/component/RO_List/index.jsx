@@ -110,8 +110,8 @@ const ROlist = ({ loItems, setLoItems, setIndex}) => {
       </div>
         <ul className="ro-list">
           {loading ? (
-            <li className="loading-message">
-              <p>Loading....</p>
+            <li>
+              <p className='loading-message'>Loading....</p>
             </li>
           ) : filteredRoList.length > 0 ? (
           filteredRoList.map((item, index) => (

@@ -25,6 +25,9 @@ const styles = {
     maxWidth: "100%",
     boxSizing: "border-box",
   },
+  menu: {
+      marginRight: "px",
+  },
   searchContainer: {
     display: "flex",
     alignItems: "center",
@@ -66,10 +69,10 @@ const styles = {
     fontWeight: "bold",
     textAlign: "left",
   },
-  searchIcon: {
-    fontSize: "20px",
-    color: "#555",
-  },
+  // searchIcon: {
+  //   fontSize: "20px",
+  //   color: "#555",
+  // },
   iconWrapper: {
     display: "flex",
     gap: "12px",
@@ -100,6 +103,6 @@ const styles = {
     margin: "auto",   
   },
   
-};
+}
 
-export default styles;
+export default styles

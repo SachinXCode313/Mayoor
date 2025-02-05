@@ -85,6 +85,7 @@ const Wrapper = styled.section`
     #name {
         font-size: 33px;
         font-weight: bold;
+        margin-top: 6px;
     }
     p {
         font-size: 15px;
@@ -134,9 +135,15 @@ const Wrapper = styled.section`
         font-weight: bold;
     }
     
+    .started{
+       margin-left: 80px;
+       margin-top: 8px;
+    }
+
     .get-started{
         background : #21C2BA;
         color : #000;
+        font-size: 20px;
         padding : 15px 30px;
         border-radius: 5px;
         border : none;
@@ -145,5 +152,6 @@ const Wrapper = styled.section`
         font-weight : bold;
         border-bottom : solid 3px #00a098;
     }
-`;
+`
+
 export default Wrapper;

@@ -127,8 +127,8 @@ const AC_List = ({acItems, setAcItems, handleAcItems, studentsData , setIndex,us
 
       <ul className="ac-list">
         {loading ? (
-          <li className="loading-message">
-            <p>Loading....</p>
+          <li >
+            <p className="loading-message">Loading....</p>
           </li>
         ) : filteredAcList.length > 0 ? (
           filteredAcList.map((item) => (
