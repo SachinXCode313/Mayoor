@@ -36,18 +36,18 @@ const Login = ({setUser}) => {
   
   const loginInProgress = useRef(false); // Track if login is in progress
 
-  useEffect(() => {
-    requestNotificationPermission();
+  // useEffect(() => {
+  //   const token = requestNotificationPermission();
 
-    onMessage(messaging, (payload) => {
-      console.log("Received foreground message:", payload);
-      const { title, body } = payload.notification || {};
+  //   onMessage(messaging, (payload) => {
+  //     console.log("Received foreground message:", payload);
+  //     const { title, body } = payload.notification || {};
 
-      new Notification({ title, body });
+  //     new Notification({ title, body });
 
       
-    });
-  }, []);
+  //   });
+  // }, []);
 
   useEffect(() => {
     const socket = new WebSocket(WS_URL);
