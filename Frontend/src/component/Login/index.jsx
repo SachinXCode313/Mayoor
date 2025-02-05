@@ -1,7 +1,7 @@
 import Wrapper from "./style";
 import React, { useState, useEffect, useRef } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut ,signInWithRedirect,getRedirectResult} from "firebase/auth";
 // import { requestNotificationPermission } from "../../Helper/firebase";
 // import { onMessage } from "firebase/messaging";
 // import { messaging } from "../../Helper/firebase";
