@@ -1,7 +1,7 @@
 import Wrapper from "./style";
 import React, { useState, useEffect, useRef } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut ,signInWithRedirect,getRedirectResult} from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 // import { requestNotificationPermission } from "../../Helper/firebase";
 // import { onMessage } from "firebase/messaging";
 // import { messaging } from "../../Helper/firebase";
@@ -76,67 +76,57 @@ const Login = ({setUser}) => {
   
 
   const handleLogin = async () => {
-    if (loginInProgress.current) return;
+    if (loginInProgress.current) return; // Prevent multiple login attempts
     loginInProgress.current = true;
-  
+
     try {
+      // Force fresh sign-in flow
       await signOut(auth);
-      provider.setCustomParameters({ prompt: "select_account" });
-  
-      if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-        // Use redirect for iOS
-        await signInWithRedirect(auth, provider);
+      provider.setCustomParameters({
+        prompt: "select_account",
+      });
+
+      const result = await signInWithPopup(auth, provider);
+      console.log("Sign-in successful:", result);
+
+      const email = result.user.email;
+      const domain = email.split("@")[1];
+
+      if (allowedDomains.includes(domain)) {
+        const idToken = await result.user.getIdToken();
+        console.log("ID Token retrieved:", idToken);
+
+        try {
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/verify-token`, {
+            token: idToken,
+          });
+
+          if (response.status === 200) {
+            setTeacher(result.user); // Set teacher only after successful login
+            setError("");
+            console.log("teacher authenticated successfully:", response.data);
+            setUser(result.user.displayName)
+            // Send minimal user data through WebSocket
+            if (ws) {
+              ws.send(JSON.stringify({ email: result.user.email, name: result.user.displayName }));
+            }
+          } else {
+            setError("Authentication failed: " + response.data.message);
+          }
+        } catch (err) {
+          console.error("Error during token verification:", err.response?.data || err.message || err);
+          setError("Error verifying token with backend.");
+        }
       } else {
-        // Use popup for other devices
-        const result = await signInWithPopup(auth, provider);
-        handleSignInResult(result);
+        setError("Access denied: Unauthorized domain.");
+        await signOut(auth);
       }
     } catch (err) {
-      console.error("Error during login:", err.message);
-      setError(`Login failed: ${err.message}`);
+      console.error("Error during login:", err.code, err.message);
+      setError(`An error occurred during login: ${err.message || err}`);
+      await signOut(auth); // Ensure we clean up invalid credentials
     } finally {
       loginInProgress.current = false;
-    }
-  };
-  
-  // Handle the redirect result
-  useEffect(() => {
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result) handleSignInResult(result);
-      })
-      .catch((error) => {
-        console.error("Redirect sign-in error:", error.message);
-      });
-  }, []);
-  
-  const handleSignInResult = async (result) => {
-    if (!result) return;
-  
-    const email = result.user.email;
-    const domain = email.split("@")[1];
-  
-    if (allowedDomains.includes(domain)) {
-      const idToken = await result.user.getIdToken();
-      try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/verify-token`, { token: idToken });
-  
-        if (response.status === 200) {
-          setTeacher(result.user);
-          setUser(result.user.displayName);
-  
-          if (ws) {
-            ws.send(JSON.stringify({ email: result.user.email, name: result.user.displayName }));
-          }
-        } else {
-          setError("Authentication failed: " + response.data.message);
-        }
-      } catch (err) {
-        setError("Error verifying token with backend.");
-      }
-    } else {
-      setError("Access denied: Unauthorized domain.");
-      await signOut(auth);
     }
   };
 

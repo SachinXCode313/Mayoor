@@ -9,6 +9,7 @@ import homeIcon from '../assets/Smart Home.png';
 import listIcon from '../assets/Audit.png';
 import StudentList from '../Students/StudentSelect';
 import ClassView from '../ClassView/Classview';
+import LoadNotification from '../App/LoadNotification';
 
 import { useSwipeable } from 'react-swipeable';
 const Home = ({ user }) => {
@@ -50,6 +51,7 @@ const handlers = useSwipeable({
 });
   return (
     <Wrapper {...handlers}>
+      <LoadNotification/>
       <div className="screen">
         {index === 1 ? (
           <HomeList user={user} setIndex={setIndex}  />
