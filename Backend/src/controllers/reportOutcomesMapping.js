@@ -11,7 +11,7 @@ const getReportOutcomesMapping = async (req, res) => {
         if (!ro_id) {
             return res.status(400).json({ error: "ro_id is required in the headers" });
         }
-        // Query to fetch lo_id, ac_id, and priority mapped to the given ro_id
+        // Query to fetch lo_id, and priority mapped to the given ro_id
         const [rows] = await db.query(
             `SELECT lo_id, priority
             FROM ro_lo_mapping
@@ -19,14 +19,14 @@ const getReportOutcomesMapping = async (req, res) => {
             [ro_id]
         );
         if (rows.length === 0) {
-            return res.status(404).json({ error: "No ACs found for the given ro_id." });
+            return res.status(404).json({ error: "No LOs found for the given ro_id." });
         }
         res.status(200).json({
-            message: "ACs and their priorities for the given ro_id fetched successfully",
+            message: "LOs and their priorities for the given ro_id fetched successfully",
             data: rows
         });
     } catch (error) {
-        console.error("Error fetching ACs mapping for RO:", error.message);
+        console.error("Error fetching LOs mapping for RO:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
