@@ -23,20 +23,30 @@ const getClassAverageACScore = async (req, res) => {
             GROUP BY ac.id
             ORDER BY ac.id;
         `, [year, classname, section, subject, quarter]);
+
         if (acAverages.length === 0) {
             return res.status(404).json({ error: "No AC scores found for the provided filters." });
         }
+
         // Format the response
         const result = acAverages.map(row => ({
             ac_id: row.id,
             average_score: parseFloat(row.average_score)
         }));
-        res.status(200).json({ class_ac_averages: result });
+
+        // Calculate overall average
+        const overallAverage = result.reduce((sum, item) => sum + item.average_score, 0) / result.length;
+
+        res.status(200).json({ 
+            class_ac_averages: result,
+            overall_average: parseFloat(overallAverage.toFixed(3)) 
+        });
     } catch (error) {
         console.error("Error fetching class AC averages:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
 const getClassAverageLOScore = async (req, res) => {
     try {
         const { subject, classname, year, quarter, section } = req.headers;
