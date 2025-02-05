@@ -27,7 +27,7 @@ const provider = new GoogleAuthProvider();
 const allowedDomains = ["gitjaipur.com"];
 const WS_URL = "ws://localhost:3500";
 
-const Login = () => {
+const Login = ({setUser}) => {
   const [teacher, setTeacher] = useState(null); // Start with null to avoid flicker
   const [teachers, setTeachers] = useState([]);
   const [error, setError] = useState("");
@@ -105,7 +105,7 @@ const Login = () => {
             setTeacher(result.user); // Set teacher only after successful login
             setError("");
             console.log("teacher authenticated successfully:", response.data);
-
+            setUser(result.user.displayName)
             // Send minimal user data through WebSocket
             if (ws) {
               ws.send(JSON.stringify({ email: result.user.email, name: result.user.displayName }));
