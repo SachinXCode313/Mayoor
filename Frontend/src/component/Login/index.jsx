@@ -1,7 +1,7 @@
 import Wrapper from "./style";
 import React, { useState, useEffect, useRef } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, signInWithRedirect  } from "firebase/auth";
 // import { requestNotificationPermission } from "../../Helper/firebase";
 // import { onMessage } from "firebase/messaging";
 // import { messaging } from "../../Helper/firebase";
@@ -86,7 +86,12 @@ const Login = ({setUser}) => {
         prompt: "select_account",
       });
 
-      const result = await signInWithPopup(auth, provider);
+      let result;
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        result = await signInWithRedirect(auth, provider);
+      } else {
+        result = await signInWithPopup(auth, provider);
+      }
       console.log("Sign-in successful:", result);
 
       const email = result.user.email;
