@@ -19,6 +19,9 @@ const LoadNotification = () => {
     
   });
 }, []);
+
+return
+
 }
 
 export default LoadNotification
