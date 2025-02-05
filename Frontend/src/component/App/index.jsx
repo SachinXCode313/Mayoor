@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react"
-import { requestNotificationPermission } from "../../Helper/firebase";
-import { onMessage } from "firebase/messaging";
-import { messaging } from "../../Helper/firebase";
+import { requestNotificationPermission } from "../../Helper/firebase"
+import { onMessage } from "firebase/messaging"
+import { messaging } from "../../Helper/firebase"
 import Login from "../Login"
 import Home from "../Home"
 import './index.css'
