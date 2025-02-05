@@ -18,7 +18,7 @@ import requestNotificationPermission from '../../Helper/push';
 import { messaging } from '../../Helper/firebase';
 
 
-const Home = ({ user,onLogout }) => {
+const Home = ({ user }) => {
   const [index, setIndex] = useState(1);
   const [tabs, setTabs] = useState([
     { id: 2, title: 'Home', icon: homeIcon },
@@ -80,7 +80,7 @@ useEffect(() => {
         {index === 1 ? (
           <HomeList user={user} setIndex={setIndex}  />
         ) : index === 2 ? (
-          <ClassView setIndex={setIndex} user={user} onLogout={onLogout}/>
+          <ClassView setIndex={setIndex} user={user}/>
         ) : index === 3 ? (
           <StudentList onStudentsData={handleStudentsData} setIndex={setIndex} />
         ) : index === 4 ? (
