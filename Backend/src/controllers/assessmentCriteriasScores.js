@@ -2,10 +2,10 @@ import db from "../config/db.js";
 
 // Get Assessment Criterias Scores
 const getAssessmentCriteriaScores =  async (req, res) => {
-    const { student_id, year, section, subject, quarter, classname } = req.headers;
+    const { student_id} = req.headers;
     console.log(`Fetching scores and average for Student ID: ${student_id}`);
-    if (!student_id || !year || !section || !subject || !quarter || !classname) {
-        return res.status(400).json({ message: "Missing required headers: student_id, year, section, subject, quarter, classname" });
+    if (!student_id) {
+        return res.status(400).json({ message: "Missing required headers: student_id" });
     }
     try {
         // Query to fetch all ac_id and values for the student
