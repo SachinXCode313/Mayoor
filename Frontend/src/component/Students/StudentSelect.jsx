@@ -6,7 +6,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import axios from "axios";
 import StudentReport from "../Student_report/StudentReport.jsx";
 import TeacherProfile from "../TeacherProfile/index.jsx"
-import loading from "./loading.gif";
+// import loading from "./loading.gif";
 
 const StudentList = ({ onStudentsData }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -141,7 +141,8 @@ const StudentList = ({ onStudentsData }) => {
           ))
         ) : (
           <div style={styles.noResults}>
-            <img src={loading} alt="" className="loading"/>
+            loading....
+            {/* <img src={loading} alt="" className="loading"/> */}
           </div>
         )}
       </div>
