@@ -1,6 +1,6 @@
 import { useState} from "react"
 import Login from "../Login"
-import Home from "../Home"
+// import Home from "../Home"
 import './index.css'
 // import LoadNotification from "./LoadNotification"
 
@@ -9,14 +9,14 @@ import './index.css'
 
 const App = () => {
 
-    const [user, setUser] = useState(null)
+    // const [user, setUser] = useState(null)
 
     return (
       <>
-        {/* <Login/> */}
+        <Login/>
         {/* <LoadNotification/> */}
         {
-          user ? <Home user={user} /> : <Login setUser = {setUser} />
+          // user ? <Home user={user} /> : <Login setUser = {setUser} />
         }
         </>
     )

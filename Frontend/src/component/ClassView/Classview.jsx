@@ -69,7 +69,7 @@ const options = {
   },
 };
 
-const ClassView = ({setIndex, user}) => {
+const ClassView = ({setIndex, user,onLogout}) => {
   const [selectedChart, setSelectedChart] = useState("ac");
   const handleClick = () => {
     setIndex(1)
@@ -85,7 +85,9 @@ const ClassView = ({setIndex, user}) => {
       }, []);
       const handleProfileClick = () => alert("Go to Profile");
       const handleSettingsClick = () => alert("Open Settings");
-      const handleLogoutClick = () => alert("Logging Out...");
+      const handleLogoutClick = () => {
+        onLogout()
+      }
   return (
     <div className="class-container">
       <div className="class-header">
