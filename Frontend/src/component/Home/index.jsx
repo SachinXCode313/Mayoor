@@ -8,8 +8,9 @@ import stuIcon from '../assets/Graduate.png';
 import homeIcon from '../assets/Smart Home.png';
 import listIcon from '../assets/Audit.png';
 import StudentList from '../Students/StudentSelect';
-import ClassView from "../Classview";
 import { useSwipeable } from 'react-swipeable';
+import ClassView from '../ClassView/Classview';
+
 const Home = ({ user }) => {
   const [index, setIndex] = useState(1);
   const [tabs, setTabs] = useState([
