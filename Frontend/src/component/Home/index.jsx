@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Wrapper from './style';
 import HomeList from './Homelist';
 import ROlist from '../RO_List';
@@ -11,7 +11,13 @@ import StudentList from '../Students/StudentSelect';
 import ClassView from '../ClassView/Classview';
 import LoadNotification from '../App/LoadNotification';
 
+
 import { useSwipeable } from 'react-swipeable';
+import { onMessage } from 'firebase/messaging';
+import requestNotificationPermission from '../../Helper/push';
+import { messaging } from '../../Helper/firebase';
+
+
 const Home = ({ user }) => {
   const [index, setIndex] = useState(1);
   const [tabs, setTabs] = useState([
@@ -49,9 +55,25 @@ const handlers = useSwipeable({
   },
   trackMouse: true,
 });
+
+
+useEffect(() => {
+  requestNotificationPermission();
+
+  onMessage(messaging, (payload) => {
+    console.log("Received foreground message:", payload);
+    const { title, body } = payload.notification || {};
+
+    new Notification({ title, body });
+    
+  });
+}, []);
+
+
+
   return (
     <Wrapper {...handlers}>
-      <LoadNotification/>
+      {/* <LoadNotification/> */}
       <div className="screen">
         {index === 1 ? (
           <HomeList user={user} setIndex={setIndex}  />
