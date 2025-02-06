@@ -101,6 +101,7 @@ const styles = `
   .chart-wrapper {
     width: 90%;
     overflow-x: auto;
+    margin-top: 50px;
   }
 
   .chart-container {

@@ -99,16 +99,16 @@ const Login = ({setUser}) => {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/verify-token`, {
           token: idToken,
         });
-  
+
         if (response.status === 200) {
           setTeacher(result.user); // Set teacher only after successful login
           setError("");
           console.log("teacher authenticated successfully:", response.data);
           setUser(result.user.displayName);
           // Send minimal user data through WebSocket
-          if (ws) {
-            ws.send(JSON.stringify({ email: result.user.email, name: result.user.displayName }));
-          }
+          // if (ws) {
+          //   ws.send(JSON.stringify({ email: result.user.email, name: result.user.displayName }));
+          // }
         } else {
           setError("Authentication failed: " + response.data.message);
         }
