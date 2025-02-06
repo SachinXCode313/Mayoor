@@ -27,13 +27,13 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 const allowedDomains = ["gitjaipur.com"];
-const WS_URL = "ws://mayoorschoolapp.onrender.com/";
+// const WS_URL = "ws://mayoorschoolapp.onrender.com/";
 
 const Login = ({setUser}) => {
   const [teacher, setTeacher] = useState(null); // Start with null to avoid flicker
   // const [teachers, setTeachers] = useState([]);
   const [error, setError] = useState("");
-  const [ws, setWs] = useState(null);
+  // const [ws, setWs] = useState(null);
   const [notification, setNotification] = useState({ title: "", body: "" });
   
   const loginInProgress = useRef(false); // Track if login is in progress
@@ -51,21 +51,21 @@ const Login = ({setUser}) => {
   //   });
   // }, []);
 
-  useEffect(() => {
-    const socket = new WebSocket(WS_URL);
-    setWs(socket);
+  // useEffect(() => {
+  //   const socket = new WebSocket(WS_URL);
+  //   setWs(socket);
 
-    socket.onopen = () => console.log("✅ Connected to WebSocket server");
+  //   socket.onopen = () => console.log("✅ Connected to WebSocket server");
 
-    socket.onmessage = (event) => {
-      console.log("📥 Received data:", event.data);
-      // setTeachers(JSON.parse(event.data));
-    };
+  //   socket.onmessage = (event) => {
+  //     console.log("📥 Received data:", event.data);
+  //     // setTeachers(JSON.parse(event.data));
+  //   };
 
-    socket.onclose = () => console.log("🔴 Disconnected from WebSocket server");
+  //   socket.onclose = () => console.log("🔴 Disconnected from WebSocket server");
 
-    return () => socket.close();
-  }, []);
+  //   return () => socket.close();
+  // }, []);
 
   // const handleJoin = () => {
   //   if (teacher && ws) {
