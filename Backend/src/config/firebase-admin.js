@@ -3,6 +3,7 @@ import admin from 'firebase-admin'
 export const initializeFirebase = () => {
   try {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     // const serviceAccount = JSON.parse(
     //   readFileSync(path.resolve(__dirname, '../../firebase-adminsdk.json'), 'utf8')
@@ -15,6 +16,8 @@ export const initializeFirebase = () => {
       client_email: process.env.FIREBASE_CLIENT_EMAIL,
     }
 >>>>>>> 4e336ae (adding notification feature)
+=======
+>>>>>>> 4b9aa87 (adding notification feature)
 
     admin.initializeApp({
       credential: admin.credential.cert({
@@ -22,7 +25,10 @@ export const initializeFirebase = () => {
         project_id: process.env.FIREBASE_PROJECT_ID,
         private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
         client_email: process.env.FIREBASE_CLIENT_EMAIL,
+<<<<<<< HEAD
         token_uri : process.env.FIREBASE_TOKEN_URI
+=======
+>>>>>>> 4b9aa87 (adding notification feature)
       }),
     })
 
