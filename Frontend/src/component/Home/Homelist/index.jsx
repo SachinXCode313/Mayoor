@@ -44,7 +44,7 @@ const HomeList = ({ user, setIndex, msg }) => {
     <Wrapper>
       <div id="user">
         <div id="detail">
-          <h1 id="name">Hi, {user}</h1>
+          <h1 id="name">Welcome, {user || "Guest"}</h1>
         </div>
         <div id="image">
           {/* <img id="notification" src={notification} alt="Notification" /> */}
@@ -56,8 +56,8 @@ const HomeList = ({ user, setIndex, msg }) => {
         <label htmlFor="year" onClick={toggle}>Year ({selectedYear})</label>
         <div className="options">
           <Ripples>
-          <div tabIndex={0} className={selectedYear === 2025 ? "option active" : "option"} onClick={e => setSelectedYear(2025)}>2025</div>
-            </Ripples>
+            <div tabIndex={0} className={selectedYear === 2025 ? "option active" : "option"} onClick={e => setSelectedYear(2025)}>2025</div>
+          </Ripples>
           <Ripples><div tabIndex={0} className={selectedYear === 2024 ? "option active" : "option"} onClick={e => setSelectedYear(2024)}>2024</div></Ripples>
         </div>
         <label htmlFor="class" onClick={toggle}>Class ({selectedClass})</label>

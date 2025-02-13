@@ -11,7 +11,7 @@ import imgBell from "../assets/bell.png";
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
-const ClassView = ({ setIndex, user }) => {
+const ClassView = ({ setIndex, user , onLogout }) => {
   const [selectedChart, setSelectedChart] = useState("ac");
   const [acData, setAcData] = useState([]);
   const [loData, setLoData] = useState([]);
@@ -139,7 +139,10 @@ const ClassView = ({ setIndex, user }) => {
 
       const handleProfileClick = () => alert("Go to Profile");
       const handleSettingsClick = () => alert("Open Settings");
-      const handleLogoutClick = () => alert("Logging Out...");
+      // const handleLogoutClick = () => {
+      //   handleLogout()
+      //   alert("Logging Out...");
+      // }
   return (
     <div className="class-container">
       <div className="class-header">
@@ -155,7 +158,7 @@ const ClassView = ({ setIndex, user }) => {
           <Menu
              onProfileClick={handleProfileClick}
              onSettingsClick={handleSettingsClick}
-             onLogoutClick={handleLogoutClick}
+             onLogout={onLogout}
              onReturnClick={handleClick}
           />
           </div>

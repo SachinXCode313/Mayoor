@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import imgMenu from "../assets/menu.png";
 import Wrapper from "./style";
 
-const Menu = ({ onProfileClick, onSettingsClick, onLogoutClick, onReturnClick }) => {
+const Menu = ({ onProfileClick, onSettingsClick, onLogout, onReturnClick }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Close menu when clicking outside
@@ -35,7 +35,7 @@ const Menu = ({ onProfileClick, onSettingsClick, onLogoutClick, onReturnClick })
         {/* <button onClick={onProfileClick}>Profile</button> */}
         <button onClick={onReturnClick}>Return Home</button>
         {/* <button onClick={onSettingsClick}>Settings</button> */}
-        <button onClick={onLogoutClick} className="logout-btn">
+        <button onClick={onLogout} className="logout-btn">
           Log Out
         </button>
       </div>
