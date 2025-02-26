@@ -8,11 +8,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+app.options('*', cors()); // Allows preflight requests
+
 app.use(cors({
-    origin: ["http://localhost:3000", "http://localhost:3001", "https://mayoor-flax.vercel.app" , "https://login-app-fawn.vercel.app"],
-    methods: ['GET', 'POST', 'OPTIONS'],
+    origin: ["http://localhost:3000", "http://localhost:3001", "https://mayoor-flax.vercel.app", "https://login-app-fawn.vercel.app"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', "subject", "year", "classname", "quarter", "section", "ac_id", "lo_id", "ro_id", "student_id"],
+    allowedHeaders: '*',
 }));
 
 app.use(bodyParser.json());
