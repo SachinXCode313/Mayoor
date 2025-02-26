@@ -1,0 +1,147 @@
+CREATE TABLE subjects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE classes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE sections (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE quarters (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE teachers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    role VARCHAR(100) NOT NULL,
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'inactive',
+    last_seen DATETIME
+);
+
+CREATE TABLE class_teacher (
+    teacher INT,
+    class INT,
+    section INT,
+    PRIMARY KEY (teacher, class, section),
+    FOREIGN KEY (teacher) REFERENCES teachers(id),
+    FOREIGN KEY (class) REFERENCES classes(id),
+    FOREIGN KEY (section) REFERENCES sections(id)
+)
+
+CREATE TABLE teacher_allocation (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    teacher INT,
+    class INT,
+    section INT,
+    subject INT,
+    FOREIGN KEY (teacher) REFERENCES teachers(id), 
+    FOREIGN KEY (class) REFERENCES classes(id), 
+    FOREIGN KEY (section) REFERENCES sections(id), 
+    FOREIGN KEY (subject) REFERENCES subjects(id)
+)
+
+CREATE TABLE report_outcomes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    subject INT,
+    year INT,
+    FOREIGN KEY (subject) REFERENCES subjects(id)
+);
+
+CREATE TABLE learning_outcomes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    subject INT,
+    class INT,
+    quarter INT,
+    year INT,
+    FOREIGN KEY (subject) REFERENCES subjects(id),
+    FOREIGN KEY (class) REFERENCES classes(id), 
+    FOREIGN KEY (quarter) REFERENCES quarters(id) 
+);
+
+CREATE TABLE assessment_criterias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    max_marks INT,
+    subject INT,
+    class INT,
+    quarter INT,
+    year INT,
+    FOREIGN KEY (subject) REFERENCES subjects(id),
+    FOREIGN KEY (class) REFERENCES classes(id), 
+    FOREIGN KEY (quarter) REFERENCES quarters(id) 
+);
+
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active'
+);
+
+CREATE TABLE students_records (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student INT ,
+    class INT,
+    section INT,
+    year INT NOT NULL,
+    FOREIGN KEY (student) REFERENCES students(id), 
+    FOREIGN KEY (class) REFERENCES classes(id), 
+    FOREIGN KEY (section) REFERENCES sections(id) 
+);
+
+CREATE TABLE lo_ac_mapping (
+    lo INT,
+    ac INT,
+    priority VARCHAR(10),
+    weight DECIMAL(3,2),
+    PRIMARY KEY (lo,ac),
+    FOREIGN KEY (lo) REFERENCES learning_outcomes(id) ON DELETE CASCADE,
+    FOREIGN KEY (ac) REFERENCES assessment_criterias(id) ON DELETE CASCADE
+);
+
+CREATE TABLE ro_lo_mapping (
+    ro INT,
+    lo INT,
+    priority VARCHAR(10),
+    weight DECIMAL(3,2),
+    PRIMARY KEY (ro,lo),
+    FOREIGN KEY (ro) REFERENCES report_outcomes(id) ON DELETE CASCADE,
+    FOREIGN KEY (lo) REFERENCES learning_outcomes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE ac_scores (
+    student INT,
+    ac INT,
+    value DECIMAL(5, 2),
+    PRIMARY KEY (student, ac),
+    FOREIGN KEY (student) REFERENCES students_records(id),
+    FOREIGN KEY (ac) REFERENCES assessment_criterias(id) ON DELETE CASCADE 
+);
+
+CREATE TABLE lo_scores (
+    student INT,
+    lo INT,
+    value DECIMAL(5, 2),
+    PRIMARY KEY (student, lo),
+    FOREIGN KEY (student) REFERENCES students_records(id),
+    FOREIGN KEY (lo) REFERENCES learning_outcomes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE ro_scores (
+    student INT,
+    ro INT,
+    value DECIMAL(5, 2),
+    PRIMARY KEY (student, ro),    
+    FOREIGN KEY (student) REFERENCES students_records(id),
+    FOREIGN KEY (ro) REFERENCES report_outcomes(id) ON DELETE CASCADE
+);
