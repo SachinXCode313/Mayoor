@@ -1,7 +1,7 @@
 import Wrapper from "./style";
 import React, { useState, useEffect, useRef } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "firebase/auth";
 // import { requestNotificationPermission } from "../../Helper/firebase";
 // import { onMessage } from "firebase/messaging";
 // import { messaging } from "../../Helper/firebase";
@@ -29,14 +29,43 @@ const provider = new GoogleAuthProvider();
 const allowedDomains = ["gitjaipur.com"];
 // const WS_URL = "ws://mayoorschoolapp.onrender.com/";
 
-const Login = ({setUser}) => {
-  const [teacher, setTeacher] = useState(null); // Start with null to avoid flicker
+const Login = () => {
+  const [user, setUser] = useState(null); // Start with null to avoid flicker
   // const [teachers, setTeachers] = useState([]);
   const [error, setError] = useState("");
   // const [ws, setWs] = useState(null);
   const [notification, setNotification] = useState({ title: "", body: "" });
-  
+
   const loginInProgress = useRef(false); // Track if login is in progress
+
+  // ✅ Load user from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("firebaseUser");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+
+    // ✅ Listen to auth state changes
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        const userData = {
+          uid: currentUser.uid,
+          displayName: currentUser.displayName,
+          email: currentUser.email,
+          photoURL: currentUser.photoURL,
+        };
+
+        // ✅ Store user in localStorage
+        localStorage.setItem("firebaseUser", JSON.stringify(userData));
+        setUser(userData);
+      } else {
+        localStorage.removeItem("firebaseUser");
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup on unmount
+  }, []);
 
   // useEffect(() => {
   //   const token = requestNotificationPermission();
@@ -47,7 +76,7 @@ const Login = ({setUser}) => {
 
   //     new Notification({ title, body });
 
-      
+
   //   });
   // }, []);
 
@@ -75,40 +104,47 @@ const Login = ({setUser}) => {
   //     setTeacher(null); // Clear after sending
   //   }
   // };
-  
+
 
   const handleLogin = async () => {
     if (loginInProgress.current) return; // Prevent multiple login attempts
     loginInProgress.current = true;
-  
+
     try {
       // Force fresh sign-in flow
       await signOut(auth);
       provider.setCustomParameters({
         prompt: "select_account",
       });
-  
+
       const result = await signInWithPopup(auth, provider);
       console.log("Sign-in successful:", result);
-  
+
       const email = result.user.email;
       const idToken = await result.user.getIdToken();
       console.log("ID Token retrieved:", idToken);
-  
+
       try {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/verify-token`, {
           token: idToken,
         });
-  
+
         if (response.status === 200) {
-          setTeacher(result.user); // Set teacher only after successful login
           setError("");
-          console.log("teacher authenticated successfully:", response.data);
-          setUser(result.user.displayName);
+          const userData = {
+            uid: result.user.uid,
+            displayName: result.user.displayName,
+            email: result.user.email,
+            photoURL: result.user.photoURL,
+          };
+          console.log("user authenticated successfully:", userData);
+          // ✅ Store user in localStorage
+          localStorage.setItem("firebaseUser", JSON.stringify(userData));
+          setUser(userData);
           // Send minimal user data through WebSocket
-          if (ws) {
-            ws.send(JSON.stringify({ email: result.user.email, name: result.user.displayName }));
-          }
+          // if (ws) {
+          //   ws.send(JSON.stringify({ email: result.user.email, name: result.user.displayName }));
+          // }
         } else {
           setError("Authentication failed: " + response.data.message);
         }
@@ -124,15 +160,20 @@ const Login = ({setUser}) => {
       loginInProgress.current = false;
     }
   };
-  
 
-  console.log(teacher);
+  const handleLogout = async () => {
+    await signOut(auth);
+    localStorage.removeItem("firebaseUser"); // ✅ Remove user from localStorage
+    setUser(null);
+  };
+
+  console.log(user);
 
   return (
     <Wrapper>
       <div className="homePage">
-        {teacher ? (
-          <Home teacher={teacher} />
+        {user ? (
+          <Home user={user?.displayName} onLogout={handleLogout} />
         ) : (
           <div className="container">
             <div>
@@ -150,5 +191,4 @@ const Login = ({setUser}) => {
 };
 
 export default Login;
-
 

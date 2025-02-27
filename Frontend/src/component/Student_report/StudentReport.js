@@ -46,15 +46,43 @@ const Wrapper = styled.div`
     font-size: 14px;
     margin: 3px 0;
   }
-  .percentage-container {
+ .percentage-container {
     display: flex;
-    justify-content: space-around;
-    margin: 15px 0;
-  }
-  .percentage {
+    flex-wrap: wrap;
+    justify-content: space-between; /* Ensures left and right alignment */
+    align-items: center;
+    width: 80%; /* Increase width for more space */
+    margin: 30px auto; /* Adjust margin to center */
+    position: relative;
+}
+
+.percentage-container div {
+    width: 180px; /* Increased circle size */
+    height: 180px; /* Increased circle size */
+    background-color: white;
+    display: flex;
+    flex-direction: column; /* Arrange content vertically */
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%; /* Makes perfect circles */
     text-align: center;
-    width: 90px;
-  }
+    // box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15); /* Optional: adds a soft shadow */
+}
+
+.percentage-container div:nth-child(3) {
+    position: absolute;
+    top: 220px; /* Increased gap between top and bottom circle */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.percentage {
+    margin-top: 15px; /* More space between circle and text */
+    font-size: 18px; /* Increase text size */
+    color: black;
+}
+
+
   .percentage p {
     font-size: 11px;
     margin-top: 5px;
@@ -96,6 +124,7 @@ const Wrapper = styled.div`
   }
   .average-title{
   margin-left: 20px;
+  margin-top: 50px;
   }
   .subject-title{
   margin-top: 40px;

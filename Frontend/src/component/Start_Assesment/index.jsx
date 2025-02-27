@@ -1,57 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Wrapper from "./style";
-import { FaArrowLeft } from "react-icons/fa";
-import Student from './Student.avif';
-import bellIcon from './bell.png';
-import userIcon from './user.png';
+import { FaArrowDown, FaArrowLeft, FaArrowUp } from "react-icons/fa";
+import Student from "./Student.avif";
 import axios from "axios";
-import menuIcon from "../assets/menu.png";
-
 const Assessment = ({ selectedAssessment, onBack, studentsData }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [acData, setAcData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [userData, setUserData] = useState(null);
-
+  const containerRef = useRef(null);
   useEffect(() => {
     const userData = sessionStorage.getItem("userData");
     if (userData) {
       setUserData(JSON.parse(userData));
     }
-  }, []);
-
+  }, [])
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-  };
-
-  // Function to handle marks change for each student
+  }
   const handleMarksChange = (e, studentId) => {
-    const value = e.target.value;
-    const updatedStudents = [...studentsData];
-    const studentIndex = updatedStudents.findIndex(student => student.id === studentId);
-
-    if (studentIndex !== -1) {
-      updatedStudents[studentIndex].marks = value;
-      setAcData(updatedStudents);  // Update the state for studentsData (if needed)
+    let value = parseInt(e.target.value, 10);
+    const maxMarks = selectedAssessment?.max_marks || 100;
+    if (value > maxMarks || value < 0) {
+      alert("Invalid")
     }
-  };
-
-  // Function to handle the form submission and sending the scores to the backend
+    const updatedStudents = studentsData.map((student) =>
+      student.id === studentId ? { ...student, marks: value } : student
+    )
+  }
   const handleSubmit = async () => {
-    // Prepare payload with student ids and marks
     const payload = studentsData
-      .filter(student => student.marks !== '') // Only include students with marks entered
-      .map(student => ({
+      .filter((student) => student.marks !== "")
+      .map((student) => ({
         student_id: student.id,
-        obtained_marks: student.marks
+        obtained_marks: student.marks,
       }));
-
     if (payload.length === 0) {
       alert("No marks entered!");
       return;
     }
-
     const headers = {
-      Authorization: "Bearer YOUR_ACCESS_TOKEN", // Replace with actual token
+      Authorization: "Bearer YOUR_ACCESS_TOKEN",
       "Content-Type": "application/json",
       year: userData?.year,
       classname: userData?.class,
@@ -59,24 +46,31 @@ const Assessment = ({ selectedAssessment, onBack, studentsData }) => {
       quarter: userData?.quarter,
       subject: userData?.subject,
     };
-
     const requestBody = {
       ac_id: selectedAssessment?.id,
       scores: payload,
     };
-
-    console.log("Data being sent to the backend:", requestBody);
-
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/assessment-criteria-score`, requestBody, { headers });
-      console.log("Response from backend:", response.data);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/assessment-criteria-score`,
+        requestBody,
+        { headers }
+      );
       alert("Marks submitted successfully!");
     } catch (error) {
-      console.error("Error submitting marks:", error.response || error.message);
       alert("Failed to submit marks. Please try again.");
     }
   };
-
+  const scrollUp = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({ top: -200, behavior: "smooth" });
+    }
+  };
+  const scrollDown = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({ top: 200, behavior: "smooth" });
+    }
+  };
   return (
     <Wrapper>
       <div className="profile-section">
@@ -91,42 +85,50 @@ const Assessment = ({ selectedAssessment, onBack, studentsData }) => {
             onChange={handleSearchChange}
             className="search-bar"
           />
-          <div className="icon">
-            {/* <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} /> */}
-            {/* <img src={userIcon} alt="User Icon" style={{ width: "22px", height: "22px" }} /> */}
-            {/* <img className="menu" src={menuIcon} alt="Menu Icon" style={{ width: "22px", height: "31px" }} /> */}
-          </div>
         </div>
-
         <div className="info-container">
-          <h1 className="name">{selectedAssessment ? selectedAssessment.name : "AC-1"}</h1>
-          <p className="max-marks">Max Marks : {selectedAssessment.max_marks}</p>
+          <h1 className="name">
+            {selectedAssessment ? selectedAssessment.name : "AC-1"}
+          </h1>
+          <p className="max-marks">
+            Max Marks: {selectedAssessment?.max_marks}
+          </p>
         </div>
       </div>
-
       <div className="ac-container">
-        {studentsData.map((stu) => (
-          <div className="ac-box" key={stu.id}>
-            <img src={Student} alt="Profile" className="profile-image" />
-            <h3 className="studentName">{stu.name}</h3>
-            <p className="roll-number">Roll Number: {stu.id}</p>
-            <input
-              type="number"
-              value={stu.marks}
-              onChange={(e) => handleMarksChange(e, stu.id)}  // Pass student ID to the handler
-              placeholder="Enter Marks"
-              className="marks-input"
-              min="1" // Ensure the input value is at least 1
-              max={selectedAssessment?.max_marks || 100}
-              required
-            />
-          </div>
-        ))}
+        <button className="scroll-up" onClick={scrollUp}>
+          <FaArrowUp />
+        </button>
+        <div className="student-list" ref={containerRef}>
+          {studentsData.map((stu) => (
+            <div className="ac-box" key={stu.id}>
+              <img src={Student} alt="Profile" className="profile-image" />
+              <h3 className="studentName">{stu.name}</h3>
+              <p className="roll-number">Roll Number: {stu.id}</p>
+              <input
+                type="number"
+                className="marks-input"
+                value={stu.marks}
+                onChange={(e) => handleMarksChange(e, stu.id)}
+                placeholder="Enter Marks"
+                min="0"
+                max={selectedAssessment?.max_marks || 100}
+                required
+              />
+            </div>
+          ))}
+        </div>
+        <button className="scroll-down" onClick={scrollDown}>
+          <FaArrowDown />
+        </button>
+        <input
+          className="done-button"
+          type="button"
+          value="Done"
+          onClick={handleSubmit}
+        />
       </div>
-
-      <input className="done-button" type="button" value="Done" onClick={handleSubmit} />
     </Wrapper>
   );
 };
-
 export default Assessment;

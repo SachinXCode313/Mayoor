@@ -2,101 +2,81 @@ import React, { useState, useEffect } from "react";
 import Wrapper from "./style";
 import Form_AC from "../Form_AC/index";
 import axios from "axios";
-const ACMapping = ({ loId, acItems }) => {
+
+const ACMapping = ({ loId, acList }) => {
   const [priorityMapping, setPriorityMapping] = useState({});
-  const [isLocked, setIsLocked] = useState(false); // Lock all ACs if any priority exists
+  const [lockedPriorities, setLockedPriorities] = useState({}); // Track locked ACs
   const [showForm, setShowForm] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [filteredLoListMapping, setFilteredLoListMapping] = useState([]);
+
   useEffect(() => {
     const userData = sessionStorage.getItem("userData");
     if (userData) {
       setUserData(JSON.parse(userData));
     }
   }, []);
+
   const handleform = () => {
     setShowForm(true);
   };
+
   const handleClick = (acid, priority) => {
-    if (isLocked) return; // Prevent changing priorities if locked
-    setPriorityMapping((prev) => ({
-      ...prev,
-      [acid]: priority.toLowerCase(),
-    }));
+    if (lockedPriorities[acid]) return; // Prevent changing locked priorities
+    setPriorityMapping((prev) => {
+      if (prev[acid] === priority.toLowerCase()) {
+        const newMapping = { ...prev };
+        delete newMapping[acid]; // Deselect if already selected
+        return newMapping;
+      }
+      return { ...prev, [acid]: priority.toLowerCase() };
+    });
   };
-  const handleDone = async () => {
-    if (isLocked) return; // Prevent sending data if locked
-    const body = {
-      lo_id: loId,
-      data: Object.entries(priorityMapping).map(([ac_id, priority]) => ({
-        ac_id: Number(ac_id),
-        priority,
-      })),
-    };
-    console.log("Data to be sent:", JSON.stringify(body, null, 2));
+
+  const loadLOMapping = async (userData) => {
+    setLoading(true);
     const headers = {
-      Authorization: "Bearer YOUR_ACCESS_TOKEN",
-      "Content-Type": "application/json",
-      year: userData?.year,
-      subject: userData?.subject,
-      quarter: userData?.quarter,
-      section: userData?.section,
-      classname: userData?.class,
+      Authorization: 'Bearer YOUR_ACCESS_TOKEN',
+      'Content-Type': 'application/json',
+      year: userData.year,
+      classname: userData.class,
+      section: userData.section,
+      subject: userData.subject,
+      quarter: userData.quarter,
     };
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/learning-outcome-mapping`,
-        body,
-        { headers }
-      );
-      console.log("API Response:", response.data);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/learning-outcome-mapping`, { headers });
+      const data = response.data;
+      let finalData = [];
+      if (Array.isArray(data)) {
+        finalData = data;
+      } else if (Array.isArray(data.ro)) {
+        finalData = data.ro;
+      } else if (Array.isArray(data.lo)) {
+        finalData = data.lo;
+      }
+      setFilteredLoListMapping(finalData);
     } catch (error) {
-      console.error("Error sending data:", error);
+      console.error('Error fetching LO Mapping:', error);
+    } finally {
+      setLoading(false);
     }
   };
+
   useEffect(() => {
-    const loadLoAcMapping = async () => {
-      if (!userData) return;
-      const headers = {
-        Authorization: "Bearer YOUR_ACCESS_TOKEN",
-        "Content-Type": "application/json",
-        lo_id: loId,
-        year: userData.year,
-        classname: userData.class,
-        section: userData.section,
-        subject: userData.subject,
-        quarter: userData.quarter,
-      };
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/learning-outcome-mapping`,
-          { headers }
-        );
-        const { data } = response.data;
-        console.log("Response Come Data:", data);
-        if (data.length > 0) {
-          setIsLocked(true); // If any priority exists, lock all ACs
-          const newPriorityMapping = {};
-          data.forEach(({ ac_id, priority }) => {
-            newPriorityMapping[ac_id] = priority.toLowerCase();
-          });
-          setPriorityMapping(newPriorityMapping);
-        } else {
-          setIsLocked(false); // If no priority exists, allow user selection
-        }
-      } catch (error) {
-        console.error("Error fetching ac score:", error.response || error.message);
-        setPriorityMapping({});
-        setIsLocked(false);
-      }
-    };
-    loadLoAcMapping();
-  }, [userData, loId]);
+    if (userData && Object.keys(userData).length > 0) {
+      loadLOMapping(userData);
+    }
+  }, [userData]);
+
   return (
     <Wrapper>
       <div className="ac-list-container">
         <div className="ac-list">
-          {acItems.map((ac) => {
+          {acList.map((ac) => {
             const selectedPriority = priorityMapping[ac.id] || "";
+
             return (
               <div key={ac.id} className="ac-item">
                 <div>
@@ -106,21 +86,21 @@ const ACMapping = ({ loId, acItems }) => {
                   <button
                     className={`priority-button ${selectedPriority === "h" ? "h" : ""}`}
                     onClick={() => handleClick(ac.id, "H")}
-                    disabled={isLocked}
+                    disabled={lockedPriorities[ac.id]}
                   >
                     H
                   </button>
                   <button
                     className={`priority-button ${selectedPriority === "m" ? "m" : ""}`}
                     onClick={() => handleClick(ac.id, "M")}
-                    disabled={isLocked}
+                    disabled={lockedPriorities[ac.id]}
                   >
                     M
                   </button>
                   <button
                     className={`priority-button ${selectedPriority === "l" ? "l" : ""}`}
                     onClick={() => handleClick(ac.id, "L")}
-                    disabled={isLocked}
+                    disabled={lockedPriorities[ac.id]}
                   >
                     L
                   </button>
@@ -130,8 +110,17 @@ const ACMapping = ({ loId, acItems }) => {
           })}
         </div>
         <div className="btns">
-          <input type="button" value="Add New AC" className="addBtn" onClick={handleform} disabled={isLocked} />
-          <input type="button" value="Done" className="btn" onClick={handleDone} disabled={isLocked} />
+          {/* <input
+            type="button"
+            value="Add"
+            className="addBtn"
+            onClick={handleform}
+          /> */}
+          <input
+            type="button"
+            value="Done"
+            className="btn"
+          />
         </div>
       </div>
       {showForm && (
@@ -144,5 +133,5 @@ const ACMapping = ({ loId, acItems }) => {
     </Wrapper>
   );
 };
-export default ACMapping;
 
+export default ACMapping;

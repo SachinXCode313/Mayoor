@@ -30,7 +30,6 @@ const Menu = ({ onProfileClick, onSettingsClick, onLogoutClick, onReturnClick })
         }}
       />
 
-      {/* Sliding Menu */}
       <div className={`sidebar ${menuOpen ? "open" : ""}`}>
         {/* <button onClick={onProfileClick}>Profile</button> */}
         <button onClick={onReturnClick}>Return Home</button>

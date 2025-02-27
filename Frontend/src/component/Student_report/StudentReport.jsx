@@ -157,17 +157,17 @@ useEffect(() => {
     loadRoScore(userData);
   }
 }, [userData])
-  const chartData = {
-    labels: ["Science", "Computer Science", "Social Studies", "II Language", "GP"],
-    datasets: [
-      {
-        label: "Marks",
-        data: [70, 95, 45, 60, 80],
-        backgroundColor: ["#3498DB", "#2ECC71", "#F1C40F", "#9B59B6", "#E74C3C"],
-        borderRadius: 5,
-      },
-    ],
-  }
+  // const chartData = {
+  //   labels: ["Science", "Computer Science", "Social Studies", "II Language", "GP"],
+  //   datasets: [
+  //     {
+  //       label: "Marks",
+  //       data: [70, 95, 45, 60, 80],
+  //       backgroundColor: ["#3498DB", "#2ECC71", "#F1C40F", "#9B59B6", "#E74C3C"],
+  //       borderRadius: 5,
+  //     },
+  //   ],
+  // }
   const percentages = [
     { value: acPer, label: "Assessment Criteria", component: "ac" },
     { value: loPer, label: "Learning Outcome", component: "lo" },
@@ -225,10 +225,10 @@ useEffect(() => {
                 </div>
               ))}
             </div>
-            <h3 className= "subject-title">Subject Performance</h3>
+            {/* <h3 className= "subject-title">Subject Performance</h3>
             <div className="chart-container">
               <Bar data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
-            </div>
+            </div> */}
           </>
         ) : (
           <div className="score-container">

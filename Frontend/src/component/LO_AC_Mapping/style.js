@@ -48,8 +48,9 @@ const Wrapper = styled.section`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
+    padding: 10px;
     color:rgb(26, 49, 46);
-    box-shadow: 0 4px 8px rgba(138, 135, 135, 0.3);
+    box-shadow: 0px 4px 8px rgba(138, 135, 135, 0.2);
   }
   /* Priority buttons container */
   .priority-buttons {
