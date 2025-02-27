@@ -8,7 +8,7 @@ import stuIcon from '../assets/Graduate.png';
 import homeIcon from '../assets/Smart Home.png';
 import listIcon from '../assets/Audit.png';
 import StudentList from '../Students/StudentSelect';
-import Classview from '../Classview';
+import ClassView from '../ClassView/Classview';
 
 import { useSwipeable } from 'react-swipeable';
 const Home = ({ user }) => {
@@ -54,7 +54,7 @@ const handlers = useSwipeable({
         {index === 1 ? (
           <HomeList user={user} setIndex={setIndex}  />
         ) : index === 2 ? (
-          <Classview setIndex={setIndex} user={user}/>
+          <ClassView setIndex={setIndex} user={user}/>
         ) : index === 3 ? (
           <StudentList onStudentsData={handleStudentsData} setIndex={setIndex} />
         ) : index === 4 ? (

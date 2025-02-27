@@ -8,7 +8,7 @@ import imgUser from "../assets/user.png";
 import imgMenu from "../assets/menu.png";
 import imgBell from "../assets/bell.png";
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
-const Classview = ({ setIndex, user }) => {
+const ClassView = ({ setIndex, user }) => {
   const [selectedChart, setSelectedChart] = useState("ac");
   const [acData, setAcData] = useState([]);
   const [loData, setLoData] = useState([]);
@@ -174,4 +174,5 @@ const Classview = ({ setIndex, user }) => {
     </div>
   );
 };
-export default Classview;
+
+export default ClassView;
