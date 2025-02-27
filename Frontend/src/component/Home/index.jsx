@@ -8,7 +8,6 @@ import stuIcon from '../assets/Graduate.png';
 import homeIcon from '../assets/Smart Home.png';
 import listIcon from '../assets/Audit.png';
 import StudentList from '../Students/StudentSelect';
-import Classview from '../Classview/Classview';
 import LoadNotification from '../App/LoadNotification';
 
 
@@ -16,6 +15,7 @@ import { useSwipeable } from 'react-swipeable';
 import { onMessage } from 'firebase/messaging';
 import requestNotificationPermission from '../../Helper/push';
 import { messaging } from '../../Helper/firebase';
+import Classview from '../Classview';
 
 
 const Home = ({ user, onLogout }) => {
