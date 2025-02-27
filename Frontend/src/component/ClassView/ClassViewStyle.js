@@ -5,49 +5,24 @@ const styles = `
     flex-direction: column;
     align-items: center;
     background-color: #f8f9fa;
+    height: 35px;
   }
 
   .class-header {
     width: 100%;
-    height: 75px;
+    height: 70px;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    gap: 60px;
     align-items: center;
     padding-top: 25px;
     background-color:#21c2ba;
     color: white;
+    // gap: 50px
   }
 
-  .header-icons {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .back-icon {
-    padding-left: 20px;
-  }
-
-  .right-icons {
-    display: flex;
-    gap: 10px;
-    padding-right: 20px;
-  }
-
-  .class-overview {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-
-  .class-title {
-    font-size: 25px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: -30px;
+  .class-title{
+  text-align: center;
   }
 
   .info-box {

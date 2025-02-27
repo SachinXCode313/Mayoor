@@ -35,7 +35,7 @@ const Wrapper = styled.section`
 .sidebar {
   position: fixed;
   top: 0;
-  right: -250px; /* Initially hidden */
+  left: -250px; /* Initially hidden */
   width: 150px;
   height: auto;
   background: #2a9d8f /* Teal color */
@@ -51,7 +51,7 @@ const Wrapper = styled.section`
 
 /* When menu is open */
 .sidebar.open {
-  right: 0; /* Slide into view */
+  left: 0; /* Slide into view */
 }
 
 /* Menu Items */

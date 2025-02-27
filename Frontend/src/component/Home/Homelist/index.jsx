@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Wrapper from './style';
-// import notification from "./bell.png";
-// import student from './user.png';
-// import menu from "./menu.png";
 import Ripples from 'react-ripples'
 const HomeList = ({ user, setIndex, msg }) => {
-  console.log(user)
   const [userData, setUserData] = useState({});
   useEffect(() => {
     const clearSessionStorageOnRefresh = () => {
@@ -44,7 +40,8 @@ const HomeList = ({ user, setIndex, msg }) => {
     <Wrapper>
       <div id="user">
         <div id="detail">
-          <h1 id="name">Welcome, {user || "Guest"}</h1>
+          <p id="hi">Hi,</p>
+          <h1 id="name">{user}</h1>
         </div>
         <div id="image">
           {/* <img id="notification" src={notification} alt="Notification" /> */}
@@ -56,8 +53,8 @@ const HomeList = ({ user, setIndex, msg }) => {
         <label htmlFor="year" onClick={toggle}>Year ({selectedYear})</label>
         <div className="options">
           <Ripples>
-            <div tabIndex={0} className={selectedYear === 2025 ? "option active" : "option"} onClick={e => setSelectedYear(2025)}>2025</div>
-          </Ripples>
+          <div tabIndex={0} className={selectedYear === 2025 ? "option active" : "option"} onClick={e => setSelectedYear(2025)}>2025</div>
+            </Ripples>
           <Ripples><div tabIndex={0} className={selectedYear === 2024 ? "option active" : "option"} onClick={e => setSelectedYear(2024)}>2024</div></Ripples>
         </div>
         <label htmlFor="class" onClick={toggle}>Class ({selectedClass})</label>

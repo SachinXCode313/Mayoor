@@ -2,41 +2,41 @@ import React, { useState, useEffect } from "react";
 import styles from "./StudentSelectStyles"; // Importing styles
 import bellIcon from "../assets/bell.png";
 import userIcon from "../assets/user.png";
-// import { IoSearchOutline } from "react-icons/io5";
+import { IoSearchOutline } from "react-icons/io5";
 import axios from "axios";
 import StudentReport from "../Student_report/StudentReport.jsx";
-import TeacherProfile from "../TeacherProfile/index.jsx"
-import Menu from "../MenuBar";
+import TeacherProfile from "../TeacherProfile/index.jsx";
+import Menu from "../MenuBar/index.jsx";
 
-const StudentList = ({ onStudentsData, setIndex }) => {
+const StudentList = ({ onStudentsData }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [students, setStudents] = useState([]); // Stores API student list
-  const [filteredStudents, setFilteredStudents] = useState([]); // Stores search-filtered students
+  const [students, setStudents] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const [showReport, setShowReport] = useState(null);
   const [showTeacherProfile, setShowTeacherProfile] = useState(false);
-
+  const [activeMenuIndex, setActiveMenuIndex] = useState(null);
+  
   const handleProfileClick = () => alert("Go to Profile");
   const handleSettingsClick = () => alert("Open Settings");
   const handleLogoutClick = () => alert("Logging Out...");
+ 
   const handleReport = (student) => {
-    setShowReport(student); // Set the clicked student
-  }
+    setShowReport(student);
+  };
 
   const handleProfile = () => {
     setShowTeacherProfile(true);
-  }
-  const handleClick =()=>{
-    setIndex(1)
-  }
+  };
 
   const handleBackToList1 = () => {
-    setShowReport(null); // Back to student list from report
-  }
+    setShowReport(null);
+  };
 
   const handleBackToList2 = () => {
-    setShowTeacherProfile(false); // Back to student list from teacher profile
-  }
+    setShowTeacherProfile(false);
+  };
+
   const [userData, setUserData] = useState(null);
   useEffect(() => {
     const userData = sessionStorage.getItem("userData");
@@ -44,41 +44,46 @@ const StudentList = ({ onStudentsData, setIndex }) => {
       setUserData(JSON.parse(userData));
     }
   }, []);
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setFilteredStudents(
-        Array.isArray(students)
-          ? students.filter((student) =>
-              student.name.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-          : []
-      )
-    }, 300)
+        students.filter((student) =>
+          student.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }, 300);
 
     return () => clearTimeout(handler);
   }, [searchTerm, students]);
 
   useEffect(() => {
     const loadStudents = async () => {
-      if (!userData || students.length > 0) return; // Prevent unnecessary API calls
-  
+      if (!userData || students.length > 0) return;
+
       try {
         const headers = {
           Authorization: "Bearer YOUR_ACCESS_TOKEN",
           "Content-Type": "application/json",
-          year: userData?.year,  
+          year: userData?.year,
           classname: userData?.class,
           section: userData?.section,
           subject: userData?.subject,
         };
-  
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/students`, { headers });
-        console.log("Response Data:", response.data);
 
-        let re = /(\b[a-z](?!\s))/g
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/students`,
+          { headers }
+        );
 
-        response.data.students.map(student => {student.name = student.name.toLowerCase().replace(re, function(x){return x.toUpperCase();})})
-  
+        let re = /(\b[a-z](?!\s))/g;
+        response.data.students.map(
+          (student) =>
+            (student.name = student.name
+              .toLowerCase()
+              .replace(re, (x) => x.toUpperCase()))
+        );
+
         if (response.data && Array.isArray(response.data.students)) {
           setStudents(response.data.students);
           onStudentsData(response.data.students);
@@ -91,11 +96,11 @@ const StudentList = ({ onStudentsData, setIndex }) => {
         setStudents([]);
       }
     };
-  
+
     if (userData && Object.keys(userData).length > 0 && students.length === 0) {
       loadStudents();
     }
-  }, [userData]);  // Removed `onStudentsData` from dependencies
+  }, [userData]);
 
   if (showReport) {
     return <StudentReport student={showReport} onBack={handleBackToList1} />;
@@ -107,8 +112,14 @@ const StudentList = ({ onStudentsData, setIndex }) => {
 
   return (
     <div style={styles.container}>
-      
       <div style={styles.header}>
+      {/* <div className="icon"> */}
+          <Menu
+            onProfileClick={handleProfileClick}
+            onSettingsClick={handleSettingsClick}
+            onLogoutClick={handleLogoutClick}
+          />
+        {/* </div> */}
         <div style={styles.searchContainer}>
           <div
             style={{
@@ -125,36 +136,33 @@ const StudentList = ({ onStudentsData, setIndex }) => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
             />
-            {/* <IoSearchOutline style={styles.searchIcon} /> */}
-          </div>
-
-          <div style={styles.iconWrapper}>
-            {/* <img src={bellIcon} alt="Bell Icon" style={{ width: "22px", height: "22px" }} /> */}
-            {/* <img src={userIcon} alt="User Icon" onClick={handleProfile} style={{ width: "22px", height: "22px" }} /> */}
-            <Menu style={styles.menu}
-             onProfileClick={handleProfileClick}
-             onSettingsClick={handleSettingsClick}
-             onLogoutClick={handleLogoutClick}
-             onReturnClick={handleClick}
-          />
+            <IoSearchOutline style={styles.searchIcon} />
           </div>
         </div>
-        
-        {/* <h2 style={styles.title}>Student List</h2> */}
       </div>
 
       {/* Student List */}
-      <div style={{width : "100%"}}>
+      <div className="studentlist" style={{ width: "100%" }}>
         {filteredStudents.length > 0 ? (
           filteredStudents.map((student, index) => (
-            <div className="student-item" key={index} style={styles.listItem} onClick={() => handleReport(student)}>
-              <span className="initials">{student.name.split(' ')[0][0] + student.name.split(' ')[1][0].toUpperCase()}</span><span>{student.name}</span>
+            <div
+              key={index}
+              className="student-item"
+              style={styles.studentItem}
+              onClick={() => handleReport(student)}
+            >
+              <div className="student-avatar" style={styles.studentAvatar}>
+                {student.name
+                  .split(" ")
+                  .slice(0, 2)
+                  .map((word) => word[0].toUpperCase())
+                  .join("")}
+              </div>
+              <div className="student-name" style={styles.studentName}>{student.name}</div>
             </div>
           ))
         ) : (
-          <div style={styles.noResults}>
-            Loading...
-          </div>
+          <div style={styles.noResults}>No students found</div>
         )}
       </div>
     </div>

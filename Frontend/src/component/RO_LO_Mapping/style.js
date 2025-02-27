@@ -46,11 +46,12 @@ const Wrapper = styled.section`
 /* Individual LO item */
 .lo-item {
   display: flex;
+  padding: 10px;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-  color: #1A302D;
-  box-shadow: 0 4px 8px rgba(138, 135, 135, 0.3); /* Softer shadow */
+  color: #1a302d;
+  box-shadow: 0 4px 8px rgba(138, 135, 135, 0.2); /* Softer shadow */
 }
 /* Priority buttons container */
 .priority-buttons {

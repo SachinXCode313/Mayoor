@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import Wrapper from './style';
 import HomeList from './Homelist';
 import ROlist from '../RO_List';
@@ -8,24 +8,17 @@ import stuIcon from '../assets/Graduate.png';
 import homeIcon from '../assets/Smart Home.png';
 import listIcon from '../assets/Audit.png';
 import StudentList from '../Students/StudentSelect';
-import LoadNotification from '../App/LoadNotification';
-
-
-import { useSwipeable } from 'react-swipeable';
-import { onMessage } from 'firebase/messaging';
-import requestNotificationPermission from '../../Helper/push';
-import { messaging } from '../../Helper/firebase';
 import Classview from '../Classview';
 
-
-const Home = ({ user, onLogout }) => {
+import { useSwipeable } from 'react-swipeable';
+const Home = ({ user }) => {
   const [index, setIndex] = useState(1);
   const [tabs, setTabs] = useState([
     { id: 2, title: 'Home', icon: homeIcon },
     { id: 3, title: 'Students', icon: stuIcon },
-    { id: 4, title: 'AC', icon: listIcon },
-    { id: 5, title: 'LO', icon: listIcon },
-    { id: 6 , title: 'RO', icon: listIcon },
+    { id: 4, title: 'LO', icon: listIcon },
+    { id: 5, title: 'RO', icon: listIcon },
+    { id: 6 , title: 'AC', icon: listIcon },
   ]);
   const [loItems, setLoItems] = useState([]);
   const [acItems, setAcItems] = useState([]);
@@ -48,47 +41,28 @@ const Home = ({ user, onLogout }) => {
 // console.log(user)
 const handlers = useSwipeable({
   onSwipedLeft: () => {
-    if (index !== 1) setIndex((prevIndex) => (prevIndex < 6 ? prevIndex + 1 : prevIndex));
+    if (index !== 1 && index !== 6) setIndex((prevIndex) => (prevIndex < 6 ? prevIndex + 1 : prevIndex));
   },
   onSwipedRight: () => {
-    if (index !== 1) setIndex((prevIndex) => (prevIndex > 1 ? prevIndex - 1 : prevIndex));
+    if (index !== 1 && index !== 6) setIndex((prevIndex) => (prevIndex > 1 ? prevIndex - 1 : prevIndex));
   },
   trackMouse: true,
 });
-
-
-useEffect(() => {
-  requestNotificationPermission();
-
-  onMessage(messaging, (payload) => {
-    console.log("Received foreground message:", payload);
-    const { title, body } = payload.notification || {};
-
-    new Notification(title,{
-      body: body || "Foreground body",
-    })
-    
-  });
-}, []);
-
-
-
   return (
     <Wrapper {...handlers}>
-      {/* <LoadNotification/> */}
       <div className="screen">
         {index === 1 ? (
           <HomeList user={user} setIndex={setIndex}  />
         ) : index === 2 ? (
-          <Classview setIndex={setIndex} user={user} onLogout={onLogout}/>
+          <Classview setIndex={setIndex} user={user}/>
         ) : index === 3 ? (
           <StudentList onStudentsData={handleStudentsData} setIndex={setIndex} />
         ) : index === 4 ? (
-          <AClist acItems={acItems} setAcItems={setAcItems} handleAcItems={handleAcItems} studentsData={studentsData} setIndex={setIndex} user={user}/>
-        ) : index === 5 ? (
           <LOlist loItems={loItems} handleLoItems={handleLoItems} acItems={acItems} setAcItems={setAcItems} setIndex={setIndex}/>
+        ) : index === 5 ? (
+          <ROlist loItems={loItems} setLoItems={setLoItems} setIndex={setIndex} handleLoItems={handleLoItems} acItems={acItems}/>
         ) : (
-          <ROlist loItems={loItems} setLoItems={setLoItems} setIndex={setIndex}/>
+          <AClist acItems={acItems} setAcItems={setAcItems} handleAcItems={handleAcItems} studentsData={studentsData} setIndex={setIndex} user={user}/>
         )}
       </div>
       {index !== 1 && (

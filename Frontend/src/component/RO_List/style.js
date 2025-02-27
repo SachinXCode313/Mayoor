@@ -9,7 +9,7 @@ const Wrapper = styled.section`
 
     .search-container {
       display: flex;
-      gap: 60px;
+      gap: 5px;
       align-items: center;
       position: relative;
       // width: 100%;
@@ -24,9 +24,9 @@ const Wrapper = styled.section`
       display: flex;
       gap: 12px;
       align-items: center;
-      padding-right: 15px;
+      // padding-right: 15px;
     }
-       .search-bar {
+    .search-bar {
       width: 100%;
       padding: 10px 40px 10px 15px; /* Padding for space for the search icon */
       font-size: 16px;
@@ -114,13 +114,15 @@ const Wrapper = styled.section`
   }
 
   .ro-list-item {
+   width: 90%;
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 10px;
+    margin: 10px auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 30px 30px 0 0;
+    color: #6C6C6C;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 10px;
+    z-index: -1;
   }
 
   .ro-header {
@@ -139,17 +141,15 @@ const Wrapper = styled.section`
   }
 
   .ro-dropdown-content {
-    padding: 10px;
+    // padding: 10px;
     background: #eee;
-    color: #004d40;
+    color:#1a302d;
   }
   
 .list-icons{
   height: 20px;
- // background-color: #21c3bc;
 }
 .list-icon-containers{
- // background-color: #21c3bc;
   margin-right: 10px;
   border-radius: 5px;
   padding: 2px;
@@ -157,6 +157,16 @@ const Wrapper = styled.section`
 /* .item-title{
   font-weight: bold;
 } */
+
+.mapCounter{
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: gray;
+  text-align: center;
+  color: #fff;
+  padding: 2px;
+}
 `
 
 export default Wrapper;
