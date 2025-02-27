@@ -8,7 +8,7 @@ import stuIcon from '../assets/Graduate.png';
 import homeIcon from '../assets/Smart Home.png';
 import listIcon from '../assets/Audit.png';
 import StudentList from '../Students/StudentSelect';
-import ClassView from '../ClassView/Classview';
+import Classview from '../Classview/Classview';
 import LoadNotification from '../App/LoadNotification';
 
 
@@ -80,7 +80,7 @@ useEffect(() => {
         {index === 1 ? (
           <HomeList user={user} setIndex={setIndex}  />
         ) : index === 2 ? (
-          <ClassView setIndex={setIndex} user={user} onLogout={onLogout}/>
+          <Classview setIndex={setIndex} user={user} onLogout={onLogout}/>
         ) : index === 3 ? (
           <StudentList onStudentsData={handleStudentsData} setIndex={setIndex} />
         ) : index === 4 ? (

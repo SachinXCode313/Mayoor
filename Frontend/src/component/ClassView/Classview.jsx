@@ -11,7 +11,7 @@ import imgBell from "../assets/bell.png";
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
-const ClassView = ({ setIndex, user , onLogout }) => {
+const Classview = ({ setIndex, user , onLogout }) => {
   const [selectedChart, setSelectedChart] = useState("ac");
   const [acData, setAcData] = useState([]);
   const [loData, setLoData] = useState([]);
@@ -202,4 +202,4 @@ const ClassView = ({ setIndex, user , onLogout }) => {
   );
 };
 
-export default ClassView;
+export default Classview;
