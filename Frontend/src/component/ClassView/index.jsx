@@ -3,28 +3,23 @@ import { Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend } from "chart.js";
 import "./ClassViewStyle"
 import Menu from "../MenuBar/index";
-
 import imgUser from "../assets/user.png";
 // import imgBack from "../assets/Vector.png";
 import imgMenu from "../assets/menu.png";
 import imgBell from "../assets/bell.png";
-
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
-
-const Classview = ({ setIndex, user , onLogout }) => {
+const Classview = ({ setIndex, user }) => {
   const [selectedChart, setSelectedChart] = useState("ac");
   const [acData, setAcData] = useState([]);
   const [loData, setLoData] = useState([]);
   const [roData, setRoData] = useState([]);
   const [userData, setUserData] = useState('');
-
   useEffect(() => {
     const userData = sessionStorage.getItem("userData");
     if (userData) {
       setUserData(JSON.parse(userData));
     }
   }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,7 +36,6 @@ const Classview = ({ setIndex, user , onLogout }) => {
           // "quarter": "1",
           // "section": "Orchid",
         };
-
         const acResponse = await fetch("https://mayoor-backend.vercel.app/api/class-average-ac-score", {
           method: "GET",
           headers: headers,
@@ -54,16 +48,13 @@ const Classview = ({ setIndex, user , onLogout }) => {
           method: "GET",
           headers: headers,
         });
-
         const acScores = await acResponse.json();
         const loScores = await loResponse.json();
         const roScores = await roResponse.json();
-
         // Extracting average scores for the chart
         const acData = acScores.class_ac_averages.map(item => item.average_score);
         const loData = loScores.class_lo_averages.map(item => item.average_score);
         const roData = roScores.class_ro_averages.map(item => item.average_score);
-
         setAcData(acData);
         setLoData(loData);
         setRoData(roData);
@@ -71,10 +62,8 @@ const Classview = ({ setIndex, user , onLogout }) => {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, [userData]);
-
   const chartData = {
     ac: {
       labels: ["AC 1", "AC 2", "AC 3", "AC 4", "AC 5", "AC 6", "AC 7", "AC 8", "AC 9", "AC 10"],
@@ -82,9 +71,9 @@ const Classview = ({ setIndex, user , onLogout }) => {
         {
           label: "AC Scores",
           data: acData,
-          borderColor: "#3b82f6",
+          borderColor: "#3B82F6",
           fill: false,
-          pointBackgroundColor: "#3b82f6",
+          pointBackgroundColor: "#3B82F6",
         },
       ],
     },
@@ -94,9 +83,9 @@ const Classview = ({ setIndex, user , onLogout }) => {
         {
           label: "LO Scores",
           data: loData,
-          borderColor: "#ff7f50",
+          borderColor: "#FF7F50",
           fill: false,
-          pointBackgroundColor: "#ff7f50",
+          pointBackgroundColor: "#FF7F50",
         },
       ],
     },
@@ -106,14 +95,13 @@ const Classview = ({ setIndex, user , onLogout }) => {
         {
           label: "RO Scores",
           data: roData,
-          borderColor: "#32cd32",
+          borderColor: "#32CD32",
           fill: false,
-          pointBackgroundColor: "#32cd32",
+          pointBackgroundColor: "#32CD32",
         },
       ],
     },
   };
-
   const options = {
     responsive: true,
     plugins: { legend: { display: false } },
@@ -132,39 +120,26 @@ const Classview = ({ setIndex, user , onLogout }) => {
       },
     },
   };
-
   const handleClick = () => {
     setIndex(1);
   };
-
       const handleProfileClick = () => alert("Go to Profile");
       const handleSettingsClick = () => alert("Open Settings");
-      // const handleLogoutClick = () => {
-      //   handleLogout()
-      //   alert("Logging Out...");
-      // }
+      const handleLogoutClick = () => alert("Logging Out...");
   return (
     <div className="class-container">
       <div className="class-header">
-      <div className="class-overview">
-          <div className="class-title">Class Overview</div>
-        </div>
-        <div className="header-icons">
-          <div className="back-icon">
-            {/* <img src={imgBack} alt="Back" className="header-image" /> */}
-          </div>
-          <div className="right-icons">
-            {/* <img src={imgBell} alt="Bell" className="header-image" /> */}
+      {/* <div className="class-overview"> */}
+      {/* <div className="right-icons"> */}
           <Menu
              onProfileClick={handleProfileClick}
              onSettingsClick={handleSettingsClick}
-             onLogout={onLogout}
+             onLogoutClick={handleLogoutClick}
              onReturnClick={handleClick}
           />
-          </div>
-        </div>
+          <h2 className="class-title">Class Overview</h2>
+        {/* </div> */}
       </div>
-
       <div className="info-box">
         <div className="info-text">
           <p>
@@ -186,13 +161,11 @@ const Classview = ({ setIndex, user , onLogout }) => {
           </p>
         </div>
       </div>
-
       <select className="chart-dropdown" onChange={(e) => setSelectedChart(e.target.value)}>
         <option value="ac">AC Scores</option>
         <option value="lo">LO Scores</option>
         <option value="ro">RO Scores</option>
       </select>
-
       <div className="chart-wrapper">
         <div className="chart-container">
           <Line data={chartData[selectedChart]} options={options} />
@@ -201,5 +174,4 @@ const Classview = ({ setIndex, user , onLogout }) => {
     </div>
   );
 };
-
 export default Classview;
