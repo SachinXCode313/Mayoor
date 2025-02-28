@@ -1,12 +1,9 @@
 import Wrapper from "./style";
 import React, { useState, useEffect, useRef } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "firebase/auth";
-// import { requestNotificationPermission } from "../../Helper/firebase";
-// import { onMessage } from "firebase/messaging";
-// import { messaging } from "../../Helper/firebase";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence, getRedirectResult, signInWithRedirect } from "firebase/auth";
 import axios from "axios";
-import Home from "../Home/";
+import Home from "../Home";
 import Logo from './Logo.png';
 
 const firebaseConfig = {
@@ -19,23 +16,13 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-
-
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-const allowedDomains = ["gitjaipur.com"];
-// const WS_URL = "ws://mayoorschoolapp.onrender.com/";
-
 const Login = () => {
   const [user, setUser] = useState(null); // Start with null to avoid flicker
-  // const [teachers, setTeachers] = useState([]);
   const [error, setError] = useState("");
-  // const [ws, setWs] = useState(null);
-  const [notification, setNotification] = useState({ title: "", body: "" });
-
   const loginInProgress = useRef(false); // Track if login is in progress
 
   // ✅ Load user from localStorage on mount
@@ -65,92 +52,34 @@ const Login = () => {
     });
 
     return () => unsubscribe(); // Cleanup on unmount
+
+    // Set persistence to local storage
+    setPersistence(auth, browserLocalPersistence)
+      .then(() => console.log("Auth persistence set to local"))
+      .catch((error) => console.error("Error setting auth persistence:", error));
   }, []);
 
-  // useEffect(() => {
-  //   const token = requestNotificationPermission();
-
-  //   onMessage(messaging, (payload) => {
-  //     console.log("Received foreground message:", payload);
-  //     const { title, body } = payload.notification || {};
-
-  //     new Notification({ title, body });
-
-
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   const socket = new WebSocket(WS_URL);
-  //   setWs(socket);
-
-  //   socket.onopen = () => console.log("✅ Connected to WebSocket server");
-
-  //   socket.onmessage = (event) => {
-  //     console.log("📥 Received data:", event.data);
-  //     // setTeachers(JSON.parse(event.data));
-  //   };
-
-  //   socket.onclose = () => console.log("🔴 Disconnected from WebSocket server");
-
-  //   return () => socket.close();
-  // }, []);
-
-  // const handleJoin = () => {
-  //   if (teacher && ws) {
-  //     const userData = JSON.stringify({ teacherName: teacher.displayName, email: teacher.email });
-  //     console.log("Sending data to WebSocket server:", userData);  // Log the data before sending
-  //     ws.send(userData);
-  //     setTeacher(null); // Clear after sending
-  //   }
-  // };
-
-
+  // Handle login using popup or redirect based on device
   const handleLogin = async () => {
     if (loginInProgress.current) return; // Prevent multiple login attempts
     loginInProgress.current = true;
 
     try {
-      // Force fresh sign-in flow
-      await signOut(auth);
+      await signOut(auth); // Force sign out for fresh login
+
       provider.setCustomParameters({
-        prompt: "select_account",
+        prompt: "select_account", // Always prompt user to select account
       });
-      
-      const result = await signInWithPopup(auth, provider);
-      console.log("Sign-in successful:", result);
 
-      const email = result.user.email;
-      const idToken = await result.user.getIdToken();
-      console.log("ID Token retrieved:", idToken);
-
-      try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/verify-token`, {
-          token: idToken,
-        });
-
-        if (response.status === 200) {
-          setError("");
-          const userData = {
-            uid: result.user.uid,
-            displayName: result.user.displayName,
-            email: result.user.email,
-            photoURL: result.user.photoURL,
-          };
-          console.log("user authenticated successfully:", userData);
-          // ✅ Store user in localStorage
-          localStorage.setItem("firebaseUser", JSON.stringify(userData));
-          setUser(userData);
-          // Send minimal user data through WebSocket
-          // if (ws) {
-          //   ws.send(JSON.stringify({ email: result.user.email, name: result.user.displayName }));
-          // }
-        } else {
-          setError("Authentication failed: " + response.data.message);
-        }
-      } catch (err) {
-        console.error("Error during token verification:", err.response?.data || err.message || err);
-        setError("Error verifying token with backend.");
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        // If iOS device, use redirect
+        console.log("Using redirect login on iOS");
+        await signInWithRedirect(auth, provider);
+      } else {
+        // Use popup login for other devices
+        console.log("Using popup login");
+        const result = await signInWithPopup(auth, provider);
+        handleUserLogin(result);
       }
     } catch (err) {
       console.error("Error during login:", err.code, err.message);
@@ -161,13 +90,59 @@ const Login = () => {
     }
   };
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    localStorage.removeItem("firebaseUser"); // ✅ Remove user from localStorage
-    setUser(null);
+  // Handle login result from redirect (for iOS)
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result) {
+          handleUserLogin(result);
+        }
+      })
+      .catch((error) => {
+        console.error("Error getting redirect result:", error);
+        setError(`An error occurred: ${error.message}`);
+      });
+  }, []);
+
+  const handleUserLogin = async (result) => {
+    if (!result?.user) return;
+
+    const userData = {
+      uid: result.user.uid,
+      displayName: result.user.displayName,
+      email: result.user.email,
+      photoURL: result.user.photoURL,
+    };
+
+    // Store user in localStorage
+    localStorage.setItem("firebaseUser", JSON.stringify(userData));
+    setUser(userData);
+
+    try {
+      const idToken = await result.user.getIdToken();
+      console.log("ID Token retrieved:", idToken);
+
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/verify-token`, {
+        token: idToken,
+      });
+
+      if (response.status === 200) {
+        setError("");
+        console.log("User authenticated successfully:", userData);
+      } else {
+        setError("Authentication failed: " + response.data.message);
+      }
+    } catch (err) {
+      console.error("Error during token verification:", err.response?.data || err.message || err);
+      setError("Error verifying token with backend.");
+    }
   };
 
-  console.log(user);
+  const handleLogout = async () => {
+    await signOut(auth);
+    localStorage.removeItem("firebaseUser"); // Remove user from localStorage
+    setUser(null);
+  };
 
   return (
     <Wrapper>
@@ -191,4 +166,3 @@ const Login = () => {
 };
 
 export default Login;
-
