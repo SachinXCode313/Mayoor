@@ -43,7 +43,6 @@ const Login = () => {
     const storedUser = localStorage.getItem("firebaseUser");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-      return; // Avoid redundant auth state listener setup
     }
 
     // ✅ Listen to auth state changes
@@ -117,7 +116,7 @@ const Login = () => {
       provider.setCustomParameters({
         prompt: "select_account",
       });
-
+      
       const result = await signInWithPopup(auth, provider);
       console.log("Sign-in successful:", result);
 
