@@ -43,6 +43,7 @@ const Login = () => {
     const storedUser = localStorage.getItem("firebaseUser");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+      return; // Avoid redundant auth state listener setup
     }
 
     // ✅ Listen to auth state changes
